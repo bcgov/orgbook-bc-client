@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <Header />
-    <v-main class="ma-12">
-      <router-view />
+    <v-main>
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+        <router-view class="pa-8" />
+      </v-container>
     </v-main>
     <Footer />
   </v-app>
@@ -24,12 +26,30 @@ export default class App extends Vue {}
 
 <style>
 .row {
-  max-width: 100vw;
+  margin: 0;
+  padding: 0;
 }
-.flex-text-left {
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex-justify-content-start {
   justify-content: start;
 }
-.flex-text-right {
+.flex-justify-content-end {
   justify-content: end;
+}
+.flex-justify-content-flex-end {
+  justify-content: flex-end;
+}
+.flex-align-content-center {
+  align-content: center;
+}
+.flex-align-items-center {
+  align-items: center;
 }
 </style>

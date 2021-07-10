@@ -1,28 +1,36 @@
 <template>
   <div>
-    <v-row>
-      <v-col>
-        <About class="pa-4 pl-8 pr-8" />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <Feedback class="pa-4 pl-8 pr-8" />
-      </v-col>
-    </v-row>
-    <v-footer color="primary">
-      <v-btn
-        v-for="link in links"
-        :key="link.path"
-        plain
-        text
-        color="white"
-        :to="link.path"
-        :ripple="false"
-        :block="$vuetify.breakpoint.smAndDown"
-        class="text-capitalize flex-text-left"
-        >{{ link.label }}</v-btn
-      >
+    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+      <v-row>
+        <v-col>
+          <About class="pa-4" />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <Feedback class="pa-4" />
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-footer color="primary" class="pl-0 pr-0">
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+        <v-row>
+          <v-col class="pt-0 pb-0">
+            <v-btn
+              v-for="link in links"
+              :key="link.path"
+              plain
+              text
+              color="white"
+              :to="link.path"
+              :ripple="false"
+              :block="$vuetify.breakpoint.smAndDown"
+              class="text-capitalize flex-justify-content-start"
+              >{{ link.label }}</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-container>
     </v-footer>
   </div>
 </template>
