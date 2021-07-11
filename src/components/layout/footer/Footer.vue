@@ -1,17 +1,23 @@
 <template>
   <div>
-    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-      <v-row>
-        <v-col>
-          <About class="pa-4" />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <Feedback class="pa-4" />
-        </v-col>
-      </v-row>
-    </v-container>
+    <div id="footerAbout">
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+        <v-row class="ma-0">
+          <v-col>
+            <About class="pl-4 pr-4" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
+    <div id="footerFeedback">
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+        <v-row class="ma-0">
+          <v-col>
+            <Feedback class="pl-4 pr-4" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
     <v-footer color="primary" class="pl-0 pr-0">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row>
@@ -60,3 +66,9 @@ export default class Footer extends Vue {
   }
 }
 </script>
+
+<style scoped>
+#footerAbout {
+  background: #e3e3e3;
+}
+</style>

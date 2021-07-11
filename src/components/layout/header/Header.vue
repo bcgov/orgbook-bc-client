@@ -5,7 +5,7 @@
         <v-row class="flex-col-align-center">
           <v-col
             class="
-              pl-md-8 pl-lg-8 pl-xl-8 pl-xs-4 pl-sm-4
+              pl-xl-8 pl-lg-8 pl-md-8 pl-sm-4 pl-xs-4
               flex-row flex-align-items-center
             "
           >
@@ -26,14 +26,13 @@
                 color="white"
                 :to="link.path"
                 :ripple="false"
-                class="text-capitalize float-right"
+                class="text-capitalize"
                 >{{ link.label }}</v-btn
               >
             </div>
             <v-app-bar-nav-icon
               v-if="$vuetify.breakpoint.smAndDown"
               @click="drawer = true"
-              class="float-right"
             ></v-app-bar-nav-icon>
           </v-col>
         </v-row>
