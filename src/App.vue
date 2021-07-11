@@ -2,9 +2,15 @@
   <v-app>
     <Header />
     <v-main>
+      <Loading v-if="loading" />
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <router-view class="pa-8" />
       </v-container>
+      <Notification
+        v-for="alert in alerts"
+        :key="alert.id"
+        :alert="alert"
+      ></Notification>
     </v-main>
     <Footer />
   </v-app>
@@ -14,11 +20,19 @@
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
+import Loading from "@/components/shared/Loading.vue";
+import Notification from "@/components/shared/Notification.vue";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
     Header,
     Footer,
+    Loading,
+    Notification,
+  },
+  computed: {
+    ...mapGetters(["loading", "alerts"]),
   },
 })
 export default class App extends Vue {}
