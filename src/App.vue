@@ -3,9 +3,7 @@
     <Header />
     <v-main>
       <Loading v-if="loading" />
-      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-        <router-view class="pa-8" />
-      </v-container>
+      <router-view></router-view>
       <Notification
         v-for="alert in alerts"
         :key="alert.id"
