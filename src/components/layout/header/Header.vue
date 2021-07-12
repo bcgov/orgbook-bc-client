@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="primary" dark flat>
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="flex-col-align-center">
           <v-col
@@ -50,8 +50,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { headerLinks } from "@/config/nav";
 import { NavLink } from "@/interfaces/nav-link";
+import { headerLinks } from "@/config/nav";
 
 interface Data {
   drawer: boolean;

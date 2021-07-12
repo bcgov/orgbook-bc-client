@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h1>Contact goes here!</h1>
-    <ContactForm />
+    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+      <h1>Contact goes here!</h1>
+      <ContactForm />
+    </v-container>
   </div>
 </template>
 
