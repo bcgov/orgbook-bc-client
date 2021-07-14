@@ -40,11 +40,11 @@ export interface State {
         await axios.get(webParams.url).then(resp => commit("addContactReasons", resp.data))
       },
       async fetchCredentialTypes({ commit }: ActionContext<State, RootState>, webParams: webData): Promise<void> {
-        await axios.get(webParams.url).then(resp => commit("addContactReasons", resp.data))
+        await axios.get(webParams.url).then(resp => commit("addCredentialTypes", resp.data))
       },
-      // async postRequest({}:ActionContext<State, RootState>,webParams: webData): Promise<void> {
-      //   await axios.post(webParams.url, webParams.data)
-      // },
+      async postRequest({ commit }: ActionContext<State, RootState>, webParams: webData): Promise<void> {
+        await axios.post(webParams.url, webParams.data)
+      },
   };
   
   const mutations = {

@@ -15,7 +15,7 @@
 
       <v-text-field outlined label="Email address"></v-text-field>
 
-      <v-select outlined label="What Information is incorrect?"></v-select>
+      <v-select outlined v-model="credential" :items="credentialTypes" label="What Information is incorrect?"></v-select>
 
       <v-text-field outlined label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
 
@@ -62,14 +62,23 @@ export default class ContactForm extends Vue {
   data() {
     return {
       reason: '',
+      credential:'',
     }
   }
+  //  watch(): Promise<void> {
+  //   reason: function() {
+  //     if(this.reason === "incorrect"){
+  //       return this.fetchCredentialTypes({url:"http://localhost:3000/reasonItems",data:{}})
+  //     }
+  //   }
+  // }
 
   fetchCredentialTypes!: (webParams:webData) => Promise<void>;
   fetchRequestTypes!: (webParams:webData) => Promise<void>;
 
   async created(): Promise<void>{
-    return this.fetchRequestTypes({url:"http://localhost:3000/reasonItems",data:{}});
+    this.fetchRequestTypes({url:"http://localhost:3000/reasonItems",data:{}});
+    this.fetchCredentialTypes({url:"http://localhost:3000/credentialItems",data:{}});
   }
 }
 </script>
