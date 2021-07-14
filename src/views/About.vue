@@ -11,11 +11,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
-import { NavLink } from "@/interfaces/nav-link";
+import { INavLink } from "@/interfaces/nav-link.interface";
 import { subHeaderLinks } from "@/config/nav";
 
 interface Data {
-  links: NavLink[];
+  links: INavLink[];
 }
 
 @Component({

@@ -50,12 +50,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { NavLink } from "@/interfaces/nav-link";
+import { INavLink } from "@/interfaces/nav-link.interface";
 import { headerLinks } from "@/config/nav";
 
 interface Data {
   drawer: boolean;
-  links: NavLink[];
+  links: INavLink[];
 }
 
 @Component
