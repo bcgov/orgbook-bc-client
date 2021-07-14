@@ -12,7 +12,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import { INavLink } from "@/interfaces/nav-link.interface";
-import { subHeaderLinks } from "@/config/nav";
+import { subHeaderLinks } from "@/data/nav";
 
 interface Data {
   links: INavLink[];

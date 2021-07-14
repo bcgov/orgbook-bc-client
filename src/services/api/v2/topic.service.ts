@@ -1,7 +1,7 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
-import Http, { HttpResponse } from "@/services/http";
-import ApiResource from "@/services/api/resource";
+import Http, { HttpResponse } from "@/services/http.service";
+import ApiResource from "@/services/api/resource.service";
 
 export default class Topic extends ApiResource {
   baseVersion = "v2";

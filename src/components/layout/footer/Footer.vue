@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { footerLinks } from "@/config/nav";
+import { footerLinks } from "@/data/nav";
 import { INavLink } from "@/interfaces/nav-link.interface";
 import About from "@/components/layout/footer/About.vue";
 import Feedback from "@/components/layout/footer/Feedback.vue";

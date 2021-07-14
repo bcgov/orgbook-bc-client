@@ -1,7 +1,7 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
-import Http, { HttpResponse } from "@/services/http";
-import ApiResource from "@/services/api/resource";
+import Http, { HttpResponse } from "@/services/http.service";
+import ApiResource from "@/services/api/resource.service";
 
 export default class CredentialType extends ApiResource {
   baseVersion = "v2";
