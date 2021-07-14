@@ -17,7 +17,7 @@ export interface IncorrectInfoContactRequest extends ContactRequest {
 
 export interface webData{
   url:string;
-  data:any;
+  data:ContactRequest|IncorrectInfoContactRequest;
 }
 
 export interface State {

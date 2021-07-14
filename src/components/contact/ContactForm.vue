@@ -11,15 +11,15 @@
         OrgBook BC cannot make corrections to the data. Only the issuing organization can do so. Complete the information below and we will forward your message to the appropriate organization. 
       </strong>
 
-      <v-text-field outlined label="Name"></v-text-field>
+      <v-text-field outlined v-model="name" label="Name"></v-text-field>
 
-      <v-text-field outlined label="Email address"></v-text-field>
+      <v-text-field outlined v-model="email" label="Email address"></v-text-field>
 
-      <v-select outlined v-model="credential" :items="credentialTypes" label="What Information is incorrect?"></v-select>
+      <v-select outlined v-model="error" :items="credentialTypes" label="What Information is incorrect?"></v-select>
 
-      <v-text-field outlined label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
+      <v-text-field outlined v-model="identifier" label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
 
-      <v-textarea outlined label="Describe the problem"></v-textarea>
+      <v-textarea outlined v-model="message" label="Describe the problem"></v-textarea>
 
     </div>
 
@@ -33,14 +33,14 @@
     </div>
 
     <div v-else-if="reason">
-       <v-text-field outlined label="Name"></v-text-field>
+       <v-text-field outlined v-model="name" label="Name"></v-text-field>
 
-      <v-text-field outlined label="Email address"></v-text-field>
+      <v-text-field outlined v-model="email" label="Email address"></v-text-field>
 
-      <v-textarea outlined label="Message"></v-textarea>
+      <v-textarea outlined v-model="message" label="Message"></v-textarea>
     </div>
 
-    <v-btn v-if="reason != 'listed'" depressed color="primary">Submit</v-btn>
+    <v-btn v-if="reason != 'listed'" @click="submit" depressed color="primary">Submit</v-btn>
     
   </div>
 </template>
@@ -48,37 +48,49 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { webData } from '@/store/modules/contact'
+import { webData, ContactRequest, IncorrectInfoContactRequest } from '@/store/modules/contact'
+
+const API_BASE='http://localhost:3000'
+
 
 @Component({
   computed: {
     ...mapGetters(["credentialTypes", "requestTypes"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes"]),
+    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes", "postRequest"]),
   },
 })
 export default class ContactForm extends Vue {
+  reason!:string
+  name!:string
+  email!:string
+  error!:string
+  message!:string
+  identifier!:string
   data() {
     return {
-      reason: '',
-      credential:'',
+      reason:"",
+      name:"",
+      email:"",
+      error:"",
+      message:"",
+      identifier:""
     }
   }
-  //  watch(): Promise<void> {
-  //   reason: function() {
-  //     if(this.reason === "incorrect"){
-  //       return this.fetchCredentialTypes({url:"http://localhost:3000/reasonItems",data:{}})
-  //     }
-  //   }
-  // }
-
+  
   fetchCredentialTypes!: (webParams:webData) => Promise<void>;
   fetchRequestTypes!: (webParams:webData) => Promise<void>;
+  postRequest!: (webParams:webData) => Promise<void>;
 
   async created(): Promise<void>{
-    this.fetchRequestTypes({url:"http://localhost:3000/reasonItems",data:{}});
-    this.fetchCredentialTypes({url:"http://localhost:3000/credentialItems",data:{}});
+    console.log(API_BASE)
+    this.fetchRequestTypes({url:API_BASE+"/reasonItems",data:{}});
+    this.fetchCredentialTypes({url:API_BASE+"/credentialItems",data:{}});
+  }
+
+  submit (){
+    this.postRequest({url:API_BASE+'/test',data:{reason:this.reason, name:this.name, email:this.email, error:this.error, message:this.message, identifier:this.identifier}})
   }
 }
 </script>
