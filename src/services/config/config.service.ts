@@ -5,6 +5,6 @@ export interface AppConfig {
 }
 
 export async function getAppConfig(): Promise<AppConfig> {
-  const appConfig = await Http.get("config/config.json");
+  const appConfig = await Http.get("/config/config.json");
   return Promise.resolve(appConfig.data as AppConfig);
 }

@@ -2,6 +2,7 @@ import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
 import Http, { HttpResponse } from "@/services/http.service";
 import ApiResource from "@/services/api/resource.service";
+import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 
 export default class Topic extends ApiResource {
   baseVersion = "v2";
@@ -13,6 +14,14 @@ export default class Topic extends ApiResource {
 
   async getTopic(id: number): Promise<HttpResponse<ITopic>> {
     return await Http.get<ITopic>(this.formatEndpointUrl(`${id}`));
+  }
+
+  async getTopicCredentialSet(
+    id: number
+  ): Promise<HttpResponse<ICredentialSet>> {
+    return await Http.get<ICredentialSet>(
+      this.formatEndpointUrl(`${id}/credentialset`)
+    );
   }
 
   async getFormattedTopic(id: number): Promise<HttpResponse<IFormattedTopic>> {

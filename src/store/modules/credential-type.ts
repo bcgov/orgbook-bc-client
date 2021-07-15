@@ -18,7 +18,7 @@ const state: State = {
 };
 
 const getters = {
-  credentialTypePage: (state: State): IApiPagedResult<ICredentialType> =>
+  pagedCredentialTypes: (state: State): IApiPagedResult<ICredentialType> =>
     state.page,
 };
 
