@@ -11,6 +11,12 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
+    path: "/entity/:sourceId",
+    name: "Entity",
+    component: () =>
+      import(/* webpackChunkName: "entity" */ "@/views/Entity.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     component: () =>
@@ -39,6 +45,13 @@ const routes: Array<RouteConfig> = [
     name: "Contact",
     component: () =>
       import(/* webpackChunkName: "contact" */ "@/views/Contact.vue"),
+  },
+  {
+    path: "*",
+    name: "Not Found",
+    beforeEnter: (to, from, next) => {
+      next("/");
+    },
   },
 ];
 
