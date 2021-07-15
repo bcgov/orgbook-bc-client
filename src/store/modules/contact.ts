@@ -23,16 +23,19 @@ export interface webData{
 export interface State {
     credentialTypes: Array<string>;
     requestTypes: Array<string>;
+    contactLoading: boolean
   }
   
   const state: State = {
     credentialTypes: [],
     requestTypes: [],
+    contactLoading:false,
   };
   
   const getters = {
     credentialTypes: (state: State): Array<string> => state.credentialTypes,
     requestTypes: (state: State): Array<string> => state.requestTypes,
+    contactLoading: (state: State): boolean => state.contactLoading,
   };
   
   const actions = {
@@ -42,6 +45,9 @@ export interface State {
       async fetchCredentialTypes({ commit }: ActionContext<State, RootState>, webParams: webData): Promise<void> {
         await axios.get(webParams.url).then(resp => commit("addCredentialTypes", resp.data))
       },
+      async setContactLoading({ commit }: ActionContext<State, RootState>, loading: boolean): Promise<void>{
+        commit("setContactLoadingState", loading)
+      },
       async postRequest({ commit }: ActionContext<State, RootState>, webParams: webData): Promise<void> {
         await axios.post(webParams.url, webParams.data)
       },
@@ -49,13 +55,16 @@ export interface State {
   
   const mutations = {
     addContactReasons: (state: State, contactReasons: Array<string>): Array<string> => {
-        console.log(contactReasons)
         state.requestTypes = contactReasons;
         return state.requestTypes;
     },
     addCredentialTypes: (state: State, credentialTypes: Array<string>): Array<string> => {
         state.credentialTypes = credentialTypes;
         return state.credentialTypes;
+    },
+    setContactLoadingState:(state: State, loading: boolean): boolean =>{
+      state.contactLoading = loading;
+      return state.contactLoading;
     }
   };
   
