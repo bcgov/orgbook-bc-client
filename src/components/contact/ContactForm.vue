@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-form ref="form" :disabled=contactLoading>
+    <v-form ref="form" :disabled=loading>
     <div>
       <h3>Reason for contact</h3>
       <v-select outlined v-model="formData.reason" :items="requestTypes" label="Select a Reason"></v-select>
@@ -16,7 +16,7 @@
 
       <v-text-field outlined v-model="formData.email" label="Email address"></v-text-field>
 
-      <v-select outlined v-model="formData.error" :items="credentialTypes" label="What Information is incorrect?"></v-select>
+      <v-select outlined v-model="formData.error" :items="pagedCredentialTypes" label="What Information is incorrect?"></v-select>
 
       <v-text-field outlined v-model="formData.identifier" label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
 
@@ -34,14 +34,14 @@
     </div>
 
     <div v-else-if="formData.reason">
-       <v-text-field outlined v-model="name" label="Name"></v-text-field>
+       <v-text-field outlined v-model="formData.name" label="Name"></v-text-field>
 
-      <v-text-field outlined v-model="email" label="Email address"></v-text-field>
+      <v-text-field outlined v-model="formData.email" label="Email address"></v-text-field>
 
-      <v-textarea outlined v-model="message" label="Message"></v-textarea>
+      <v-textarea outlined v-model="formData.message" label="Message"></v-textarea>
     </div>
 
-    <v-btn v-if="formData.reason && formData.reason != 'listed'" @click="submit" depressed color="primary" :disabled="contactLoading">Submit</v-btn>
+    <v-btn v-if="formData.reason && formData.reason != 'listed'" @click="submit" depressed color="primary" :disabled="loading">Submit</v-btn>
   </v-form>
   </div>
 </template>
@@ -49,7 +49,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { webData, ContactRequest, IncorrectInfoContactRequest } from '@/store/modules/contact'
+import { ContactRequest, IncorrectInfoContactRequest } from '@/store/modules/contact'
 import router from '@/router';
 
 const API_BASE='http://localhost:3000'
@@ -57,10 +57,10 @@ const API_BASE='http://localhost:3000'
 
 @Component({
   computed: {
-    ...mapGetters(["credentialTypes", "requestTypes", "contactLoading"]),
+    ...mapGetters(["pagedCredentialTypes", "requestTypes", "loading"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes", "postRequest", "setContactLoading"]),
+    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes", "postRequest", "setLoading"]),
   },
 })
 export default class ContactForm extends Vue {
@@ -71,14 +71,20 @@ export default class ContactForm extends Vue {
     }
   }
   
-  fetchCredentialTypes!: (webParams:webData) => Promise<void>;
-  fetchRequestTypes!: (webParams:webData) => Promise<void>;
-  postRequest!: (webParams:webData) => Promise<void>;
-  setContactLoading!: (loading: boolean) => void;
+  fetchCredentialTypes!: () => Promise<void>;
+  fetchRequestTypes!: (url:string) => Promise<void>;
+  postRequest!: (feedback: ContactRequest|IncorrectInfoContactRequest) => Promise<void>;
+  setLoading!: (loading: boolean) => void;
 
   async created(): Promise<void>{
-    this.fetchRequestTypes({url:API_BASE+"/reasonItems",data:{}as ContactRequest});
-    this.fetchCredentialTypes({url:API_BASE+"/credentialItems",data:{}as ContactRequest});
+    this.setLoading(true)
+    await Promise.all(
+      [
+        this.fetchRequestTypes(API_BASE+"/reasonItems"),
+        this.fetchCredentialTypes()
+      ]
+    )
+    this.setLoading(false)
   }
 
 
@@ -88,10 +94,10 @@ export default class ContactForm extends Vue {
       this.$refs.form as Vue & { validate: () => boolean }
     ).validate();
     if (isFormValid) {
-      this.setContactLoading(true);
-      await this.postRequest({url:API_BASE+'/test',data:{...this.formData}});
+      this.setLoading(true);
+      await this.postRequest(this.formData);
       router.push('/');
-      this.setContactLoading(false);
+      this.setLoading(false);
     }
   }
 }

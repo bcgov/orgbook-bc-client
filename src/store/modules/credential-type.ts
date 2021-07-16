@@ -1,5 +1,5 @@
 import { ActionContext } from "vuex";
-import { State as RootState } from "@/store";
+import store, { State as RootState } from "@/store";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v2/credential-type.service";
@@ -18,8 +18,8 @@ const state: State = {
 };
 
 const getters = {
-  pagedCredentialTypes: (state: State): IApiPagedResult<ICredentialType> =>
-    state.page,
+  pagedCredentialTypes: (state: State): any =>
+    state.page.results.map(item=>{return {text:item.description, value:item.id}})
 };
 
 const actions = {
@@ -27,6 +27,7 @@ const actions = {
     commit,
   }: ActionContext<State, RootState>): Promise<void> {
     try {
+      
       const res = await credentialTypeSerivice.getCredentialTypes();
       commit("setPage", res.data);
     } catch (e) {
