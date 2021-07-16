@@ -12,15 +12,15 @@
         OrgBook BC cannot make corrections to the data. Only the issuing organization can do so. Complete the information below and we will forward your message to the appropriate organization. 
       </strong>
 
-      <v-text-field outlined v-model="formData.name" required label="Name"></v-text-field>
+      <v-text-field outlined v-model="formData.from_name" required label="Name"></v-text-field>
 
-      <v-text-field outlined v-model="formData.email" label="Email address"></v-text-field>
+      <v-text-field outlined v-model="formData.from_email" label="Email address"></v-text-field>
 
       <v-select outlined v-model="formData.error" :items="pagedCredentialTypes" label="What Information is incorrect?"></v-select>
 
       <v-text-field outlined v-model="formData.identifier" label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
 
-      <v-textarea outlined v-model="formData.message" label="Describe the problem"></v-textarea>
+      <v-textarea outlined v-model="formData.comments" label="Describe the problem"></v-textarea>
 
     </div>
 
@@ -34,11 +34,11 @@
     </div>
 
     <div v-else-if="formData.reason">
-       <v-text-field outlined v-model="formData.name" label="Name"></v-text-field>
+       <v-text-field outlined v-model="formData.from_name" label="Name"></v-text-field>
 
-      <v-text-field outlined v-model="formData.email" label="Email address"></v-text-field>
+      <v-text-field outlined v-model="formData.from_email" label="Email address"></v-text-field>
 
-      <v-textarea outlined v-model="formData.message" label="Message"></v-textarea>
+      <v-textarea outlined v-model="formData.comments" label="Message"></v-textarea>
     </div>
 
     <v-btn v-if="formData.reason && formData.reason != 'listed'" @click="submit" depressed color="primary" :disabled="loading">Submit</v-btn>

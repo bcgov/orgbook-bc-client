@@ -13,9 +13,9 @@ const httpService = new Http();
 
 export interface ContactRequest {
     reason: string;
-    name: string;
-    email: string;
-    message: string;
+    from_name: string;
+    from_email: string;
+    comments: string;
 }
 
 export interface IncorrectInfoContactRequest extends ContactRequest {
@@ -41,7 +41,6 @@ export interface State {
         await Http.get<HttpResponse<string>>(
           url
         ).then(resp=> commit("addContactReasons", resp.data));
-        //await axios.get(webParams.url).then(resp => commit("addContactReasons", resp.data))
       },
       async postRequest({ commit }: ActionContext<State, RootState>, feedback: ContactRequest|IncorrectInfoContactRequest): Promise<void> {
         await contactService.postFeedback(feedback)

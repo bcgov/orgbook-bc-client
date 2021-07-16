@@ -9,7 +9,8 @@ export default class Contact extends ApiResource {
   async postFeedback(feedback: ContactRequest|IncorrectInfoContactRequest): Promise<HttpResponse<ContactRequest|IncorrectInfoContactRequest>> {
     return await Http.post<ContactRequest|IncorrectInfoContactRequest>(
       this.formatEndpointUrl(""),
-      feedback
+      feedback,
+      {"Content-Type": "application/x-www-form-urlencoded"}
     );
   }
 
