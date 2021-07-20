@@ -1,7 +1,13 @@
 <template>
-  <v-toolbar dark>
-      <v-toolbar-title>Find an organization</v-toolbar-title>
-        <v-autocomplete
+<div>
+    <v-row>
+      <v-col>
+        <v-toolbar-title>Find an organization</v-toolbar-title>
+      </v-col>
+      
+    </v-row>
+    <v-row>
+      <v-col><v-autocomplete
       v-model="select"
       :loading="loading"
       :items="items"
@@ -15,22 +21,31 @@
       solo-inverted
       
     ></v-autocomplete>
-  </v-toolbar>
+     <v-icon>mdi-magnify</v-icon>
+    </v-col>
+   
+    </v-row>
+</div>
+    
 </template>
 
 <script lang="ts">
 import { Component, PropSync, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import _ from 'lodash-es'
+import Autocomplete from "@/services/api/v3/autocomplete.service";
+import _ from 'lodash-es';
+import { HttpResponse } from "@/services/http.service";
+import { IApiPagedResult } from "@/interfaces/api/result.interface";
+import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 
 
 
 @Component({
   computed: {
-    ...mapGetters(["pagedCredentialTypes", "requestTypes", "loading"]),
+    ...mapGetters(["loading"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes", "postRequest", "setLoading"]),
+    ...mapActions(["getAutocomplete","setLoading"]),
   },
 })
 
@@ -41,72 +56,13 @@ export default class SearchComponent extends Vue {
     states!:Array<string>
     setLoading!: (loading: boolean) => void;
     debounceSearchReq = _.debounce(this.searchReq, 500)
+    getAutocomplete!: (query:string) => Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>>;
+
     data() {
     return {
         items: [],
         search: null,
         select: null,
-        states: [
-          'Alabama',
-          'Alaska',
-          'American Samoa',
-          'Arizona',
-          'Arkansas',
-          'California',
-          'Colorado',
-          'Connecticut',
-          'Delaware',
-          'District of Columbia',
-          'Federated States of Micronesia',
-          'Florida',
-          'Georgia',
-          'Guam',
-          'Hawaii',
-          'Idaho',
-          'Illinois',
-          'Indiana',
-          'Iowa',
-          'Kansas',
-          'Kentucky',
-          'Louisiana',
-          'Maine',
-          'Marshall Islands',
-          'Maryland',
-          'Massachusetts',
-          'Michigan',
-          'Minnesota',
-          'Mississippi',
-          'Missouri',
-          'Montana',
-          'Nebraska',
-          'Nevada',
-          'New Hampshire',
-          'New Jersey',
-          'New Mexico',
-          'New York',
-          'North Carolina',
-          'North Dakota',
-          'Northern Mariana Islands',
-          'Ohio',
-          'Oklahoma',
-          'Oregon',
-          'Palau',
-          'Pennsylvania',
-          'Puerto Rico',
-          'Rhode Island',
-          'South Carolina',
-          'South Dakota',
-          'Tennessee',
-          'Texas',
-          'Utah',
-          'Vermont',
-          'Virgin Island',
-          'Virginia',
-          'Washington',
-          'West Virginia',
-          'Wisconsin',
-          'Wyoming',
-        ],
       }
     
     }
@@ -125,13 +81,15 @@ export default class SearchComponent extends Vue {
 
     querySelections (v:string) {
       this.setLoading(true)
-      // Simulated ajax query
-      setTimeout(() => {
-        this.items = this.states.filter(e => {
+      //Simulated ajax query
+      this.getAutocomplete(v).then(resp =>{
+        const autocompleteResults=resp.data.results.map(item=>item.value)
+        console.log(resp)
+        this.items = autocompleteResults.filter(e => {
           return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
         })
         this.setLoading(false)
-      }, 500)
+      })
     }
     
       

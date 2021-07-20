@@ -1,7 +1,6 @@
 <template>
   <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
     <SearchComponent></SearchComponent>
-    <h1>Home goes here!</h1>
     <SearchResult :results="pagedSerchTopics" />
   </v-container>
 </template>
@@ -9,6 +8,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import SearchResult from "@/components/search/SearchResult.vue";
+import SearchComponent from "@/components/search/SearchComponent.vue"
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 
@@ -19,6 +19,7 @@ interface Data {
 @Component({
   components: {
     SearchResult,
+    SearchComponent
   },
   computed: {
     ...mapGetters(["searchQuery", "pagedSerchTopics"]),

@@ -1,11 +1,6 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Contact from "@/services/api/v2/contact.service";
-import axios from "axios";
-import CredentialType from "@/services/api/v2/credential-type.service";
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
-import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
-import { defaultPageResult } from "@/utils/result";
 import Http, { HttpResponse } from "@/services/http.service";
 
 const contactService = new Contact();
