@@ -1,7 +1,7 @@
 <template>
   <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
     <h1>Home goes here!</h1>
-    <SearchResult :results="pagedSerchTopics" />
+    <SearchResult :page="pagedSerchTopics" />
   </v-container>
 </template>
 

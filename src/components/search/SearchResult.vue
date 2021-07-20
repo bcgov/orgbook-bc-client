@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>Search Result goes here</div>
-    <SearchTopicPage />
-    <SearchTopicPageNavigation />
+    <SearchTopicPage :results="page && page.results" />
+    <SearchTopicPageNavigation :page="page" />
     <SearchFilter />
     <SearchFilterChips />
   </div>
@@ -28,6 +28,6 @@ import SearchFilterChips from "./SearchFilterChips.vue";
 })
 export default class SearchResult extends Vue {
   @Prop({ default: () => defaultPageResult<ISearchTopic>() })
-  results!: IApiPagedResult<ISearchTopic>;
+  page!: IApiPagedResult<ISearchTopic>;
 }
 </script>
