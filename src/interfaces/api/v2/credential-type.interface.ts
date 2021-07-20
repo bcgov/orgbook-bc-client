@@ -10,5 +10,5 @@ export interface ICredentialType extends IApiResource {
   url: URL | string;
   last_issue_date: Date;
   schema: ISchema;
-  issuuer: IIssuer;
+  issuer: IIssuer;
 }
