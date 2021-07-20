@@ -6,25 +6,7 @@
       <v-select outlined v-model="formData.reason" :items="requestTypes" label="Select a Reason"></v-select>
     </div>
 
-
-    <div v-if="formData.reason && formData.reason == 'incorrect'">
-      <strong>
-        OrgBook BC cannot make corrections to the data. Only the issuing organization can do so. Complete the information below and we will forward your message to the appropriate organization. 
-      </strong>
-
-      <v-text-field outlined v-model="formData.from_name" required label="Name"></v-text-field>
-
-      <v-text-field outlined v-model="formData.from_email" label="Email address"></v-text-field>
-
-      <v-select outlined v-model="formData.error" :items="pagedCredentialTypes" label="What Information is incorrect?"></v-select>
-
-      <v-text-field outlined v-model="formData.identifier" label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
-
-      <v-textarea outlined v-model="formData.comments" label="Describe the problem"></v-textarea>
-
-    </div>
-
-    <div v-else-if="formData.reason && formData.reason == 'listed'">
+    <div v-if="formData.reason && formData.reason == 'listed'">
       <strong>How to add your organization to OrgBook BC</strong>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra 
@@ -34,12 +16,24 @@
     </div>
 
     <div v-else-if="formData.reason">
-       <v-text-field outlined v-model="formData.from_name" label="Name"></v-text-field>
+      <strong :hidden="incorrectHidden">
+        OrgBook BC cannot make corrections to the data. Only the issuing organization can do so. Complete the information below and we will forward your message to the appropriate organization. 
+      </strong>
+
+      <v-text-field outlined v-model="formData.from_name" required label="Name"></v-text-field>
 
       <v-text-field outlined v-model="formData.from_email" label="Email address"></v-text-field>
 
-      <v-textarea outlined v-model="formData.comments" label="Message"></v-textarea>
+      <div :hidden="incorrectHidden">
+        <v-select outlined v-model="formData.error" :items="pagedCredentialTypes" label="What Information is incorrect?"></v-select>
+
+        <v-text-field outlined v-model="formData.identifier" label="Identifier (such as the incorporation number, registration number, or licence / permit number)"></v-text-field>
+      </div>
+
+      <v-textarea outlined v-model="formData.comments" :label="labelMessage"></v-textarea>
+
     </div>
+    
 
     <v-btn v-if="formData.reason && formData.reason != 'listed'" @click="submit" depressed color="primary" :disabled="loading">Submit</v-btn>
   </v-form>
@@ -70,7 +64,7 @@ export default class ContactForm extends Vue {
       formData: {reason:""}
     }
   }
-  
+
   fetchCredentialTypes!: () => Promise<void>;
   fetchRequestTypes!: (url:string) => Promise<void>;
   postRequest!: (feedback: ContactRequest|IncorrectInfoContactRequest) => Promise<void>;
@@ -100,5 +94,16 @@ export default class ContactForm extends Vue {
       this.setLoading(false);
     }
   }
+
+  
+  public get incorrectHidden() : boolean {
+    return this.formData.reason !== "incorrect"
+  }
+  
+  
+  public get labelMessage() : string {
+    return this.formData.reason === "incorrect" ? "Describe the problem" : "Message"
+  }
+  
 }
 </script>
