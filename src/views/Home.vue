@@ -1,5 +1,5 @@
 <template>
-  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
     <h1>Home goes here!</h1>
     <SearchResult :page="pagedSerchTopics" />
   </v-container>
