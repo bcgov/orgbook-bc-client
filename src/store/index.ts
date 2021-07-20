@@ -5,6 +5,7 @@ import alert, { State as AlertState } from "./modules/notification";
 import credentialType, {
   State as CredentialTypeState,
 } from "./modules/credential-type";
+import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
 
 Vue.use(Vuex);
@@ -13,6 +14,7 @@ export interface State {
   app: AppState;
   alert: AlertState;
   credentialType: CredentialTypeState;
+  search: SearchState;
   topic: TopicState;
 }
 
@@ -21,6 +23,7 @@ export default new Vuex.Store({
     app,
     alert,
     credentialType,
+    search,
     topic,
   },
 });
