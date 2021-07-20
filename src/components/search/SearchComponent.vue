@@ -21,6 +21,7 @@
 <script lang="ts">
 import { Component, PropSync, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import _ from 'lodash-es'
 
 
 
@@ -39,6 +40,7 @@ export default class SearchComponent extends Vue {
     items!:Array<string>
     states!:Array<string>
     setLoading!: (loading: boolean) => void;
+    debounceSearchReq = _.debounce(this.searchReq, 500)
     data() {
     return {
         items: [],
@@ -114,7 +116,7 @@ export default class SearchComponent extends Vue {
 
     @Watch('search')
   onChildChanged(val: string, oldVal: string) {
-    this.searchReq(val)
+    this.debounceSearchReq(val)
   }
 
     searchReq (val: string) {
