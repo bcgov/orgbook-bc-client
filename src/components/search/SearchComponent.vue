@@ -32,7 +32,6 @@
 <script lang="ts">
 import { Component, PropSync, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import Autocomplete from "@/services/api/v3/autocomplete.service";
 import _ from 'lodash-es';
 import { HttpResponse } from "@/services/http.service";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
@@ -84,7 +83,6 @@ export default class SearchComponent extends Vue {
       //Simulated ajax query
       this.getAutocomplete(v).then(resp =>{
         const autocompleteResults=resp.data.results.map(item=>item.value)
-        console.log(resp)
         this.items = autocompleteResults.filter(e => {
           return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
         })
