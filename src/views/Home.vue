@@ -10,6 +10,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import SearchResult from "@/components/search/SearchResult.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
+import { defaultQuery } from "@/utils/result";
 
 interface Data {
   q: string | null;
@@ -27,17 +28,6 @@ interface Data {
   },
 })
 export default class Home extends Vue {
-  private defaultQuery = {
-    q: null,
-    latest: true,
-    revoked: false,
-    inactive: null,
-    category: null,
-    issuer_id: null,
-    type_id: null,
-    credential_type_id: null,
-  };
-
   q!: string | null;
 
   setLoading!: (loading: boolean) => void;
@@ -52,8 +42,10 @@ export default class Home extends Vue {
 
   created(): void {
     const query = this.$route.query as unknown as ISearchQuery;
-    this.q = query?.q || null;
-    this.setSearchQuery({ ...this.defaultQuery, ...query });
+    if (query?.q) {
+      this.q = query?.q || null;
+      this.setSearchQuery({ ...defaultQuery, ...query });
+    }
   }
 
   @Watch("searchQuery")

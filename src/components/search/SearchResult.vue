@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div>Search Result goes here</div>
-    <SearchTopicPage :results="page && page.results" />
-    <SearchTopicPageNavigation :page="page" />
     <SearchFilter />
     <SearchFilterChips />
+    <SearchTopicPage :results="page && page.results" />
+    <SearchTopicPageNavigation :page="page" />
   </div>
 </template>
 

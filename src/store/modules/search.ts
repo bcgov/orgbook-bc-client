@@ -39,7 +39,7 @@ const actions = {
   },
   unsetSearchQuery({ commit }: ActionContext<State, RootState>): void {
     commit("setQuery", null);
-    router.push({ query: {} }).catch(() => undefined);
+    router.replace({ query: {} }).catch(() => undefined);
   },
   async fetchSearchTopics(
     { commit }: ActionContext<State, RootState>,
@@ -56,10 +56,10 @@ const actions = {
 
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
-    state.query = { ...state.query, ...query };
+    state.query = { ...query };
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
-    state.page = { ...state.page, ...page };
+    state.page = { ...page };
   },
 };
 

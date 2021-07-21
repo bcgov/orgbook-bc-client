@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>Search Topic Page goes here</div>
     <SearchTopic v-for="result in results" :key="result.id" :topic="result" />
   </div>
 </template>

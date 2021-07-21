@@ -1,5 +1,16 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 
+export const defaultQuery = {
+  q: null,
+  latest: true,
+  revoked: false,
+  inactive: null,
+  category: null,
+  issuer_id: null,
+  type_id: null,
+  credential_type_id: null,
+};
+
 export function defaultPageResult<T>(): IApiPagedResult<T> {
   return {
     total: 0,
