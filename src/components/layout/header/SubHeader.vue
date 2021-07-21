@@ -21,11 +21,11 @@
 </template>
 
 <script lang="ts">
-import { NavLink } from "@/interfaces/nav-link";
+import { INavLink } from "@/interfaces/nav-link.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class SubHeader extends Vue {
-  @Prop({ default: () => [] }) links!: NavLink[];
+  @Prop({ default: () => [] }) links!: INavLink[];
 }
 </script>
