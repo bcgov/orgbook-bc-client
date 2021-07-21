@@ -6,7 +6,7 @@
       <v-select outlined v-model="formData.reason" :items="requestTypes" label="Select a Reason"></v-select>
     </div>
 
-    <div v-if="formData.reason && formData.reason == 'listed'">
+    <div v-if="formData.reason && formData.reason == 'REGISTER_ORGANIZATION'">
       <strong>How to add your organization to OrgBook BC</strong>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra 
@@ -35,7 +35,7 @@
     </div>
     
 
-    <v-btn v-if="formData.reason && formData.reason != 'listed'" @click="submit" depressed color="primary" :disabled="loading">Submit</v-btn>
+    <v-btn v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'" @click="submit" depressed color="primary" :disabled="loading">Submit</v-btn>
   </v-form>
   </div>
 </template>
@@ -43,18 +43,17 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { ContactRequest, IncorrectInfoContactRequest } from '@/store/modules/contact'
+import { ContactRequest, IncorrectInfoContactRequest, contactReason } from '@/store/modules/contact'
 import router from '@/router';
 
-const API_BASE='http://localhost:3000'
 
 
 @Component({
   computed: {
-    ...mapGetters(["pagedCredentialTypes", "requestTypes", "loading"]),
+    ...mapGetters(["pagedCredentialTypes", "loading"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "fetchRequestTypes", "postRequest", "setLoading"]),
+    ...mapActions(["fetchCredentialTypes", "postRequest", "setLoading"]),
   },
 })
 export default class ContactForm extends Vue {
@@ -66,18 +65,14 @@ export default class ContactForm extends Vue {
   }
 
   fetchCredentialTypes!: () => Promise<void>;
-  fetchRequestTypes!: (url:string) => Promise<void>;
   postRequest!: (feedback: ContactRequest|IncorrectInfoContactRequest) => Promise<void>;
   setLoading!: (loading: boolean) => void;
 
   async created(): Promise<void>{
+    console.log(contactReason)
+    console.log(this.requestTypes)
     this.setLoading(true)
-    await Promise.all(
-      [
-        this.fetchRequestTypes(API_BASE+"/reasonItems"),
-        this.fetchCredentialTypes()
-      ]
-    )
+    await this.fetchCredentialTypes()
     this.setLoading(false)
   }
 
@@ -94,15 +89,19 @@ export default class ContactForm extends Vue {
       this.setLoading(false);
     }
   }
-
+  
+  public get requestTypes() : Array<{text:string, value:string}> {
+    return Object.keys(contactReason).map((key) => ({text: contactReason[key], value: key}))
+  }
+  
   
   public get incorrectHidden() : boolean {
-    return this.formData.reason !== "incorrect"
+    return this.formData.reason !== "INCORRECT_INFO"
   }
   
   
   public get labelMessage() : string {
-    return this.formData.reason === "incorrect" ? "Describe the problem" : "Message"
+    return this.formData.reason === "INCORRECT_INFO" ? "Describe the problem" : "Message"
   }
   
 }
