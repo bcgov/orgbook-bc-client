@@ -1,7 +1,7 @@
 import { IApiResource } from "../resource.interface";
 import { IIssuer } from "./issuer.interface";
 
-interface ITopicName {
+export interface ITopicName {
   id: number;
   type: string;
   text: string;
@@ -12,7 +12,7 @@ interface ITopicName {
   issuer: IIssuer;
 }
 
-interface ITopicAttribute {
+export interface ITopicAttribute {
   id: number;
   type: string;
   value: string;

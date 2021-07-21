@@ -1,15 +1,12 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store";
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ITopic } from "@/interfaces/api/v2/topic.interface";
 import Topic from "@/services/api/v2/topic.service";
-import { defaultPageResult } from "@/utils/result";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 
 const topicService = new Topic();
 
 export interface State {
-  page: IApiPagedResult<ITopic>;
   selected: {
     topic: ITopic | null;
     credentialSet: ICredentialSet | null;
@@ -17,7 +14,6 @@ export interface State {
 }
 
 const state: State = {
-  page: defaultPageResult<ITopic>(),
   selected: {
     topic: null,
     credentialSet: null,
