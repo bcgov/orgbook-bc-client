@@ -10,8 +10,7 @@ export default class Contact extends ApiResource {
     return await Http.post<ContactRequest|IncorrectInfoContactRequest>(
       this.formatEndpointUrl(""),
       feedback,
-      {},
-      {"Content-Type": "application/x-www-form-urlencoded"}
+      {headers:{"Content-Type": "application/x-www-form-urlencoded"}}
     );
   }
 
