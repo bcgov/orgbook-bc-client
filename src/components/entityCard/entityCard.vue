@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card>
-            <v-card-title>{{title}}</v-card-title>
+            <v-card-title v-if="title">{{title}}</v-card-title>
             <slot></slot>
         </v-card>
     </v-container>

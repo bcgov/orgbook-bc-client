@@ -9,7 +9,13 @@
     <div v-if="selectedTopicCredentialSet">
       {{ selectedTopicCredentialSet }}
     </div>
-    <EntityCard ref=ItemOne title="test"></EntityCard>
+    <EntityCard ref="registration" >
+      <CredentialItem authority="test" effectiveDate="1914-01-30T08:00:00+00:00">
+        <template #header>
+          <h3>Registration</h3>
+        </template>
+      </CredentialItem>
+    </EntityCard>
   </div>
 </template>
 
@@ -19,10 +25,13 @@ import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import EntityCard from "@/components/entityCard/entityCard.vue"
+import CredentialItem from "@/components/credentialItem/credentialItem.vue"
+
 
 @Component({
   components:{
-    EntityCard
+    EntityCard,
+    CredentialItem
   },
   computed: {
     ...mapGetters(["selectedTopic", "selectedTopicCredentialSet"]),
@@ -51,8 +60,8 @@ export default class EntityResult extends Vue {
     return{
       currentTab:null,
       tabItems:[
-        {text:"Item One", refname:"ItemOne"},
-        {text:"Item Two", refname:"ItemTwo"},
+        {text:"Registration", refname:"registration"},
+        {text:"Addresses", refname:"addresses"},
         {text:"Item Three", refname:"ItemThree"}
       ]
     }
