@@ -7,10 +7,14 @@ import {
 } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultPageResult } from "@/utils/result";
 import v4Search from "@/services/api/v4/search.service";
+import Autocomplete from "@/services/api/v3/autocomplete.service"
 import router from "@/router";
 import { Dictionary } from "vue-router/types/router";
+import { HttpResponse } from "@/services/http.service";
+import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 
 const v4SearchService = new v4Search();
+const autocompleteSvc = new Autocomplete();
 
 export interface State {
   query: ISearchQuery | null;
@@ -52,6 +56,10 @@ const actions = {
       console.error(e);
     }
   },
+  async getAutocomplete({ commit }: ActionContext<State, RootState>,
+    query: string): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>>{
+      return autocompleteSvc.autocomplete(query)
+    }
 };
 
 const mutations = {
