@@ -18,7 +18,7 @@ export default class Http {
   static async post<T>(
     url: string,
     req: T,
-    config: HttpRequestConfig = {}
+    config: HttpRequestConfig = {},
   ): Promise<HttpResponse<T>> {
     return Axios.post(url, req, { headers, ...config });
   }
