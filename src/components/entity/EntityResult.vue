@@ -9,19 +9,21 @@
     <div v-if="selectedTopicCredentialSet">
       {{ selectedTopicCredentialSet }}
     </div>
-    <div id="ItemOne">
-      #ItemOne.
-    </div>
+    <EntityCard ref=ItemOne title="test"></EntityCard>
   </div>
 </template>
 
 <script lang="ts">
 import { ITopic } from "@/interfaces/api/v2/topic.interface";
 import { Component, Vue } from "vue-property-decorator";
+import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
-import router from "@/router/index"
+import EntityCard from "@/components/entityCard/entityCard.vue"
 
 @Component({
+  components:{
+    EntityCard
+  },
   computed: {
     ...mapGetters(["selectedTopic", "selectedTopicCredentialSet"]),
   },
@@ -57,7 +59,7 @@ export default class EntityResult extends Vue {
   }
 
   tabClick(refname:string){
-    this.$vuetify.goTo(refname, {duration:500, easing:'easeInOutCubic'})
+    this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {duration:500, easing:'easeInOutCubic'})
   }
 
   async created(): Promise<void> {
