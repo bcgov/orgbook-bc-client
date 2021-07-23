@@ -2,8 +2,11 @@
   <div>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
       <h1>Contact</h1>
-
-      <p>OrgBook BC is continuously evolving. More information and features will be added to the site on an ongoing basis, and we welcome feedback to help us decide what would be most valuable.</p>
+      <p>
+        OrgBook BC is continuously evolving. More information and features will
+        be added to the site on an ongoing basis, and we welcome feedback to
+        help us decide what would be most valuable.
+      </p>
       <ContactForm />
     </v-container>
   </div>
