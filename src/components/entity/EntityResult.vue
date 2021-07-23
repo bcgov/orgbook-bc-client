@@ -9,12 +9,51 @@
     <div v-if="selectedTopicCredentialSet">
       {{ selectedTopicCredentialSet }}
     </div>
+    <v-btn @click="test">
+      Test
+    </v-btn>
     <EntityCard ref="registration" >
-      <CredentialItem authority="test" effectiveDate="1914-01-30T08:00:00+00:00">
+      <template #expansionPanels>
+        <CredentialItem authority="test" effectiveDate="1914-01-30T08:00:00+00:00">
         <template #header>
           <h3>Registration</h3>
         </template>
+        <template #content>
+          <p>test</p>
+        </template>
       </CredentialItem>
+
+      <CredentialItem title="Message" authority="hello" effectiveDate="1914-01-30T08:00:00+00:00">
+        <template #header>
+          <h3>Message</h3>
+        </template>
+        <template #content>
+          <p>Hello World!</p>
+        </template>
+      </CredentialItem>
+      </template>      
+    </EntityCard>
+
+    <EntityCard title="Addresses" ref="addresses" >
+      <template #expansionPanels>
+        <CredentialItem authority="CRA" effectiveDate="1914-01-30T08:00:00+00:00">
+        <template #header>
+          <h3>Physical address</h3>
+        </template>
+        <template #content>
+          <p>Credential Value Here</p>
+        </template>
+      </CredentialItem>
+
+      <CredentialItem authority="CRA" effectiveDate="1914-01-30T08:00:00+00:00">
+        <template #header>
+          <h3>Mailing address</h3>
+        </template>
+        <template #content>
+          <p>Test Rd, Victoria BC</p>
+        </template>
+      </CredentialItem>
+      </template>      
     </EntityCard>
   </div>
 </template>
@@ -26,6 +65,7 @@ import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import EntityCard from "@/components/entityCard/entityCard.vue"
 import CredentialItem from "@/components/credentialItem/credentialItem.vue"
+import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 
 
 @Component({
@@ -55,6 +95,8 @@ export default class EntityResult extends Vue {
     type: string;
   }) => Promise<void>;
   fetchTopicCredentialSet!: (id: number) => Promise<void>;
+  selectedTopicCredentialSet!: ICredentialSet | null;
+  selectedTopic!: ITopic | null;
 
   data (){
     return{
@@ -65,6 +107,10 @@ export default class EntityResult extends Vue {
         {text:"Item Three", refname:"ItemThree"}
       ]
     }
+  }
+
+  test(){
+    console.log(this.selectedTopicCredentialSet)
   }
 
   tabClick(refname:string){

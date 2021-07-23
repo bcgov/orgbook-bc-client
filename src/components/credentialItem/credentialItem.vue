@@ -1,7 +1,5 @@
-<template>
-    <div>
-        <v-expansion-panels>
-            <v-expansion-panel>
+<template> 
+        <v-expansion-panel>
             <v-expansion-panel-header>
                 <slot name="header"></slot>
             </v-expansion-panel-header>
@@ -11,11 +9,11 @@
                 Effective: {{effectiveDate | formatDate}} <br/>
             </v-expansion-panel-content>
             <v-divider></v-divider>
-            <slot name="content"></slot>
+            <v-container>
+                <slot name="content"></slot>
+            </v-container>
+            
         </v-expansion-panel>
-        </v-expansion-panels>
-        
-    </div>
 </template>
 
 <script lang="ts">
@@ -29,7 +27,7 @@ Vue.filter('formatDate', function(value:string) {
 })
 
 @Component({
-    props:['title', 'authority', 'effectiveDate']
+    props:['authority', 'effectiveDate']
 })
 
 export default class CredentialItem extends Vue {}
