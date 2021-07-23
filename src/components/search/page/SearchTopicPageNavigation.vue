@@ -18,41 +18,42 @@ import {
   ISearchQuery,
   ISearchTopic,
 } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultPageResult, defaultQuery } from "@/utils/result";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions } from "vuex";
+import { defaultQuery } from "@/utils/result";
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
+  computed: {
+    ...mapGetters(["pagedSearchTopics"]),
+  },
   methods: {
     ...mapActions(["setSearchQuery"]),
   },
 })
 export default class SearchTopicPageNavigation extends Vue {
   setSearchQuery!: (query: ISearchQuery) => void;
-
-  @Prop({ default: () => defaultPageResult<ISearchTopic>() })
-  page!: IApiPagedResult<ISearchTopic>;
+  pagedSearchTopics!: IApiPagedResult<ISearchTopic>;
 
   get first(): number {
-    return this?.page?.first_index || 0;
+    return this?.pagedSearchTopics?.first_index || 0;
   }
 
   get last(): number {
-    return this?.page?.last_index || 0;
+    return this?.pagedSearchTopics?.last_index || 0;
   }
 
   get next(): string | URL | undefined {
-    const nextPage = this?.page?.next as string;
+    const nextPage = this?.pagedSearchTopics?.next as string;
     return nextPage && new URL(nextPage);
   }
 
   get previous(): string | URL | undefined {
-    const previousPage = this?.page?.previous as string;
+    const previousPage = this?.pagedSearchTopics?.previous as string;
     return previousPage && new URL(previousPage);
   }
 
   get total(): number {
-    return this?.page?.total || 0;
+    return this?.pagedSearchTopics?.total || 0;
   }
 
   pageResults(url: URL): void {

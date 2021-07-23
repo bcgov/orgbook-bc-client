@@ -2,20 +2,17 @@
   <div>
     <SearchFilter />
     <SearchFilterChips />
-    <SearchTopicPage :results="page && page.results" />
-    <SearchTopicPageNavigation :page="page" />
+    <SearchTopicPage />
+    <SearchTopicPageNavigation />
   </div>
 </template>
 
 <script lang="ts">
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
-import { ISearchTopic } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultPageResult } from "@/utils/result";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import SearchTopicPage from "./SearchTopicPage.vue";
-import SearchTopicPageNavigation from "./SearchTopicPageNavigation.vue";
-import SearchFilter from "./SearchFilter.vue";
-import SearchFilterChips from "./SearchFilterChips.vue";
+import { Component, Vue } from "vue-property-decorator";
+import SearchTopicPage from "./page/SearchTopicPage.vue";
+import SearchTopicPageNavigation from "./page/SearchTopicPageNavigation.vue";
+import SearchFilter from "./filter/SearchFilter.vue";
+import SearchFilterChips from "./filter/SearchFilterChips.vue";
 
 @Component({
   components: {
@@ -25,8 +22,5 @@ import SearchFilterChips from "./SearchFilterChips.vue";
     SearchFilterChips,
   },
 })
-export default class SearchResult extends Vue {
-  @Prop({ default: () => defaultPageResult<ISearchTopic>() })
-  page!: IApiPagedResult<ISearchTopic>;
-}
+export default class SearchResult extends Vue {}
 </script>

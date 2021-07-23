@@ -1,7 +1,7 @@
 <template>
   <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
     <h1>Home goes here!</h1>
-    <SearchResult :page="pagedSerchTopics" />
+    <SearchResult />
   </v-container>
 </template>
 
@@ -21,10 +21,10 @@ interface Data {
     SearchResult,
   },
   computed: {
-    ...mapGetters(["searchQuery", "pagedSerchTopics"]),
+    ...mapGetters(["searchQuery"]),
   },
   methods: {
-    ...mapActions(["setLoading", "setSearchQuery", "fetchSearchTopics"]),
+    ...mapActions(["setLoading", "setSearchQuery", "fetchSearchFacetedTopics"]),
   },
 })
 export default class Home extends Vue {
@@ -32,7 +32,7 @@ export default class Home extends Vue {
 
   setLoading!: (loading: boolean) => void;
   setSearchQuery!: (query: ISearchQuery) => void;
-  fetchSearchTopics!: (query: ISearchQuery) => void;
+  fetchSearchFacetedTopics!: (query: ISearchQuery) => void;
 
   data(): Data {
     return {
@@ -49,13 +49,13 @@ export default class Home extends Vue {
   }
 
   @Watch("searchQuery")
-  async onSearchQueryChanged(
-    { ...newQuery }: ISearchQuery,
-    { ...oldQuery }: ISearchQuery
+  async onSearchQuery(
+    newQuery: ISearchQuery,
+    oldQuery: ISearchQuery
   ): Promise<void> {
     if (newQuery?.q && JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
       this.setLoading(true);
-      await this.fetchSearchTopics(newQuery);
+      await this.fetchSearchFacetedTopics(newQuery);
       this.setLoading(false);
     }
   }
