@@ -8,10 +8,14 @@ import {
 } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultFacetResult, defaultPageResult } from "@/utils/result";
 import v4Search from "@/services/api/v4/search.service";
+import v3Search from "@/services/api/v3/search.service";
 import router from "@/router";
 import { Dictionary } from "vue-router/types/router";
+import { HttpResponse } from "@/services/http.service";
+import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 
 const v4SearchService = new v4Search();
+const v3SearchService = new v3Search();
 
 export interface State {
   query: ISearchQuery | null;
@@ -57,6 +61,12 @@ const actions = {
     } catch (e) {
       console.error(e);
     }
+  },
+  async fetchAutocomplete(
+    _: ActionContext<State, RootState>,
+    query: string
+  ): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>> {
+    return v3SearchService.autocomplete(query);
   },
 };
 

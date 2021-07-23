@@ -8,12 +8,12 @@ export default class Search extends ApiResource {
   basePath = "search";
 
   async autocomplete(
-    q: string
+    query: string
   ): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>> {
     return await Http.get<IApiPagedResult<ISearchAutocomplete>>(
       this.formatEndpointUrl("autocomplete"),
       {
-        params: { q, revoked: false, inactive: null },
+        params: { q: query, revoked: false, inactive: null },
       }
     );
   }
