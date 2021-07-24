@@ -1,17 +1,26 @@
 <template>
-  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
-    <SearchBar :query="q"></SearchBar>
-    <SearchResult :results="pagedSearchTopics" />
-  </v-container>
+  <div>
+    <div class="search-bar">
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
+        <SearchBar :query="q"></SearchBar>
+      </v-container>
+    </div>
+    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5 pt-0 pb-0">
+      <SearchResult
+        v-if="pagedSearchTopics.total"
+        :results="pagedSearchTopics"
+      />
+    </v-container>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import SearchBar from "@/components/search/SearchBar.vue";
-import SearchResult from "@/components/search/SearchResult.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/result";
+import SearchBar from "@/components/search/SearchBar.vue";
+import SearchResult from "@/components/search/SearchResult.vue";
 
 interface Data {
   q: string | null;
@@ -63,3 +72,10 @@ export default class Home extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.search-bar {
+  color: white;
+  background: #b3b3b3;
+}
+</style>

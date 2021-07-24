@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
       <h1>Contact</h1>
       <p>
         OrgBook BC is continuously evolving. More information and features will

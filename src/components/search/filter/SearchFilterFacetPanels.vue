@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels multiple flat accordion v-model="panel">
+  <v-expansion-panels multiple flat accordion v-model="panel" class="no-radius">
     <SearchFilterFacetPanel :fields="topEntityTypes" :more="topEntityStatuses">
       <template v-slot:title> Organization Type </template>
     </SearchFilterFacetPanel>
@@ -69,11 +69,18 @@ export default class SearchFilterFacetPanels extends Vue {
   }
 
   get fields(): Record<string, ISearchFacetField[] | unknown> {
-    return this.facets.fields;
+    return (this?.facets?.fields || {}) as Record<
+      string,
+      ISearchFacetField[] | unknown
+    >;
+  }
+
+  get categories(): ISearchFacetField[] {
+    return (this?.fields?.category || []) as ISearchFacetField[];
   }
 
   fieldSelector(type: string): ISearchFacetField[] {
-    return (this.fields.category as ISearchFacetField[]).filter((cat) =>
+    return (this.categories as ISearchFacetField[]).filter((cat) =>
       (cat.value as string).includes(type)
     );
   }
@@ -83,3 +90,9 @@ export default class SearchFilterFacetPanels extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.no-radius {
+  border-radius: 0;
+}
+</style>

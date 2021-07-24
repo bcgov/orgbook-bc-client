@@ -1,23 +1,35 @@
 <template>
-  <div>
+  <div
+    :class="{ 'search-bar': true, 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }"
+  >
     <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
     <v-combobox
       outlined
+      dense
       cache-items
       hide-no-data
       hide-details
+      color="white"
+      background-color="white"
       v-model="q"
       :disabled="loading"
-      :loading="pending"
       :items="items"
       :search-input.sync="search"
       append-outer-icon="mdi-magnify"
       @input.native="updateModel"
-      @click:append-outer="onClick"
       @change="onChange"
     >
+      <template v-slot:append-outer>
+        <v-progress-circular
+          v-if="pending"
+          size="24"
+          color="white"
+          indeterminate
+        ></v-progress-circular>
+        <v-icon v-else color="white" @click="onClick">mdi-magnify</v-icon>
+      </template>
     </v-combobox>
   </div>
 </template>
@@ -114,3 +126,9 @@ export default class SearchBar extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.search-bar {
+  color: white;
+}
+</style>

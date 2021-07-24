@@ -1,7 +1,7 @@
 <template>
   <div>
     <SubHeader v-if="$vuetify.breakpoint.mdAndUp" :links="links" />
-    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
       <h1>About goes here!</h1>
       <router-view></router-view>
     </v-container>
