@@ -5,9 +5,9 @@ import { ITopicAttribute, ITopicName } from "../v2/topic.interface";
 
 export interface ISearchQuery {
   q: string | null;
-  latest: boolean | null;
-  revoked: boolean | null;
-  inactive: boolean | null;
+  latest: boolean | string | null;
+  revoked: boolean | string | null;
+  inactive: boolean | string | null;
   category: string | null;
   issuer_id: string | null;
   type_id: string | null;

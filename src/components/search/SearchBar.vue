@@ -1,39 +1,42 @@
 <template>
   <div>
-    <p class="font-weight-bold mb-1" :hidden="$vuetify.breakpoint.mdAndDown">
+    <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
-
-    <v-autocomplete
-      v-model="select"
-      :loading="loading"
-      :items="items"
-      :search-input.sync="search"
+    <v-combobox
+      outlined
       cache-items
-      flat
       hide-no-data
       hide-details
-      label=""
-      solo-inverted
+      v-model="q"
+      :disabled="loading"
+      :loading="pending"
+      :items="items"
+      :search-input.sync="search"
       append-outer-icon="mdi-magnify"
-      @click:append-outer="sendSearchReq"
+      @input.native="updateModel"
+      @click:append-outer="onClick"
+      @change="onChange"
     >
-    </v-autocomplete>
+    </v-combobox>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import _ from "lodash-es";
 import { HttpResponse } from "@/services/http.service";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
+import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
+import { defaultQuery } from "@/utils/result";
 
 interface Data {
   items: string[];
-  search: string | null;
-  select: string | null;
+  search: string;
+  q: string;
+  pending: boolean;
 }
 
 @Component({
@@ -41,54 +44,73 @@ interface Data {
     ...mapGetters(["loading"]),
   },
   methods: {
-    ...mapActions(["setLoading", "fetchAutocomplete"]),
+    ...mapActions(["fetchAutocomplete", "setSearchQuery"]),
   },
 })
 export default class SearchBar extends Vue {
-  select!: string;
-  search!: string;
   items!: Array<string>;
-  states!: Array<string>;
+  search!: string;
+  q!: string;
+  pending!: boolean;
+
   setLoading!: (loading: boolean) => void;
-  debounceSearchReq = _.debounce(this.searchReq, 500);
   fetchAutocomplete!: (
     query: string
   ) => Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>>;
+  setSearchQuery!: (query: ISearchQuery) => void;
+
+  debouncedAutocomplete = _.debounce(this.autocomplete, 500);
+
+  @Prop({ default: "" }) query!: string;
 
   data(): Data {
     return {
       items: [],
-      search: null,
-      select: null,
+      search: "",
+      q: this.query || "",
+      pending: false,
     };
-  }
-  get something(): string {
-    return this.select;
   }
 
   @Watch("search")
-  onChildChanged(val: string): void {
-    this.debounceSearchReq(val);
+  onChildChanged(q: string): void {
+    this.debouncedAutocomplete(q);
   }
 
-  searchReq(val: string): void {
-    val && val !== this.select && this.querySelections(val);
+  async autocomplete(q: string): Promise<void> {
+    let results = [] as string[];
+    try {
+      this.pending = true;
+      if (q && q !== this.q) {
+        const res = await this.fetchAutocomplete(q);
+        results = (res?.data?.results || [])
+          .map((r) => r.value)
+          .filter(
+            (r) => (r || "").toLowerCase().indexOf((r || "").toLowerCase()) > -1
+          );
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.pending = false;
+    }
+    this.items = results;
   }
 
-  querySelections(v: string): void {
-    this.setLoading(true);
-    //Simulated ajax query
-    this.fetchAutocomplete(v).then((resp) => {
-      const autocompleteResults = resp.data.results.map((item) => item.value);
-      this.items = autocompleteResults.filter((e) => {
-        return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
-      });
-      this.setLoading(false);
-    });
+  updateModel(e: InputEvent): void {
+    const value = (e?.target as HTMLInputElement)?.value || "";
+    this.search = value;
   }
 
-  sendSearchReq(): void {
-    console.log(this.search);
+  onClick(): void {
+    this.setSearchQuery({ ...defaultQuery, ...{ q: this.search } });
+  }
+
+  onChange(q: string): void {
+    if (q === this.search) {
+      return;
+    }
+    this.setSearchQuery({ ...defaultQuery, ...{ q } });
   }
 }
 </script>

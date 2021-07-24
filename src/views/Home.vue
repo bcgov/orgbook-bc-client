@@ -1,14 +1,14 @@
 <template>
   <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
-    <SearchBar></SearchBar>
-    <SearchResult :results="pagedSerchTopics" />
+    <SearchBar :query="q"></SearchBar>
+    <SearchResult :results="pagedSearchTopics" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import SearchResult from "@/components/search/SearchResult.vue";
 import SearchBar from "@/components/search/SearchBar.vue";
+import SearchResult from "@/components/search/SearchResult.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/result";
@@ -23,7 +23,7 @@ interface Data {
     SearchResult,
   },
   computed: {
-    ...mapGetters(["searchQuery"]),
+    ...mapGetters(["searchQuery", "pagedSearchTopics"]),
   },
   methods: {
     ...mapActions(["setLoading", "setSearchQuery", "fetchSearchFacetedTopics"]),

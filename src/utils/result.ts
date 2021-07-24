@@ -8,7 +8,7 @@ export const defaultQuery: ISearchQuery = {
   q: null,
   latest: true,
   revoked: false,
-  inactive: null,
+  inactive: "",
   category: null,
   issuer_id: null,
   type_id: null,
