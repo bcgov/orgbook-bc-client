@@ -1,11 +1,11 @@
 <template> 
-        <v-expansion-panel>
+        <v-expansion-panel :expand="expanded">
             <v-expansion-panel-header>
                 <slot name="header"></slot>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
                 Authority: {{authority}} <br/>
-                Credential verified <br/>
+                <v-icon>mdi-shield-check-outline</v-icon> Credential verified <br/>
                 Effective: {{effectiveDate | formatDate}} <br/>
             </v-expansion-panel-content>
             <v-divider></v-divider>
@@ -27,7 +27,7 @@ Vue.filter('formatDate', function(value:string) {
 })
 
 @Component({
-    props:['authority', 'effectiveDate']
+    props:['authority', 'effectiveDate', 'expanded']
 })
 
 export default class CredentialItem extends Vue {}
