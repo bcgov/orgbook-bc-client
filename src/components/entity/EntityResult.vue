@@ -2,10 +2,14 @@
   <div>
     <v-icon>mdi-arrow-left</v-icon><a  href="/" append-icon="mdi-map-marker">Back to search</a>
     <h3>{{entityName}}</h3>
+    <p>Business number: 
+    <br/>{{entityActive}} <span v-if="entityJurisdiction === 'BC'">• BC Corporation</span> </p>
+
     <v-tabs v-model="currentTab">
       <v-tab v-for="(item,i) in tabItems" :key="i" @click="tabClick(item.refname)">{{item.text}}</v-tab>
     </v-tabs>
     <v-divider></v-divider>
+    <v-btn @click="test">TEST</v-btn>
     
     <v-row>
       <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"><a @click="toggleShowCreds">Show all Credential statuses</a></v-col>
@@ -13,21 +17,18 @@
     
     <EntityCard ref="registration" >
       <template #expansionPanels>
-        <CredentialItem authority="test" effectiveDate="1914-01-30T08:00:00+00:00">
+        <CredentialItem :authority="entityRegistrationIssuer" effectiveDate="1914-01-30T08:00:00+00:00">
         <template #header>
           <h3>Registration</h3>
         </template>
         <template #content>
-          <p>test</p>
-        </template>
-      </CredentialItem>
+          <p>{{entityName}} is <span v-if="entityJurisdiction !== 'BC'">not</span> a <a>BC Corporation</a></p>
 
-      <CredentialItem title="Message" authority="hello" effectiveDate="1914-01-30T08:00:00+00:00">
-        <template #header>
-          <h3>Message</h3>
-        </template>
-        <template #content>
-          <p>Hello World!</p>
+          <p>
+            Incorporation number: {{entityIncorporationNumber}} <br/>
+            Registered on: {{entityRegistrationDate | formatDate}} <br/>
+            Business name effective: {{entityEffectiveDate | formatDate}}
+          </p>
         </template>
       </CredentialItem>
       </template>      
@@ -67,6 +68,8 @@ import CredentialItem from "@/components/credentialItem/credentialItem.vue"
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
 import {selectFirstAttrItem} from "@/utils/attributeFilter"
+import "@/utils/dateFilter"
+import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 
 
 @Component({
@@ -115,7 +118,7 @@ export default class EntityResult extends Vue {
 
   test(){
     //console.log(this.selectedTopicCredentialSet.names)
-    console.log(JSON.stringify(this.selectedTopic?.names))
+    console.log(JSON.stringify(this.selectedTopic))
     // this.selectedTopic?.names.forEach(name=>{
     //   console.log(JSON.stringify(name))
     // })
@@ -132,6 +135,39 @@ export default class EntityResult extends Vue {
 
   get entityName():string|undefined{
     return selectFirstAttrItem({key:"type", value:"entity_name"},this.selectedTopic?.names)?.text
+  }
+
+  get entitybusinessNumber():string|undefined{
+    return this.selectedTopic?.source_id
+  }
+
+  get entityIncorporationNumber():string|undefined{
+    return this.selectedTopic?.source_id
+  }
+
+  get entityActive():string|undefined{
+    const state = selectFirstAttrItem({key:"type", value:"entity_status"}, this.selectedTopic?.attributes)?.value
+    if (!state){
+      return state
+    }else{
+      return state === "ACT"? "Active" : "Inactive"
+    }
+  }
+
+  get entityRegistrationDate():string|undefined{
+    return selectFirstAttrItem({key:"type", value:"registration_date"},this.selectedTopic?.attributes)?.value
+  }
+
+  get entityEffectiveDate():string|undefined{
+    return selectFirstAttrItem({key:"type", value:"entity_status_effective"},this.selectedTopic?.attributes)?.value
+  }
+
+  get entityJurisdiction():string|undefined{
+    return selectFirstAttrItem({key:"type", value:"home_jurisdiction"}, this.selectedTopic?.attributes)?.value
+  }
+
+  get entityRegistrationIssuer():IIssuer|undefined{
+    return selectFirstAttrItem({key:"type", value:"entity_name"},this.selectedTopic?.names)?.issuer
   }
 
   async created(): Promise<void> {

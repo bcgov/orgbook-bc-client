@@ -4,7 +4,7 @@
                 <slot name="header"></slot>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-                Authority: {{authority}} <br/>
+                Authority: <a :href="authorityLink">{{authorityName}}</a> <br/>
                 <v-icon>mdi-shield-check-outline</v-icon> Credential verified <br/>
                 Effective: {{effectiveDate | formatDate}} <br/>
             </v-expansion-panel-content>
@@ -18,17 +18,22 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import moment from 'moment'
+import "@/utils/dateFilter"
+import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 
-Vue.filter('formatDate', function(value:string) {
-  if (value) {
-    return moment(String(value)).format('MMM DD, YYYY')
-  }
-})
 
 @Component({
     props:['authority', 'effectiveDate', 'expanded']
 })
 
-export default class CredentialItem extends Vue {}
+export default class CredentialItem extends Vue {
+    authority!:IIssuer;
+    get authorityName():string|undefined{
+        return this.authority?.name
+    }
+
+    get authorityLink():string|undefined{
+        return this.authority?.url?.toString()
+    }
+}
 </script>
