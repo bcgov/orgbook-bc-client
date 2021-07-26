@@ -1,6 +1,6 @@
 <template>
-  <v-expansion-panels multiple flat accordion v-model="panel" class="no-radius">
-    <SearchFilterFacetPanel :fields="topEntityTypes" :more="topEntityStatuses">
+  <v-expansion-panels multiple flat accordion v-model="panel" class="on-bottom">
+    <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
       <template v-slot:title> Organization Type </template>
     </SearchFilterFacetPanel>
     <SearchFilterFacetPanel :fields="topEntityStatuses">
@@ -41,7 +41,7 @@ export default class SearchFilterFacetPanels extends Vue {
     };
   }
 
-  private topFieldFormatter(top: string[], type: string): ISearchFacetField[] {
+  private topFieldSelector(top: string[], type: string): ISearchFacetField[] {
     const fields = [] as ISearchFacetField[];
     for (const value of top) {
       const field = this.fieldSelector(type).find(
@@ -57,11 +57,24 @@ export default class SearchFilterFacetPanels extends Vue {
   }
 
   get topEntityTypes(): ISearchFacetField[] {
-    return this.topFieldFormatter(this.topTypes, "entity_type");
+    return this.topFieldSelector(this.topTypes, "entity_type");
+  }
+
+  get moreEntityTypes(): ISearchFacetField[] {
+    return this.fieldSelector("entity_type")
+      .filter(
+        (field) =>
+          !this.topTypes.includes(this.fieldValueFormatter(field.value))
+      )
+      .map((field) => ({
+        value: this.fieldValueFormatter(field?.value) || "",
+        count: field?.count || 0,
+        text: field?.text || "",
+      }));
   }
 
   get topEntityStatuses(): ISearchFacetField[] {
-    return this.topFieldFormatter(this.topStatuses, "entity_status");
+    return this.topFieldSelector(this.topStatuses, "entity_status");
   }
 
   get facets(): ISearchFacetRecord {
@@ -90,9 +103,3 @@ export default class SearchFilterFacetPanels extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.no-radius {
-  border-radius: 0;
-}
-</style>

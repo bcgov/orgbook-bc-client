@@ -5,7 +5,7 @@
         v-if="$vuetify.breakpoint.mdAndUp"
         cols="12"
         md="4"
-        class="pa-0 border-left border-right"
+        class="pa-0 elevation-2"
       >
         <SearchFilterFacetPanels />
       </v-col>
@@ -45,12 +45,3 @@ import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
 })
 export default class SearchResult extends Vue {}
 </script>
-
-<style scoped>
-.border-left {
-  border-left: 1px black solid;
-}
-.border-right {
-  border-right: 1px black solid;
-}
-</style>

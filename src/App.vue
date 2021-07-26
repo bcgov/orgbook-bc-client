@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Header />
+    <Header class="on-top" />
     <v-main>
       <Loading v-if="loading" />
       <router-view></router-view>
@@ -10,7 +10,7 @@
         :alert="alert"
       ></Notification>
     </v-main>
-    <Footer />
+    <Footer class="on-top" />
   </v-app>
 </template>
 
@@ -63,5 +63,11 @@ export default class App extends Vue {}
 }
 .flex-align-items-center {
   align-items: center;
+}
+.on-top {
+  z-index: 1 !important;
+}
+.on-bottom {
+  z-index: 0 !important;
 }
 </style>

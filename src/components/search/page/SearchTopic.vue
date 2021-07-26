@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined rounded="sm" class="mb-5">
+  <v-card elevation="2" rounded="sm" class="mb-5">
     <div
       class="historical d-inline-flex rounded-sm"
       v-if="entityStatus === 'HIS'"

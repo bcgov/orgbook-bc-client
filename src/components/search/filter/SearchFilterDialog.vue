@@ -32,7 +32,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <SearchFilterFacetPanels class="filter-dialog" />
-      <v-card-actions class="filter-actions justify-center">
+      <v-card-actions class="filter-actions justify-center on-top">
         <v-btn elevation="0">Reset</v-btn>
         <v-btn elevation="0" color="primary">Apply</v-btn>
       </v-card-actions>
@@ -77,7 +77,6 @@ export default class SearchFilterDialog extends Vue {
 .filter-actions {
   position: fixed;
   bottom: 0;
-  z-index: 1;
   width: 100%;
   background: white;
 }
