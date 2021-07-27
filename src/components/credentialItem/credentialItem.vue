@@ -1,5 +1,5 @@
 <template> 
-        <v-expansion-panel :expand="expanded">
+        <v-expansion-panel v-model="expanded">
             <v-expansion-panel-header>
                 <slot name="header"></slot>
             </v-expansion-panel-header>
@@ -9,7 +9,7 @@
                 Effective: {{effectiveDate | formatDate}} <br/>
             </v-expansion-panel-content>
             <v-divider></v-divider>
-            <v-container>
+            <v-container v-if="$slots.content">
                 <slot name="content"></slot>
             </v-container>
             

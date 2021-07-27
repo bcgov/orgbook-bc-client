@@ -2,7 +2,7 @@
     <v-container>
         <v-card>
             <v-card-title v-if="title">{{title}}</v-card-title>
-            <v-expansion-panels accordion>
+            <v-expansion-panels v-if="$slots.expansionPanels" accordion>
                 <slot name="expansionPanels"></slot>
             </v-expansion-panels>
             <slot></slot>
