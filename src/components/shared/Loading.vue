@@ -1,3 +1,3 @@
 <template>
-  <v-progress-linear indeterminate fixed></v-progress-linear>
+  <v-progress-linear color="white" indeterminate fixed></v-progress-linear>
 </template>

@@ -2,33 +2,38 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "../index";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import {
+  ISearchFacetRecord,
   ISearchQuery,
   ISearchTopic,
 } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultPageResult } from "@/utils/result";
+import { defaultFacetResult, defaultPageResult } from "@/utils/result";
 import v4Search from "@/services/api/v4/search.service";
-import Autocomplete from "@/services/api/v3/autocomplete.service"
+import v3Search from "@/services/api/v3/search.service";
 import router from "@/router";
 import { Dictionary } from "vue-router/types/router";
 import { HttpResponse } from "@/services/http.service";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 
 const v4SearchService = new v4Search();
-const autocompleteSvc = new Autocomplete();
+const v3SearchService = new v3Search();
 
 export interface State {
   query: ISearchQuery | null;
   page: IApiPagedResult<ISearchTopic>;
+  facets: ISearchFacetRecord;
 }
 
 const state: State = {
   query: null,
   page: defaultPageResult<ISearchTopic>(),
+  facets: defaultFacetResult,
 };
 
 const getters = {
   searchQuery: (state: State): ISearchQuery | null => state.query,
-  pagedSerchTopics: (state: State): IApiPagedResult<ISearchTopic> => state.page,
+  pagedSearchTopics: (state: State): IApiPagedResult<ISearchTopic> =>
+    state.page,
+  searchTopicFacets: (state: State): ISearchFacetRecord => state.facets,
 };
 
 const actions = {
@@ -43,31 +48,37 @@ const actions = {
   },
   unsetSearchQuery({ commit }: ActionContext<State, RootState>): void {
     commit("setQuery", null);
-    router.push({ query: {} }).catch(() => undefined);
+    router.replace({ query: {} }).catch(() => undefined);
   },
-  async fetchSearchTopics(
+  async fetchSearchFacetedTopics(
     { commit }: ActionContext<State, RootState>,
     query: ISearchQuery
   ): Promise<void> {
     try {
-      const res = await v4SearchService.topic(query);
-      commit("setPage", res.data);
+      const res = await v4SearchService.facetedTopic(query);
+      commit("setPage", res.data.objects);
+      commit("setFacets", res.data.facets);
     } catch (e) {
       console.error(e);
     }
   },
-  async getAutocomplete({ commit }: ActionContext<State, RootState>,
-    query: string): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>>{
-      return autocompleteSvc.autocomplete(query)
-    }
+  async fetchAutocomplete(
+    _: ActionContext<State, RootState>,
+    query: string
+  ): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>> {
+    return v3SearchService.autocomplete(query);
+  },
 };
 
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
-    state.query = { ...state.query, ...query };
+    state.query = { ...query };
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
-    state.page = { ...state.page, ...page };
+    state.page = { ...page };
+  },
+  setFacets(state: State, facets: ISearchFacetRecord): void {
+    state.facets = { ...facets };
   },
 };
 
