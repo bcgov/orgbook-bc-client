@@ -1,4 +1,19 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
+import {
+  ISearchFacetRecord,
+  ISearchQuery,
+} from "@/interfaces/api/v4/search-topic.interface";
+
+export const defaultQuery: ISearchQuery = {
+  q: null,
+  latest: true,
+  revoked: false,
+  inactive: "",
+  category: null,
+  issuer_id: null,
+  type_id: null,
+  credential_type_id: null,
+};
 
 export function defaultPageResult<T>(): IApiPagedResult<T> {
   return {
@@ -12,3 +27,7 @@ export function defaultPageResult<T>(): IApiPagedResult<T> {
     results: [],
   };
 }
+
+export const defaultFacetResult: ISearchFacetRecord = {
+  fields: {},
+};

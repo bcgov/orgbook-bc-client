@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div id="footerAbout">
+    <div class="footer-feedback">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
           <v-col>
-            <About class="pl-4 pr-4" />
+            <Feedback class="pl-2 pr-2" />
           </v-col>
         </v-row>
       </v-container>
     </div>
-    <div id="footerFeedback">
+    <div class="footer-about">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
           <v-col>
-            <Feedback class="pl-4 pr-4" />
+            <About class="pl-2 pr-2" />
           </v-col>
         </v-row>
       </v-container>
@@ -21,7 +21,7 @@
     <v-footer color="primary" class="pl-0 pr-0">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row>
-          <v-col class="pt-0 pb-0">
+          <v-col class="pl-1 pr-2 pt-0 pb-0">
             <v-btn
               v-for="link in links"
               :key="link.path"
@@ -68,7 +68,11 @@ export default class Footer extends Vue {
 </script>
 
 <style scoped>
-#footerAbout {
-  background: #e3e3e3;
+.footer-feedback {
+  background: #d3d3d3;
+}
+.footer-about {
+  color: white;
+  background: #b3b3b3;
 }
 </style>

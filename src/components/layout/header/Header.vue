@@ -4,10 +4,11 @@
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="flex-col-align-center">
           <v-col
-            class="
-              pl-xl-8 pl-lg-8 pl-md-8 pl-sm-4 pl-xs-4
-              flex-row flex-align-items-center
-            "
+            :class="{
+              'pl-1': $vuetify.breakpoint.smAndDown,
+              'pl-5': $vuetify.breakpoint.mdAndUp,
+              'flex-row flex-align-items-center': true,
+            }"
           >
             <v-app-bar-title>Logo here!</v-app-bar-title>
           </v-col>
@@ -32,13 +33,14 @@
             </div>
             <v-app-bar-nav-icon
               v-if="$vuetify.breakpoint.smAndDown"
+              class="mr-n2"
               @click="drawer = true"
             ></v-app-bar-nav-icon>
           </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+    <v-navigation-drawer app v-model="drawer" temporary>
       <v-list nav>
         <v-list-item v-for="link in links" :key="link.path" :to="link.path">{{
           link.label
