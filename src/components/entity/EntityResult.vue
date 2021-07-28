@@ -80,23 +80,78 @@
       </template>
     </EntityCard>
 
+    <!-- enitity card credential holder -->
     <EntityCard title="Credentials" ref="credentials">
       <template>
+        <v-container>
+          <!-- header content for the credential card -->
+          <v-row>
+            <v-col
+              v-if="$vuetify.breakpoint.mdAndUp"
+              cols="12"
+              md="4"
+              class="pa-0 elevation-2"
+            >
+              <SearchFilterFacetPanels />
+            </v-col>
+            <v-col
+              cols="12"
+              md="8"
+              :class="{
+                'pa-0': true,
+                'pt-2 pb-5 pl-6 pr-8': $vuetify.breakpoint.mdAndUp,
+              }"
+            >
+              <SearchFilter />
+              <SearchFilterChips />
+            </v-col>
+            <v-col class="text-right">
+              <a @click="switchCredentialTimeOrder">Sort by date</a>
+              <v-icon v-if="credentialTimeOrder === 1">mdi-arrow-up</v-icon>
+              <v-icon v-else>mdi-arrow-down</v-icon>
+            </v-col>
+          </v-row>
+        </v-container>
+        <!-- body of the credential card -->
         <v-timeline dense>
-          <v-timeline-item color="blue" small v-for="(cred,i) in entityCredntials" :key="i">
+          <!-- creates a timeline item for each credential in the entity -->
+          <v-timeline-item
+            color="blue"
+            small
+            v-for="(cred, i) in entityCredntials"
+            :key="i"
+          >
             <v-container>
-              {{cred.create_timestamp|formatDate}}
+              {{ cred.effective_date | formatDate }}
               <EntityCard class="pl-0">
                 <template #expansionPanels>
                   <CredentialItem
                     :authority="entityRegistrationIssuer"
-                    effectiveDate="1914-01-30T08:00:00+00:00"
+                    :expired="cred.revoked"
+                    :reason="cred.latest && cred.local_name.type==='entity_name' ? entityRegistrationReason : ''"
+                    :dropdownDivider="true"
                   >
                     <template #header>
-                      <h3>DBA name registered</h3><br/>
-                      {{cred.local_name.text}}
+                      <v-row>
+                        <v-col v-if="cred.revoked">
+                          <span style="color: red">
+                            Expired {{ cred.revoked_date | formatDate }}
+                          </span>
+                        </v-col>
+                        <v-responsive width="100%"> </v-responsive>
+
+                        <v-col>
+                          <h3>DBA name registered</h3>
+                        </v-col>
+                        <v-responsive width="100%"> </v-responsive>
+
+                        <v-col>
+                          <p>
+                            {{ cred.local_name.text }}
+                          </p>
+                        </v-col>
+                      </v-row>
                     </template>
-                    
                   </CredentialItem>
                 </template>
               </EntityCard>
@@ -120,12 +175,18 @@ import { ICredential } from "@/interfaces/api/v2/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attributeFilter";
 import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
-import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import moment from "moment";
+import SearchFilter from "@/components/search/filter/SearchFilter.vue";
+import SearchFilterChips from "@/components/search/filter/SearchFilterChips.vue";
+import SearchFilterFacetPanels from "@/components/search/filter/SearchFilterFacetPanels.vue";
 
 @Component({
   components: {
     EntityCard,
     CredentialItem,
+    SearchFilter,
+    SearchFilterChips,
+    SearchFilterFacetPanels,
   },
   computed: {
     ...mapGetters(["selectedTopic", "selectedTopicCredentialSet"]),
@@ -152,11 +213,13 @@ export default class EntityResult extends Vue {
   fetchTopicCredentialSet!: (id: number) => Promise<void>;
   selectedTopicCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
+  credentialTimeOrder!: number;
 
   data() {
     return {
       currentTab: null,
       credItemsExpanded: false,
+      credentialTimeOrder: 1,
       tabItems: [
         { text: "Registration", refname: "registration" },
         { text: "Addresses", refname: "addresses" },
@@ -186,6 +249,10 @@ export default class EntityResult extends Vue {
     });
   }
 
+  switchCredentialTimeOrder() {
+    this.credentialTimeOrder *= -1;
+  }
+
   get entityName(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "entity_name" },
@@ -201,8 +268,15 @@ export default class EntityResult extends Vue {
     return this.selectedTopic?.source_id;
   }
 
-  get entityCredntials(): Array<ICredential> | undefined{
-    return this.selectedTopicCredentialSet[0]?.credentials
+  get entityCredntials(): Array<ICredential> | undefined {
+    if (!this.selectedTopicCredentialSet) {
+      return undefined;
+    }
+    return this.selectedTopicCredentialSet[0]?.credentials.sort(
+      (cred1, cred2) =>
+        (moment(cred1.effective_date).isBefore(cred2.effective_date) ? 1 : -1) *
+        this.credentialTimeOrder
+    );
   }
 
   get entityActive(): string | undefined {
@@ -227,6 +301,13 @@ export default class EntityResult extends Vue {
   get entityEffectiveDate(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "entity_status_effective" },
+      this.selectedTopic?.attributes
+    )?.value;
+  }
+
+  get entityRegistrationReason(): string|undefined{
+    return selectFirstAttrItem(
+      { key: "type", value: "reason_description" },
       this.selectedTopic?.attributes
     )?.value;
   }

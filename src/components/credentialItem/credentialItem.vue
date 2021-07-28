@@ -1,39 +1,48 @@
-<template> 
-        <v-expansion-panel v-model="expanded">
-            <v-expansion-panel-header>
-                <slot name="header"></slot>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-                Authority: <a :href="authorityLink">{{authorityName}}</a> <br/>
-                <v-icon>mdi-shield-check-outline</v-icon> Credential verified <br/>
-                Effective: {{effectiveDate | formatDate}} <br/>
-            </v-expansion-panel-content>
-            <v-divider></v-divider>
-            <v-container v-if="$slots.content">
-                <slot name="content"></slot>
-            </v-container>
-            
-        </v-expansion-panel>
+<template>
+  <v-expansion-panel :disabled="expired">
+    <v-expansion-panel-header>
+      <slot name="header"></slot>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content
+      :style="dropdownDivider ? 'background-color:lightgray' : ''"
+    >
+      Authority: <a :href="authorityLink">{{ authorityName }}</a> <br />
+      <v-icon>mdi-shield-check-outline</v-icon> Credential verified <br />
+      <span v-if="effectiveDate"
+        >Effective: {{ effectiveDate | formatDate }} <br
+      /></span>
+      <span v-if="reason">Reason: {{reason}}</span>
+    </v-expansion-panel-content>
+    <v-divider></v-divider>
+    <v-container v-if="$slots.content">
+      <slot name="content"></slot>
+    </v-container>
+  </v-expansion-panel>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import "@/utils/dateFilter"
+import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 
-
 @Component({
-    props:['authority', 'effectiveDate', 'expanded']
+  props: [
+    "authority",
+    "effectiveDate",
+    "expanded",
+    "expired",
+    "dropdownDivider",
+    "reason",
+  ],
 })
-
 export default class CredentialItem extends Vue {
-    authority!:IIssuer;
-    get authorityName():string|undefined{
-        return this.authority?.name
-    }
+  authority!: IIssuer;
+  get authorityName(): string | undefined {
+    return this.authority?.name;
+  }
 
-    get authorityLink():string|undefined{
-        return this.authority?.url?.toString()
-    }
+  get authorityLink(): string | undefined {
+    return this.authority?.url?.toString();
+  }
 }
 </script>
