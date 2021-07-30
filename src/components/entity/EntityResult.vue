@@ -86,34 +86,24 @@
         <v-container>
           <!-- header content for the credential card -->
           <v-row>
-            <v-col
-              v-if="$vuetify.breakpoint.mdAndUp"
-              cols="12"
-              md="4"
-              class="pa-0 elevation-2"
-            >
-              <SearchFilterFacetPanels />
+            <v-col v-if="$vuetify.breakpoint.smAndDown" class="pl-0 pr-0">
+              <div class="flex-row flex-align-items-center">
+                <EntityFilterDialog />
+              </div>
             </v-col>
-            <v-col
-              cols="12"
-              md="8"
-              :class="{
-                'pa-0': true,
-                'pt-2 pb-5 pl-6 pr-8': $vuetify.breakpoint.mdAndUp,
-              }"
-            >
-              <SearchFilter />
-              <SearchFilterChips />
-            </v-col>
-            <v-col class="text-right">
+            <v-col class="pl-0 pr-0">
+              <div
+                class="text-body-2 float-right"
+              >
               <a @click="switchCredentialTimeOrder">Sort by date</a>
               <v-icon v-if="credentialTimeOrder === 1">mdi-arrow-up</v-icon>
               <v-icon v-else>mdi-arrow-down</v-icon>
+              </div>
             </v-col>
           </v-row>
         </v-container>
         <!-- body of the credential card -->
-        <v-timeline dense>
+        <v-timeline dense class="on-bottom">
           <!-- creates a timeline item for each credential in the entity -->
           <v-timeline-item
             color="blue"
@@ -128,7 +118,11 @@
                   <CredentialItem
                     :authority="entityRegistrationIssuer"
                     :expired="cred.revoked"
-                    :reason="cred.latest && cred.local_name.type==='entity_name' ? entityRegistrationReason : ''"
+                    :reason="
+                      cred.latest && cred.local_name.type === 'entity_name'
+                        ? entityRegistrationReason
+                        : ''
+                    "
                     :dropdownDivider="true"
                   >
                     <template #header>
@@ -168,8 +162,8 @@ import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
-import EntityCard from "@/components/entityCard/entityCard.vue";
-import CredentialItem from "@/components/credentialItem/credentialItem.vue";
+import EntityCard from "@/components/entity/entityCard/entityCard.vue";
+import CredentialItem from "@/components/entity/credentialItem/credentialItem.vue";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attributeFilter";
@@ -179,6 +173,7 @@ import moment from "moment";
 import SearchFilter from "@/components/search/filter/SearchFilter.vue";
 import SearchFilterChips from "@/components/search/filter/SearchFilterChips.vue";
 import SearchFilterFacetPanels from "@/components/search/filter/SearchFilterFacetPanels.vue";
+import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 
 @Component({
   components: {
@@ -187,6 +182,7 @@ import SearchFilterFacetPanels from "@/components/search/filter/SearchFilterFace
     SearchFilter,
     SearchFilterChips,
     SearchFilterFacetPanels,
+    EntityFilterDialog,
   },
   computed: {
     ...mapGetters(["selectedTopic", "selectedTopicCredentialSet"]),
@@ -231,7 +227,9 @@ export default class EntityResult extends Vue {
 
   test() {
     //console.log(this.selectedTopicCredentialSet.names)
-    console.log(JSON.stringify(this.selectedTopicCredentialSet[0]?.credentials));
+    console.log(
+      JSON.stringify(this.selectedTopicCredentialSet[0]?.credentials)
+    );
     // this.selectedTopic?.names.forEach(name=>{
     //   console.log(JSON.stringify(name))
     // })
@@ -305,7 +303,7 @@ export default class EntityResult extends Vue {
     )?.value;
   }
 
-  get entityRegistrationReason(): string|undefined{
+  get entityRegistrationReason(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "reason_description" },
       this.selectedTopic?.attributes

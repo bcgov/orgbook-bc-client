@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel :disabled="expired">
+  <v-expansion-panel class="disabled">
     <v-expansion-panel-header>
       <slot name="header"></slot>
     </v-expansion-panel-header>
