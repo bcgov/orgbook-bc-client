@@ -2,7 +2,9 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "../index";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import {
-  ISearchFacetRecord,
+  ISearchFilter,
+  ISearchFilterFacets,
+  ISearchFilterFieldRecord,
   ISearchQuery,
   ISearchTopic,
 } from "@/interfaces/api/v4/search-topic.interface";
@@ -11,48 +13,95 @@ import v4Search from "@/services/api/v4/search.service";
 import v3Search from "@/services/api/v3/search.service";
 import router from "@/router";
 import { Dictionary } from "vue-router/types/router";
-import { HttpResponse } from "@/services/http.service";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
+import {
+  credentialTypeSpec,
+  entityStatusSpec,
+  entityTypeSpec,
+} from "@/data/search";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
 
+const filterSpec: ISearchFilter[] = [
+  entityStatusSpec,
+  entityTypeSpec,
+  credentialTypeSpec,
+];
+
 export interface State {
   query: ISearchQuery | null;
+  filters: ISearchFilter[];
   page: IApiPagedResult<ISearchTopic>;
-  facets: ISearchFacetRecord;
+  facets: ISearchFilterFacets;
 }
 
 const state: State = {
   query: null,
+  filters: [],
   page: defaultPageResult<ISearchTopic>(),
   facets: defaultFacetResult,
 };
 
 const getters = {
   searchQuery: (state: State): ISearchQuery | null => state.query,
+  searchFilters: (state: State): ISearchFilter[] => state.filters,
   pagedSearchTopics: (state: State): IApiPagedResult<ISearchTopic> =>
     state.page,
-  searchTopicFacets: (state: State): ISearchFacetRecord => state.facets,
+  searchFilterFields: (state: State): ISearchFilterFieldRecord =>
+    state?.facets?.fields || defaultFacetResult.fields,
 };
 
 const actions = {
   setSearchQuery(
-    { commit }: ActionContext<State, RootState>,
+    { commit, dispatch }: ActionContext<State, RootState>,
     query: ISearchQuery
   ): void {
     commit("setQuery", query);
+    dispatch("setSearchFilter", query);
     router
       .push({ query: query as unknown as Dictionary<string> })
       .catch(() => undefined);
   },
-  unsetSearchQuery({ commit }: ActionContext<State, RootState>): void {
-    commit("setQuery", null);
-    router.replace({ query: {} }).catch(() => undefined);
-  },
-  async fetchSearchFacetedTopics(
+  setSearchFilter(
     { commit }: ActionContext<State, RootState>,
     query: ISearchQuery
+  ): void {
+    const filters = filterSpec.filter((filter) =>
+      Object.hasOwnProperty.call(query, filter.key)
+    );
+    for (const filter of filters) {
+      filter.value = query[filter.key];
+    }
+    commit("setFilters", filters);
+  },
+  toggleSearchFilter(
+    { dispatch, getters }: ActionContext<State, RootState>,
+    filter: ISearchFilter
+  ): void {
+    const filters: ISearchFilter[] = [...getters.searchFilters];
+    const selectedFilter = filters.find(
+      (selected) => selected.key === filter.key
+    );
+    if (selectedFilter) {
+      selectedFilter.value =
+        selectedFilter.value !== filter.value ? filter.value : "";
+      filters.splice(filters.indexOf(selectedFilter), 1, selectedFilter);
+    } else {
+      filters.push(filter);
+    }
+    const query = { ...getters.searchQuery };
+    for (const filter of filters) {
+      if (Object.hasOwnProperty.call(query, filter.key)) {
+        query[filter.key] = filter.value;
+      }
+    }
+    dispatch("setSearchQuery", query);
+  },
+
+  async fetchSearchFacetedTopics(
+    { commit }: ActionContext<State, RootState>,
+    { ...query }: ISearchQuery
   ): Promise<void> {
     try {
       const res = await v4SearchService.facetedTopic(query);
@@ -65,8 +114,14 @@ const actions = {
   async fetchAutocomplete(
     _: ActionContext<State, RootState>,
     query: string
-  ): Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>> {
-    return v3SearchService.autocomplete(query);
+  ): Promise<IApiPagedResult<ISearchAutocomplete>> {
+    try {
+      const res = await v3SearchService.autocomplete(query);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      return defaultPageResult<ISearchAutocomplete>();
+    }
   },
 };
 
@@ -77,8 +132,11 @@ const mutations = {
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
     state.page = { ...page };
   },
-  setFacets(state: State, facets: ISearchFacetRecord): void {
+  setFacets(state: State, facets: ISearchFilterFacets): void {
     state.facets = { ...facets };
+  },
+  setFilters(state: State, filters: ISearchFilter[]): void {
+    state.filters = [...filters];
   },
 };
 

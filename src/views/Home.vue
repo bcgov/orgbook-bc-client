@@ -18,7 +18,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultQuery } from "@/utils/result";
+import { defaultQuery } from "@/utils/search";
 import SearchBar from "@/components/search/SearchBar.vue";
 import SearchResult from "@/components/search/SearchResult.vue";
 

@@ -5,13 +5,36 @@ import { ITopicAttribute, ITopicName } from "../v2/topic.interface";
 
 export interface ISearchQuery {
   q: string | null;
-  latest: boolean | string | null;
-  revoked: boolean | string | null;
-  inactive: boolean | string | null;
-  category: string | null;
-  issuer_id: string | null;
-  type_id: string | null;
-  credential_type_id: string | null;
+  entity_type?: string | string[] | null;
+  entity_status?: string | string[] | null;
+  credential_type_id?: string | string[] | null;
+  [index: string]: ISearchQuery[keyof ISearchQuery];
+}
+
+interface ISearchFilterBase {
+  type: string;
+  key: string;
+  queryParameter: string;
+  label?: string;
+}
+
+export interface ISearchFilterOptions extends ISearchFilterBase {
+  keySelector: (filter?: ISearchFilter) => string;
+  valueSelector: (filter?: ISearchFilter) => string;
+  inclusions?: string[];
+  exclusions?: string[];
+}
+
+export interface ISearchFilter extends ISearchFilterBase {
+  count?: number;
+  text?: string;
+  value?: unknown;
+}
+
+export type ISearchFilterFieldRecord = Record<string, ISearchFilter>;
+
+export interface ISearchFilterFacets {
+  fields: ISearchFilterFieldRecord;
 }
 
 export interface ISearchTopic {
@@ -28,17 +51,8 @@ export interface ISearchTopic {
   effective_date: Date;
   revoked_date: Date;
 }
-export interface ISearchFacetField {
-  value: string;
-  count: number;
-  text: string;
-}
-
-export interface ISearchFacetRecord {
-  fields: Record<string, ISearchFacetField[] | unknown>;
-}
 
 export interface ISearchFacetedTopic {
-  facets: ISearchFacetRecord;
+  facets: ISearchFilterFacets;
   objects: IApiPagedResult<ISearchTopic>;
 }

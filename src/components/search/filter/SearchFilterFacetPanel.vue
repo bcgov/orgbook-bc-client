@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { ISearchFacetField } from "@/interfaces/api/v4/search-topic.interface";
+import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import SearchFilterFacets from "@/components/search/filter/SearchFilterFacets.vue";
 
@@ -32,8 +32,8 @@ interface Data {
   },
 })
 export default class SearchFilterFacetPanel extends Vue {
-  @Prop({ default: () => [] }) fields!: ISearchFacetField[];
-  @Prop({ default: () => [] }) more!: ISearchFacetField[];
+  @Prop({ default: () => [] }) fields!: ISearchFilter[];
+  @Prop({ default: () => [] }) more!: ISearchFilter[];
 
   data(): Data {
     return {

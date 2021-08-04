@@ -18,7 +18,7 @@ import {
   ISearchQuery,
   ISearchTopic,
 } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultQuery } from "@/utils/result";
+import { defaultQuery } from "@/utils/search";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
