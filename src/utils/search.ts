@@ -23,47 +23,56 @@ export function topFieldSelector(
   options: ISearchFilterOptions,
   filters: ISearchFilter[] = []
 ): ISearchFilter[] {
-  const top = [] as ISearchFilter[];
   const inclusions = options.inclusions || [];
-  for (const value of inclusions) {
+  return inclusions.map((inclusion) => {
     const filter = {
       ...options,
       ...filters.find((filter) => {
         return (
           options.keySelector(filter) === options.key &&
-          options.valueSelector(filter) === value
+          options.valueSelector(filter) === inclusion
         );
       }),
     };
-    // In the case where the inclusions are not in the returned filters we set sensible defaults
-    top.push({
-      ...filter,
-      label: `${options.label}.${options.valueSelector(filter) || value}`,
-      key: options.key,
-      value: options.valueSelector(filter) || value,
-      count: filter.count || 0,
-    });
-  }
-  return top;
+    return processFieldWithFallback(options, filter, inclusion);
+  });
 }
 
 export function moreFieldSelector(
   options: ISearchFilterOptions,
   filters: ISearchFilter[] = []
 ): ISearchFilter[] {
-  const more = [] as ISearchFilter[];
   const exclusions = options.exclusions || [];
-  for (const filter of filters.filter(
-    (filter) => options.keySelector(filter) === options.key
-  )) {
-    if (!exclusions.includes(options.valueSelector(filter))) {
-      more.push({
-        ...filter,
-        label: `${options.label}.${options.valueSelector(filter)}`,
-        key: options.key,
-        value: options.valueSelector(filter),
-      });
-    }
-  }
-  return more;
+  return [...filters]
+    .filter((filter) => options.keySelector(filter) === options.key)
+    .filter(
+      (filter) => !exclusions.includes(options.valueSelector(filter) as string)
+    )
+    .map((filter) => processField(options, filter));
+}
+
+export function processField(
+  options: ISearchFilterOptions,
+  filter: ISearchFilter
+): ISearchFilter {
+  return {
+    ...filter,
+    label: `${options.label}.${options.valueSelector(filter)}`,
+    key: options.key,
+    value: options.valueSelector(filter),
+  };
+}
+
+export function processFieldWithFallback(
+  options: ISearchFilterOptions,
+  filter: ISearchFilter,
+  fallback: unknown
+): ISearchFilter {
+  return {
+    ...filter,
+    label: `${options.label}.${options.valueSelector(filter) || fallback}`,
+    key: options.key,
+    value: options.valueSelector(filter) || fallback,
+    count: filter.count || 0,
+  };
 }

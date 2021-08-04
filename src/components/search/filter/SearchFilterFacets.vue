@@ -8,7 +8,12 @@
       >
         <template v-slot:default="{ active }">
           <v-list-item-action>
-            <v-checkbox :input-value="active" color="primary"></v-checkbox>
+            <v-simple-checkbox
+              :ripple="false"
+              :value="isFilterActive(searchFilters, field)"
+              :input-value="active"
+              color="primary"
+            ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content>
             <div>{{ field.label }}</div>
@@ -32,7 +37,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters(["searchQuery", "searchFilter"]),
+    ...mapGetters(["searchQuery", "searchFilters"]),
   },
   methods: {
     ...mapActions(["toggleSearchFilter"]),
@@ -42,5 +47,11 @@ export default class SearchFilterFacets extends Vue {
   searchQuery!: ISearchQuery | null;
 
   @Prop({ default: () => [] }) fields!: ISearchFilter[];
+
+  isFilterActive(filters: ISearchFilter[], field: ISearchFilter): boolean {
+    return !!filters.find(
+      (filter) => filter.key === field.key && filter.value === field.value
+    );
+  }
 }
 </script>

@@ -54,16 +54,12 @@ const getters = {
 
 const actions = {
   setSearchQuery(
-    { commit, dispatch }: ActionContext<State, RootState>,
+    { commit }: ActionContext<State, RootState>,
     query: ISearchQuery
   ): void {
     commit("setQuery", query);
-    dispatch("setSearchFilter", query);
-    router
-      .push({ query: query as unknown as Dictionary<string> })
-      .catch(() => undefined);
   },
-  setSearchFilter(
+  setSearchFilters(
     { commit }: ActionContext<State, RootState>,
     query: ISearchQuery
   ): void {
@@ -76,9 +72,10 @@ const actions = {
     commit("setFilters", filters);
   },
   toggleSearchFilter(
-    { dispatch, getters }: ActionContext<State, RootState>,
+    { commit, getters }: ActionContext<State, RootState>,
     filter: ISearchFilter
   ): void {
+    const query: ISearchQuery = { ...getters.searchQuery };
     const filters: ISearchFilter[] = [...getters.searchFilters];
     const selectedFilter = filters.find(
       (selected) => selected.key === filter.key
@@ -90,23 +87,31 @@ const actions = {
     } else {
       filters.push(filter);
     }
-    const query = { ...getters.searchQuery };
     for (const filter of filters) {
       if (Object.hasOwnProperty.call(query, filter.key)) {
         query[filter.key] = filter.value;
       }
     }
-    dispatch("setSearchQuery", query);
+    commit("setFilters", filters);
+    commit("setQuery", query);
   },
 
-  async fetchSearchFacetedTopics(
-    { commit }: ActionContext<State, RootState>,
-    { ...query }: ISearchQuery
-  ): Promise<void> {
+  async fetchSearchFacetedTopics({
+    commit,
+    getters,
+  }: ActionContext<State, RootState>): Promise<void> {
     try {
-      const res = await v4SearchService.facetedTopic(query);
-      commit("setPage", res.data.objects);
+      const query: ISearchQuery = { ...getters.searchQuery };
+      const filters: ISearchFilter[] = [...getters.searchFilters];
+      const apiQuery: ISearchQuery = { q: query.q };
+      for (const filter of filters) {
+        if (Object.hasOwnProperty.call(query, filter.key)) {
+          apiQuery[filter.queryParameter] = filter.value;
+        }
+      }
+      const res = await v4SearchService.facetedTopic(apiQuery);
       commit("setFacets", res.data.facets);
+      commit("setPage", res.data.objects);
     } catch (e) {
       console.error(e);
     }
@@ -128,6 +133,9 @@ const actions = {
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
     state.query = { ...query };
+    router
+      .push({ query: query as unknown as Dictionary<string> })
+      .catch(() => undefined);
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
     state.page = { ...page };

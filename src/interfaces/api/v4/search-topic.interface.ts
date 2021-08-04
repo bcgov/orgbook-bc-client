@@ -4,10 +4,10 @@ import { ICredentialType } from "../v2/credential-type.interface";
 import { ITopicAttribute, ITopicName } from "../v2/topic.interface";
 
 export interface ISearchQuery {
-  q: string | null;
-  entity_type?: string | string[] | null;
-  entity_status?: string | string[] | null;
-  credential_type_id?: string | string[] | null;
+  q: unknown;
+  entity_type?: unknown;
+  entity_status?: unknown;
+  credential_type_id?: unknown;
   [index: string]: ISearchQuery[keyof ISearchQuery];
 }
 
@@ -19,8 +19,8 @@ interface ISearchFilterBase {
 }
 
 export interface ISearchFilterOptions extends ISearchFilterBase {
-  keySelector: (filter?: ISearchFilter) => string;
-  valueSelector: (filter?: ISearchFilter) => string;
+  keySelector: (filter?: ISearchFilter) => unknown;
+  valueSelector: (filter?: ISearchFilter) => unknown;
   inclusions?: string[];
   exclusions?: string[];
 }

@@ -3,8 +3,11 @@
     <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
       <template v-slot:title> Organization Type </template>
     </SearchFilterFacetPanel>
-    <SearchFilterFacetPanel :fields="topEntityStatuses">
+    <SearchFilterFacetPanel :fields="entityStatuses">
       <template v-slot:title> Organization Status </template>
+    </SearchFilterFacetPanel>
+    <SearchFilterFacetPanel :fields="credentialTypes">
+      <template v-slot:title> Credential </template>
     </SearchFilterFacetPanel>
   </v-expansion-panels>
 </template>
@@ -21,9 +24,14 @@ import {
   fieldKeyFormatter,
   fieldValueFormatter,
   moreFieldSelector,
+  processField,
   topFieldSelector,
 } from "@/utils/search";
-import { entityTypeSpec, entityStatusSpec } from "@/data/search";
+import {
+  entityTypeSpec,
+  entityStatusSpec,
+  credentialTypeSpec,
+} from "@/data/search";
 
 interface Data {
   panel: number[];
@@ -76,18 +84,28 @@ export default class SearchFilterFacetPanels extends Vue {
     );
   }
 
-  get topEntityStatuses(): ISearchFilter[] {
-    return topFieldSelector(
-      {
-        ...entityStatusSpec,
-        inclusions: this.topStatuses,
-        keySelector: (filter?: ISearchFilter) =>
-          fieldKeyFormatter((filter?.value || "::") as string),
-        valueSelector: (filter?: ISearchFilter) =>
-          fieldValueFormatter((filter?.value || "::") as string),
-      },
-      this.searchFilterFields.category as unknown as ISearchFilter[]
-    );
+  get entityStatuses(): ISearchFilter[] {
+    const options = {
+      ...entityStatusSpec,
+      keySelector: (filter?: ISearchFilter) =>
+        fieldKeyFormatter((filter?.value || "::") as string),
+      valueSelector: (filter?: ISearchFilter) =>
+        fieldValueFormatter((filter?.value || "::") as string),
+    };
+    return (this.searchFilterFields.category as unknown as ISearchFilter[])
+      .filter((filter) => options.keySelector(filter) === options.key)
+      .map((filter) => processField(options, filter));
+  }
+
+  get credentialTypes(): ISearchFilter[] {
+    const options = {
+      ...credentialTypeSpec,
+      keySelector: (filter?: ISearchFilter) => filter?.text || "",
+      valueSelector: (filter?: ISearchFilter) => filter?.value || "",
+    };
+    return (
+      this.searchFilterFields.credential_type_id as unknown as ISearchFilter[]
+    ).map((filter) => processField(options, filter));
   }
 }
 </script>
