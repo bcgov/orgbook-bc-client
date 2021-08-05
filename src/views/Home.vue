@@ -18,7 +18,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultQuery } from "@/utils/result";
+import { defaultQuery } from "@/utils/search";
 import SearchBar from "@/components/search/SearchBar.vue";
 import SearchResult from "@/components/search/SearchResult.vue";
 
@@ -35,15 +35,21 @@ interface Data {
     ...mapGetters(["searchQuery", "pagedSearchTopics"]),
   },
   methods: {
-    ...mapActions(["setLoading", "setSearchQuery", "fetchSearchFacetedTopics"]),
+    ...mapActions([
+      "setLoading",
+      "setSearchQuery",
+      "setSearchFilters",
+      "fetchSearchFacetedTopics",
+    ]),
   },
 })
 export default class Home extends Vue {
-  q!: string | null;
+  q!: unknown;
 
   setLoading!: (loading: boolean) => void;
   setSearchQuery!: (query: ISearchQuery) => void;
-  fetchSearchFacetedTopics!: (query: ISearchQuery) => void;
+  setSearchFilters!: (query: ISearchQuery) => void;
+  fetchSearchFacetedTopics!: () => void;
 
   data(): Data {
     return {
@@ -55,7 +61,9 @@ export default class Home extends Vue {
     const query = this.$route.query as unknown as ISearchQuery;
     if (query?.q) {
       this.q = query?.q || null;
-      this.setSearchQuery({ ...defaultQuery, ...query });
+      const newQuery = { ...defaultQuery, ...query };
+      this.setSearchFilters(newQuery);
+      this.setSearchQuery(newQuery);
     }
   }
 
@@ -66,7 +74,7 @@ export default class Home extends Vue {
   ): Promise<void> {
     if (newQuery?.q && JSON.stringify(newQuery) !== JSON.stringify(oldQuery)) {
       this.setLoading(true);
-      await this.fetchSearchFacetedTopics(newQuery);
+      await this.fetchSearchFacetedTopics();
       this.setLoading(false);
     }
   }

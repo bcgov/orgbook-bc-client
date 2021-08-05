@@ -38,11 +38,10 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import _ from "lodash-es";
-import { HttpResponse } from "@/services/http.service";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
-import { defaultQuery } from "@/utils/result";
+import { defaultQuery } from "@/utils/search";
 
 interface Data {
   items: string[];
@@ -68,7 +67,7 @@ export default class SearchBar extends Vue {
   setLoading!: (loading: boolean) => void;
   fetchAutocomplete!: (
     query: string
-  ) => Promise<HttpResponse<IApiPagedResult<ISearchAutocomplete>>>;
+  ) => Promise<IApiPagedResult<ISearchAutocomplete>>;
   setSearchQuery!: (query: ISearchQuery) => void;
 
   debouncedAutocomplete = _.debounce(this.autocomplete, 500);
@@ -95,7 +94,7 @@ export default class SearchBar extends Vue {
       this.pending = true;
       if (q && q !== this.q) {
         const res = await this.fetchAutocomplete(q);
-        results = (res?.data?.results || [])
+        results = (res?.results || [])
           .map((r) => r.value)
           .filter(
             (r) => (r || "").toLowerCase().indexOf((r || "").toLowerCase()) > -1

@@ -3,20 +3,35 @@
     <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
       <template v-slot:title> Organization Type </template>
     </SearchFilterFacetPanel>
-    <SearchFilterFacetPanel :fields="topEntityStatuses">
+    <SearchFilterFacetPanel :fields="entityStatuses">
       <template v-slot:title> Organization Status </template>
+    </SearchFilterFacetPanel>
+    <SearchFilterFacetPanel :fields="credentialTypes">
+      <template v-slot:title> Credential </template>
     </SearchFilterFacetPanel>
   </v-expansion-panels>
 </template>
 
 <script lang="ts">
 import {
-  ISearchFacetField,
-  ISearchFacetRecord,
+  ISearchFilter,
+  ISearchFilterFieldRecord,
 } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterFacetPanel from "@/components/search/filter/SearchFilterFacetPanel.vue";
+import {
+  fieldKeyFormatter,
+  fieldValueFormatter,
+  moreFieldSelector,
+  processField,
+  topFieldSelector,
+} from "@/utils/search";
+import {
+  entityTypeSpec,
+  entityStatusSpec,
+  credentialTypeSpec,
+} from "@/data/search";
 
 interface Data {
   panel: number[];
@@ -27,11 +42,11 @@ interface Data {
     SearchFilterFacetPanel,
   },
   computed: {
-    ...mapGetters(["searchTopicFacets"]),
+    ...mapGetters(["searchFilterFields"]),
   },
 })
 export default class SearchFilterFacetPanels extends Vue {
-  private searchTopicFacets!: ISearchFacetRecord;
+  private searchFilterFields!: ISearchFilterFieldRecord;
   private topTypes: string[] = ["BC", "CP", "GP", "S", "SP"];
   private topStatuses: string[] = ["ACT", "HIS"];
 
@@ -41,65 +56,56 @@ export default class SearchFilterFacetPanels extends Vue {
     };
   }
 
-  private topFieldSelector(top: string[], type: string): ISearchFacetField[] {
-    const fields = [] as ISearchFacetField[];
-    for (const value of top) {
-      const field = this.fieldSelector(type).find(
-        (field) => this.fieldValueFormatter(field.value) === value
-      );
-      fields.push({
-        value: field?.value ? this.fieldValueFormatter(field?.value) : value,
-        count: field?.count || 0,
-        text: field?.text || "",
-      });
-    }
-    return fields;
-  }
-
-  get topEntityTypes(): ISearchFacetField[] {
-    return this.topFieldSelector(this.topTypes, "entity_type");
-  }
-
-  get moreEntityTypes(): ISearchFacetField[] {
-    return this.fieldSelector("entity_type")
-      .filter(
-        (field) =>
-          !this.topTypes.includes(this.fieldValueFormatter(field.value))
-      )
-      .map((field) => ({
-        value: this.fieldValueFormatter(field?.value) || "",
-        count: field?.count || 0,
-        text: field?.text || "",
-      }));
-  }
-
-  get topEntityStatuses(): ISearchFacetField[] {
-    return this.topFieldSelector(this.topStatuses, "entity_status");
-  }
-
-  get facets(): ISearchFacetRecord {
-    return this.searchTopicFacets;
-  }
-
-  get fields(): Record<string, ISearchFacetField[] | unknown> {
-    return (this?.facets?.fields || {}) as Record<
-      string,
-      ISearchFacetField[] | unknown
-    >;
-  }
-
-  get categories(): ISearchFacetField[] {
-    return (this?.fields?.category || []) as ISearchFacetField[];
-  }
-
-  fieldSelector(type: string): ISearchFacetField[] {
-    return (this.categories as ISearchFacetField[]).filter((cat) =>
-      (cat.value as string).includes(type)
+  get topEntityTypes(): ISearchFilter[] {
+    return topFieldSelector(
+      {
+        ...entityTypeSpec,
+        inclusions: this.topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      this.searchFilterFields.category as unknown as ISearchFilter[]
     );
   }
 
-  fieldValueFormatter(value: string): string {
-    return value.split("::")[1];
+  get moreEntityTypes(): ISearchFilter[] {
+    return moreFieldSelector(
+      {
+        ...entityTypeSpec,
+        exclusions: this.topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      this.searchFilterFields.category as unknown as ISearchFilter[]
+    );
+  }
+
+  get entityStatuses(): ISearchFilter[] {
+    const options = {
+      ...entityStatusSpec,
+      keySelector: (filter?: ISearchFilter) =>
+        fieldKeyFormatter((filter?.value || "::") as string),
+      valueSelector: (filter?: ISearchFilter) =>
+        fieldValueFormatter((filter?.value || "::") as string),
+    };
+    return (this.searchFilterFields.category as unknown as ISearchFilter[])
+      .filter((filter) => options.keySelector(filter) === options.key)
+      .map((filter) => processField(options, filter));
+  }
+
+  get credentialTypes(): ISearchFilter[] {
+    const options = {
+      ...credentialTypeSpec,
+      keySelector: (filter?: ISearchFilter) => filter?.text || "",
+      valueSelector: (filter?: ISearchFilter) => filter?.value || "",
+    };
+    return (
+      this.searchFilterFields.credential_type_id as unknown as ISearchFilter[]
+    ).map((filter) => processField(options, filter));
   }
 }
 </script>
