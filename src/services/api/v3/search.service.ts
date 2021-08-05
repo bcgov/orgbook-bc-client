@@ -13,7 +13,7 @@ export default class Search extends ApiResource {
     return await Http.get<IApiPagedResult<ISearchAutocomplete>>(
       this.formatEndpointUrl("autocomplete"),
       {
-        params: { q, revoked: false, inactive: null },
+        params: { q, revoked: false, inactive: "" },
       }
     );
   }

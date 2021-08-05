@@ -1,13 +1,22 @@
 <template>
   <v-list flat>
     <v-list-item-group multiple active-class="">
-      <v-list-item v-for="field in fields" :key="field.value">
+      <v-list-item
+        v-for="field in fields"
+        :key="field.label"
+        @click="toggleSearchFilter(field)"
+      >
         <template v-slot:default="{ active }">
           <v-list-item-action>
-            <v-checkbox :input-value="active" color="primary"></v-checkbox>
+            <v-simple-checkbox
+              :ripple="false"
+              :value="isFilterActive(searchFilters, field)"
+              :input-value="active"
+              color="primary"
+            ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content>
-            <div>{{ field.value }}</div>
+            <div>{{ field.label }}</div>
           </v-list-item-content>
           <v-list-item-action>
             <div>{{ field.count }}</div>
@@ -19,11 +28,30 @@
 </template>
 
 <script lang="ts">
-import { ISearchFacetField } from "@/interfaces/api/v4/search-topic.interface";
+import {
+  ISearchFilter,
+  ISearchQuery,
+} from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters(["searchQuery", "searchFilters"]),
+  },
+  methods: {
+    ...mapActions(["toggleSearchFilter"]),
+  },
+})
 export default class SearchFilterFacets extends Vue {
-  @Prop({ default: () => [] }) fields!: ISearchFacetField[];
+  searchQuery!: ISearchQuery | null;
+
+  @Prop({ default: () => [] }) fields!: ISearchFilter[];
+
+  isFilterActive(filters: ISearchFilter[], field: ISearchFilter): boolean {
+    return !!filters.find(
+      (filter) => filter.key === field.key && filter.value === field.value
+    );
+  }
 }
 </script>

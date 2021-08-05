@@ -17,7 +17,7 @@ export default class Search extends ApiResource {
     return await Http.get<IApiPagedResult<ISearchTopic>>(
       this.formatEndpointUrl("topic"),
       {
-        params: { ...query },
+        params: { ...query, revoked: false, inactive: "" },
       }
     );
   }
@@ -28,7 +28,7 @@ export default class Search extends ApiResource {
     return await Http.get<ISearchFacetedTopic>(
       this.formatEndpointUrl("topic/facets"),
       {
-        params: { ...query },
+        params: { ...query, revoked: false, inactive: "" },
       }
     );
   }
