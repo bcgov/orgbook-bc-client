@@ -9,6 +9,7 @@ import credentialType, {
 } from "./modules/credential-type";
 import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
+import entityFilter, { State as EntityFilterState } from "./modules/entityFilters";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export interface State {
   credentialType: CredentialTypeState;
   search: SearchState;
   topic: TopicState;
+  entityFilter: EntityFilterState;
 }
 
 export default new Vuex.Store({
@@ -29,5 +31,6 @@ export default new Vuex.Store({
     credentialType,
     search,
     topic,
+    entityFilter,
   },
 });
