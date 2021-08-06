@@ -38,6 +38,7 @@
               <v-date-picker
                 v-model="fromDate"
                 @input="menuFrom = false"
+                @change="handleMinDateChange"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -66,6 +67,7 @@
               <v-date-picker
                 v-model="toDate"
                 @input="menuTo = false"
+                @change="handleMaxDateChange"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -79,7 +81,7 @@
       <template #content>
         <v-container>
           <v-col>
-            <p>Show Expired <v-switch v-model="showExpired"></v-switch></p>
+            <p>Show Expired <v-switch @change="handleSwitchChange" v-model="showExpired"></v-switch></p>
           </v-col>
         </v-container>
       </template>
@@ -92,9 +94,10 @@ import {
   IEntityFacetField,
 } from "@/interfaces/api/v2/entityFilter.interface";
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
+import { Filter } from "@/store/modules/entityFilters";
 
 @Component({
   components: {
@@ -107,14 +110,21 @@ import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacet
       "getAuthorities",
       "getCredentialTypes",
       "getRegistrationTypes",
+      "getEntityFilters",
     ]),
   },
+  methods:{
+    ...mapActions([
+      "setFilter"
+    ]),
+  }
 })
 export default class EntityFilterFacetPanels extends Vue {
   private getAuthorities!: Array<IEntityFacetField>;
   private getCredentialTypes!: Array<IEntityFacetField>;
   private getRegistrationTypes!: Array<IEntityFacetField>;
-
+  getEntityFilters!: Filter;
+  setFilter!:(filter:Filter) => void;
   data() {
     return {
       menuFrom: false,
@@ -125,7 +135,22 @@ export default class EntityFilterFacetPanels extends Vue {
       panel: [0, 1, 4],
     };
   }
-
+  handleSwitchChange(newVal:boolean){
+    var currFilters = {...this.getEntityFilters};
+    currFilters.Show_expired=newVal;
+    this.setFilter(currFilters)
+    console.log(this.getEntityFilters);
+  }
+  handleMinDateChange(newVal:string){
+    var currFilters = {...this.getEntityFilters};
+    currFilters.Date_min=newVal;
+    this.setFilter(currFilters);
+  }
+  handleMaxDateChange(newVal:string){
+    var currFilters = {...this.getEntityFilters};
+    currFilters.Date_max=newVal;
+    this.setFilter(currFilters)
+  }
   test() {
     console.log(this.getAuthorities);
   }

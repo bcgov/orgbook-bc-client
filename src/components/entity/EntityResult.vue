@@ -92,12 +92,10 @@
               </div>
             </v-col>
             <v-col class="pl-0 pr-0">
-              <div
-                class="text-body-2 float-right"
-              >
-              <a @click="switchCredentialTimeOrder">Sort by date</a>
-              <v-icon v-if="credentialTimeOrder === 1">mdi-arrow-up</v-icon>
-              <v-icon v-else>mdi-arrow-down</v-icon>
+              <div class="text-body-2 float-right">
+                <a @click="switchCredentialTimeOrder">Sort by date</a>
+                <v-icon v-if="credentialTimeOrder === 1">mdi-arrow-up</v-icon>
+                <v-icon v-else>mdi-arrow-down</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -108,7 +106,7 @@
           <v-timeline-item
             color="blue"
             small
-            v-for="(cred, i) in entityCredntials"
+            v-for="(cred, i) in filteredEntityCredentials"
             :key="i"
           >
             <v-container>
@@ -174,6 +172,7 @@ import SearchFilter from "@/components/search/filter/SearchFilter.vue";
 import SearchFilterChips from "@/components/search/filter/SearchFilterChips.vue";
 import SearchFilterFacetPanels from "@/components/search/filter/SearchFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
+import { Filter } from "@/store/modules/entityFilters";
 
 @Component({
   components: {
@@ -185,7 +184,11 @@ import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vu
     EntityFilterDialog,
   },
   computed: {
-    ...mapGetters(["selectedTopic", "selectedTopicCredentialSet"]),
+    ...mapGetters([
+      "selectedTopic",
+      "selectedTopicCredentialSet",
+      "getEntityFilters",
+    ]),
   },
   methods: {
     ...mapActions([
@@ -210,6 +213,7 @@ export default class EntityResult extends Vue {
   selectedTopicCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
+  getEntityFilters!: Filter;
 
   data() {
     return {
@@ -225,14 +229,49 @@ export default class EntityResult extends Vue {
     };
   }
 
+  // Credential Filters
+
+  credentialFilters: { (creds: Array<ICredential>): Array<ICredential>;} [] = [
+    this.applyDateFilter,
+    this.applyExpiredFilter,
+  ]
+
+  private applyDateFilter(creds: Array<ICredential>): Array<ICredential> {
+    var filteredCreds = creds;
+    
+    if (this.getEntityFilters.Date_min !== "") {
+      filteredCreds = filteredCreds.filter((cred) => {
+        //take the negative condition so we don't have to do another check with isSame
+        return !moment(this.getEntityFilters.Date_min as string).isAfter(
+          cred.effective_date
+        );
+      });
+    }
+
+    if (this.getEntityFilters.Date_max !== "") {
+      filteredCreds = filteredCreds.filter((cred) => {
+        return !moment(this.getEntityFilters.Date_max as string).isBefore(
+          cred.effective_date
+        )
+      });
+    }
+    return filteredCreds;
+  }
+
+  private applyExpiredFilter(creds: Array<ICredential>): Array<ICredential>{
+    var filteredCreds = creds
+    if(!this.getEntityFilters.Show_expired){
+      filteredCreds = creds.filter(cred => !cred.revoked);
+    }
+    return filteredCreds
+  }
+
+
+  //class methods
   test() {
-    //console.log(this.selectedTopicCredentialSet.names)
     console.log(
-      JSON.stringify(this.selectedTopicCredentialSet[0]?.credentials)
+      JSON.stringify(this.filteredEntityCredentials)
     );
-    // this.selectedTopic?.names.forEach(name=>{
-    //   console.log(JSON.stringify(name))
-    // })
   }
 
   toggleShowCreds() {
@@ -266,7 +305,17 @@ export default class EntityResult extends Vue {
     return this.selectedTopic?.source_id;
   }
 
-  get entityCredntials(): Array<ICredential> | undefined {
+  get filteredEntityCredentials(): Array<ICredential> | undefined {
+    if (this.entityCredentials === undefined) {
+      return undefined;
+    }
+    var filteredCreds = this.entityCredentials;
+    this.credentialFilters.forEach(filterFunc => {filteredCreds = filterFunc(filteredCreds)});
+
+    return filteredCreds
+  }
+
+  get entityCredentials(): Array<ICredential> | undefined {
     if (!this.selectedTopicCredentialSet) {
       return undefined;
     }
