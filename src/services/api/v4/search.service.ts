@@ -1,5 +1,6 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import {
+  ISearchFacetedTopic,
   ISearchQuery,
   ISearchTopic,
 } from "@/interfaces/api/v4/search-topic.interface";
@@ -16,7 +17,18 @@ export default class Search extends ApiResource {
     return await Http.get<IApiPagedResult<ISearchTopic>>(
       this.formatEndpointUrl("topic"),
       {
-        params: { ...query },
+        params: { ...query, revoked: false, inactive: "" },
+      }
+    );
+  }
+
+  async facetedTopic(
+    query: ISearchQuery
+  ): Promise<HttpResponse<ISearchFacetedTopic>> {
+    return await Http.get<ISearchFacetedTopic>(
+      this.formatEndpointUrl("topic/facets"),
+      {
+        params: { ...query, revoked: false, inactive: "" },
       }
     );
   }

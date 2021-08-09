@@ -1,4 +1,5 @@
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
+import { ISearchFilterFacets } from "@/interfaces/api/v4/search-topic.interface";
 
 export function defaultPageResult<T>(): IApiPagedResult<T> {
   return {
@@ -12,3 +13,7 @@ export function defaultPageResult<T>(): IApiPagedResult<T> {
     results: [],
   };
 }
+
+export const defaultFacetResult: ISearchFilterFacets = {
+  fields: {},
+};

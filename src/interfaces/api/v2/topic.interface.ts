@@ -1,18 +1,18 @@
-import { IApiResource } from "../resource.interface";
+import { IApiProperty, IApiResource } from "../resource.interface";
 import { IIssuer } from "./issuer.interface";
 
-export interface ITopicName {
+export interface ITopicName extends IApiProperty {
   id: number;
   type: string;
   text: string;
   language: string;
   inactive: boolean;
   credential_id: number;
-  last_updated: "1928-12-28T08:00:00Z";
+  last_updated: Date;
   issuer: IIssuer;
 }
 
-export interface ITopicAttribute {
+export interface ITopicAttribute extends IApiProperty {
   id: number;
   type: string;
   value: string;
