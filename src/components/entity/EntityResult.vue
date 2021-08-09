@@ -133,7 +133,7 @@
                         <v-responsive width="100%"> </v-responsive>
 
                         <v-col>
-                          <h3>DBA name registered</h3>
+                          <h3>{{ entityTypeToName[cred.local_name.type] }}</h3>
                         </v-col>
                         <v-responsive width="100%"> </v-responsive>
 
@@ -226,6 +226,10 @@ export default class EntityResult extends Vue {
         { text: "Relationships", refname: "relationships" },
         { text: "Credentials", refname: "credentials" },
       ],
+      entityTypeToName:{
+        business_number:'Business number issued',
+        entity_name:'DBA name registered'
+      }
     };
   }
 
@@ -234,7 +238,16 @@ export default class EntityResult extends Vue {
   credentialFilters: { (creds: Array<ICredential>): Array<ICredential>;} [] = [
     this.applyDateFilter,
     this.applyExpiredFilter,
+    this.applyCredentialTypeFilter,
   ]
+
+  private applyCredentialTypeFilter(creds: Array<ICredential>): Array<ICredential>{
+    var filteredCreds = creds;
+    if((this.getEntityFilters.Credential_type as string[]).length <= 0){
+      return filteredCreds;
+    }
+    return filteredCreds.filter(cred=>(this.getEntityFilters.Credential_type as string[]).includes(cred.local_name.type))
+  }
 
   private applyDateFilter(creds: Array<ICredential>): Array<ICredential> {
     var filteredCreds = creds;
@@ -270,7 +283,7 @@ export default class EntityResult extends Vue {
   //class methods
   test() {
     console.log(
-      JSON.stringify(this.filteredEntityCredentials)
+      JSON.stringify(this.selectedTopicCredentialSet)
     );
   }
 
@@ -319,7 +332,11 @@ export default class EntityResult extends Vue {
     if (!this.selectedTopicCredentialSet) {
       return undefined;
     }
-    return this.selectedTopicCredentialSet[0]?.credentials.sort(
+    var fullCredentials:ICredential[]=[]
+    this.selectedTopicCredentialSet.forEach(credSet=>{
+      fullCredentials.push(...credSet.credentials);
+    })
+    return fullCredentials.sort(
       (cred1, cred2) =>
         (moment(cred1.effective_date).isBefore(cred2.effective_date) ? 1 : -1) *
         this.credentialTimeOrder

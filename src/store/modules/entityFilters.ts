@@ -34,11 +34,11 @@ const state: State = {
     { text: "MINES", value: "Ministry of Energy, Mines and Low Carbon Innovation", count: 0 }
   ],
   Credential_type: [
-    { text: "BN", value: "Business number", count: 0 },
+    { text: "business_number", value: "Business number", count: 0 },
     { text: "MINES", value: "BC Mines Act permit", count: 0 },
     { text: "CANNABIS_MARKETING", value: "Cannabis marketing license", count: 0 },
     { text: "CANNABIS_RETAIL", value: "Cannabis retail license", count: 0 },
-    { text: "REGISTRATION", value: "Registration", count: 0 }
+    { text: "entity_name", value: "Registration", count: 0 }
   ],
   Registration_type: [
     { text: "AMALGAMATION", value: "Amalgamation", count: 5 },

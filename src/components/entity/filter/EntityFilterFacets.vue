@@ -4,7 +4,7 @@
       <v-list-item v-for="field in fields" :key="field.value">
         <template v-slot:default="{ active }">
           <v-list-item-action>
-            <v-checkbox @change="handleCheckBox($event, field.value)" :input-value="active" color="primary"></v-checkbox>
+            <v-checkbox @change="handleCheckBox($event, field.text)" :input-value="active" color="primary"></v-checkbox>
           </v-list-item-action>
           <v-list-item-content>
             <div>{{ field.value }}</div>
