@@ -31,7 +31,7 @@
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <SearchFilterFacetPanels class="filter-dialog" />
+      <EntityFilterFacetPanels class="filter-dialog" />
       <v-card-actions class="filter-actions justify-center on-top">
         <v-btn elevation="0">Reset</v-btn>
         <v-btn elevation="0" color="primary">Apply</v-btn>
@@ -43,7 +43,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
-import SearchFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
+import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 
 interface Data {
   dialog: boolean;
@@ -51,7 +51,7 @@ interface Data {
 
 @Component({
   components: {
-    SearchFilterFacetPanels,
+    EntityFilterFacetPanels,
   },
   computed: {
     ...mapGetters(["loading"]),
