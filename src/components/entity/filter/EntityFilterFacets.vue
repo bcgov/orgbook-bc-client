@@ -49,7 +49,6 @@ export default class EntityFilterFacets extends Vue {
     }else{
       this.popNewFilter(filterString)
     }
-    console.log(this.getEntityFilters)
   }
   pushNewFilter(filterString:string){
     var baseFilter = this.getEntityFilters

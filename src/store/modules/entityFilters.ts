@@ -3,12 +3,16 @@ import { ITopic } from "@/interfaces/api/v2/topic.interface";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
+import IssuerService from "@/services/api/v3/issuer.service";
+import Topic from "@/services/api/v2/topic.service";
 import _, { filter } from "lodash-es"
+import { ICredential } from "@/interfaces/api/v2/credential.interface";
 
 export type Filter = { [key:string]: string | Array<string> | boolean}
 
 
-
+const issuerService = new IssuerService();
+const topicService = new Topic();
 
 export interface State {
   selected: {
@@ -41,7 +45,7 @@ const state: State = {
     { text: "entity_name", value: "Registration", count: 0 }
   ],
   Registration_type: [
-    { text: "AMALGAMATION", value: "Amalgamation", count: 5 },
+    { text: "AMALGAMATION", value: "Amalgamation", count: 0 },
     { text: "CHANGE", value: "Change of name, address, or other articles", count: 0 },
     { text: "DISSOLUTION", value: "Dissolution", count: 0 },
     { text: "INCORP", value: "Incorporation or registration", count: 0 },
@@ -71,12 +75,33 @@ const getters = {
 };
 
 const actions = {
+  async fetchIssuers({ commit }: ActionContext<State, RootState>): Promise<void>{
+    try {
+      const res = await issuerService.getIssuerList();
+      console.log(res.data)
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async fetchFilters({ commit }: ActionContext<State, RootState>, id:number): Promise<void>{
+    const credList = await topicService.getTopicCredentialSet(id);
+    let fullCredList: ICredential[] = [];
+    (credList.data as unknown as Array<ICredentialSet>).forEach(credSet=>{fullCredList = [...fullCredList, ...credSet.credentials]})
+    commit("setFilterCounts", fullCredList)
+  },
   setFilter({ commit }: ActionContext<State, RootState>, filter: Filter): void {
+    console.log(filter)
     commit("setFilter", filter);
   },
 };
 
 const mutations = {
+
+  setFilterCounts: (state: State, fullCredList: ICredential[]): void =>{
+    state.Authorities.forEach(obj=>{obj.count = fullCredList.filter(cred => cred.local_name.text === obj.text).length})
+    state.Credential_type.forEach(obj=>{obj.count = fullCredList.filter(cred =>  cred.local_name.type === obj.text).length})
+  },
+
   setFilter: (state: State, filter: Filter): Filter | null => {
     //need a deep clone since we are copying a nested object
     state.EntityFilter = {...filter};

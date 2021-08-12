@@ -195,6 +195,8 @@ import { Filter } from "@/store/modules/entityFilters";
       "setLoading",
       "fetchFormattedIdentifiedTopic",
       "fetchTopicCredentialSet",
+      "fetchIssuers",
+      "fetchFilters"
     ]),
   },
 })
@@ -202,6 +204,8 @@ export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   credItemsExpanded!: boolean;
   currentTab!: string;
+  fetchIssuers!: () => Promise<void>;
+  fetchFilters!: (id:number) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -393,6 +397,9 @@ export default class EntityResult extends Vue {
   async created(): Promise<void> {
     this.setLoading(true);
     const { sourceId } = this.$route.params;
+    console.log("got here")
+    this.fetchIssuers();
+    
     if (sourceId) {
       await this.fetchFormattedIdentifiedTopic({
         sourceId,
@@ -401,6 +408,7 @@ export default class EntityResult extends Vue {
       const topic: ITopic = this.$store.getters.selectedTopic;
       if (topic?.id) {
         await this.fetchTopicCredentialSet(topic.id);
+        await this.fetchFilters(topic.id);
       }
     }
     this.setLoading(false);
