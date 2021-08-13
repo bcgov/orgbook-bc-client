@@ -12,11 +12,10 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-
-
 @Component({
-  components: {
-  },
+  components: {},
 })
-export default class CustomFilterFacetPanel extends Vue {}
+export default class CustomFilterFacetPanel extends Vue {
+  @Prop({ default: "" }) title!: string;
+}
 </script>

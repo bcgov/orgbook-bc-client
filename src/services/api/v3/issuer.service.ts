@@ -7,11 +7,7 @@ export default class Issuer extends ApiResource {
   baseVersion = "v3";
   basePath = "issuer";
 
-  async getIssuerList(): Promise<
-    HttpResponse<IApiPagedResult<IIssuer>>
-  > {
-    return await Http.get<IApiPagedResult<IIssuer>>(
-      this.formatEndpointUrl("")
-    );
+  async getIssuerList(): Promise<HttpResponse<IApiPagedResult<IIssuer>>> {
+    return await Http.get<IApiPagedResult<IIssuer>>(this.formatEndpointUrl(""));
   }
 }

@@ -4,10 +4,16 @@
     <EntityFilterFacetPanel filterField="Authorities" :fields="getAuthorities">
       <template v-slot:title> Authority </template>
     </EntityFilterFacetPanel>
-    <EntityFilterFacetPanel filterField="Credential_type" :fields="getCredentialTypes">
+    <EntityFilterFacetPanel
+      filterField="Credential_type"
+      :fields="getCredentialTypes"
+    >
       <template v-slot:title> Credential type </template>
     </EntityFilterFacetPanel>
-    <EntityFilterFacetPanel filterField="Registration_type" :fields="getRegistrationTypes">
+    <EntityFilterFacetPanel
+      filterField="Registration_type"
+      :fields="getRegistrationTypes"
+    >
       <template v-slot:title> Registration type </template>
     </EntityFilterFacetPanel>
     <CustomFilterFacetPanel>
@@ -81,7 +87,13 @@
       <template #content>
         <v-container>
           <v-col>
-            <p>Show Expired <v-switch @change="handleSwitchChange" v-model="showExpired"></v-switch></p>
+            <p>
+              Show Expired
+              <v-switch
+                @change="handleSwitchChange"
+                v-model="showExpired"
+              ></v-switch>
+            </p>
           </v-col>
         </v-container>
       </template>
@@ -90,14 +102,21 @@
 </template>
 
 <script lang="ts">
-import {
-  IEntityFacetField,
-} from "@/interfaces/api/v2/entityFilter.interface";
+import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
 import { Filter } from "@/store/modules/entityFilters";
+
+interface Data {
+  menuFrom: boolean;
+  menuTo: boolean;
+  showExpired: boolean;
+  fromDate: string;
+  toDate: string;
+  panel: number[];
+}
 
 @Component({
   components: {
@@ -113,19 +132,17 @@ import { Filter } from "@/store/modules/entityFilters";
       "getEntityFilters",
     ]),
   },
-  methods:{
-    ...mapActions([
-      "setFilter"
-    ]),
-  }
+  methods: {
+    ...mapActions(["setFilter"]),
+  },
 })
 export default class EntityFilterFacetPanels extends Vue {
   private getAuthorities!: Array<IEntityFacetField>;
   private getCredentialTypes!: Array<IEntityFacetField>;
   private getRegistrationTypes!: Array<IEntityFacetField>;
   getEntityFilters!: Filter;
-  setFilter!:(filter:Filter) => void;
-  data() {
+  setFilter!: (filter: Filter) => void;
+  data(): Data {
     return {
       menuFrom: false,
       menuTo: false,
@@ -135,23 +152,23 @@ export default class EntityFilterFacetPanels extends Vue {
       panel: [0, 1, 4],
     };
   }
-  handleSwitchChange(newVal:boolean){
-    var currFilters = {...this.getEntityFilters};
-    currFilters.Show_expired=newVal;
-    this.setFilter(currFilters)
+  handleSwitchChange(newVal: boolean): void {
+    var currFilters = { ...this.getEntityFilters };
+    currFilters.Show_expired = newVal;
+    this.setFilter(currFilters);
     console.log(this.getEntityFilters);
   }
-  handleMinDateChange(newVal:string){
-    var currFilters = {...this.getEntityFilters};
-    currFilters.Date_min=newVal;
+  handleMinDateChange(newVal: string): void {
+    var currFilters = { ...this.getEntityFilters };
+    currFilters.Date_min = newVal;
     this.setFilter(currFilters);
   }
-  handleMaxDateChange(newVal:string){
-    var currFilters = {...this.getEntityFilters};
-    currFilters.Date_max=newVal;
-    this.setFilter(currFilters)
+  handleMaxDateChange(newVal: string): void {
+    var currFilters = { ...this.getEntityFilters };
+    currFilters.Date_max = newVal;
+    this.setFilter(currFilters);
   }
-  test() {
+  test(): void {
     console.log(this.getAuthorities);
   }
 }

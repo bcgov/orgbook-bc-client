@@ -9,7 +9,9 @@ import credentialType, {
 } from "./modules/credential-type";
 import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
-import entityFilter, { State as EntityFilterState } from "./modules/entityFilters";
+import entityFilter, {
+  State as EntityFilterState,
+} from "./modules/entityFilters";
 
 Vue.use(Vuex);
 

@@ -1,8 +1,8 @@
-import Vue from "vue"
-import moment from 'moment'
+import Vue from "vue";
+import moment from "moment";
 
-Vue.filter('formatDate', function(value:string) {
+Vue.filter("formatDate", function (value: string, format = "MMM DD, YYYY") {
   if (value) {
-    return moment(String(value)).format('MMM DD, YYYY')
+    return moment(value).format(format);
   }
-})
+});
