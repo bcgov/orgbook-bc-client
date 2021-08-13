@@ -6,11 +6,13 @@ import { State as RootState } from "@/store/index";
 import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
+import CredentialType from "@/services/api/v2/credential-type.service"
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
 const issuerService = new IssuerService();
 const topicService = new Topic();
+const credentialTypeService = new CredentialType();
 
 export interface State {
   selected: {
@@ -29,27 +31,8 @@ const state: State = {
     credentialSet: null,
   },
   EntityFilter: null,
-  Authorities: [
-    { text: "CRA", value: "Canada Revenue Agency", count: 0 },
-    { text: "BCREG", value: "BC Corporate Registry", count: 0 },
-    { text: "LIQUOR", value: "Liquor & Cannabis Regulation Branch", count: 0 },
-    {
-      text: "MINES",
-      value: "Ministry of Energy, Mines and Low Carbon Innovation",
-      count: 0,
-    },
-  ],
-  Credential_type: [
-    { text: "business_number", value: "Business number", count: 0 },
-    { text: "MINES", value: "BC Mines Act permit", count: 0 },
-    {
-      text: "CANNABIS_MARKETING",
-      value: "Cannabis marketing license",
-      count: 0,
-    },
-    { text: "CANNABIS_RETAIL", value: "Cannabis retail license", count: 0 },
-    { text: "entity_name", value: "Registration", count: 0 },
-  ],
+  Authorities: [],
+  Credential_type: [],
   Registration_type: [
     { text: "AMALGAMATION", value: "Amalgamation", count: 0 },
     {
@@ -91,11 +74,20 @@ const actions = {
     commit,
   }: ActionContext<State, RootState>): Promise<void> {
     try {
-      const res = await issuerService.getIssuerList();
-      console.log(res.data);
+      const res = await (await issuerService.getIssuerList()).data.results.map(issuer => { return { text: issuer.abbreviation, value: issuer.name, count: 0 } });
+      commit("setIssuers", res)
+      console.log(res);
     } catch (e) {
       console.error(e);
     }
+
+  },
+  async fetchCredntialType({ commit }: ActionContext<State, RootState>): Promise<void> {
+    const credTypeListResp = await credentialTypeService.getCredentialTypes();
+    const credTypeList: IEntityFacetField[] = credTypeListResp.data.results.map(credType => {
+      return { text: credType.schema.name, value: credType.schema.name, count: 0 }
+    })
+    commit("setCredTypes", credTypeList);
   },
   async fetchFilters(
     { commit }: ActionContext<State, RootState>,
@@ -123,11 +115,16 @@ const mutations = {
     });
     state.Credential_type.forEach((obj) => {
       obj.count = fullCredList.filter(
-        (cred) => cred.local_name.type === obj.text
+        (cred) => cred.credential_type.description === obj.text
       ).length;
     });
   },
-
+  setCredTypes(state: State, credTypes: IEntityFacetField[]) {
+    state.Credential_type = credTypes;
+  },
+  setIssuers(state: State, issuers: IEntityFacetField[]) {
+    state.Authorities = issuers;
+  },
   setFilter: (state: State, filter: Filter): Filter | null => {
     //need a deep clone since we are copying a nested object
     state.EntityFilter = { ...filter };

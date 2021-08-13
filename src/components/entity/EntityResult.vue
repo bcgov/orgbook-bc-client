@@ -207,6 +207,7 @@ interface Data {
       "fetchFormattedIdentifiedTopic",
       "fetchTopicCredentialSet",
       "fetchIssuers",
+      "fetchCredntialType",
       "fetchFilters",
     ]),
   },
@@ -216,6 +217,7 @@ export default class EntityResult extends Vue {
   credItemsExpanded!: boolean;
   currentTab!: string;
   fetchIssuers!: () => Promise<void>;
+  fetchCredntialType!: () => Promise<void>;
   fetchFilters!: (id: number) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
@@ -265,7 +267,7 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.Credential_type as string[]).includes(
-        cred.local_name.type
+        cred.credential_type.description
       )
     );
   }
@@ -413,8 +415,6 @@ export default class EntityResult extends Vue {
   async created(): Promise<void> {
     this.setLoading(true);
     const { sourceId } = this.$route.params;
-    console.log("got here");
-    this.fetchIssuers();
 
     if (sourceId) {
       await this.fetchFormattedIdentifiedTopic({
@@ -423,6 +423,7 @@ export default class EntityResult extends Vue {
       });
       const topic: ITopic = this.$store.getters.selectedTopic;
       if (topic?.id) {
+        await Promise.all([this.fetchIssuers(), this.fetchCredntialType()])
         await this.fetchTopicCredentialSet(topic.id);
         await this.fetchFilters(topic.id);
       }
