@@ -5,9 +5,10 @@
         v-for="field in fields"
         :key="field.label"
         @click="toggleSearchFilter(field)"
+        class="pa-0"
       >
         <template v-slot:default="{ active }">
-          <v-list-item-action>
+          <v-list-item-action class="mr-2">
             <v-simple-checkbox
               :ripple="false"
               :value="isFilterActive(searchFilters, field)"
@@ -16,9 +17,9 @@
             ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content>
-            <div>{{ field.label }}</div>
+            <div>{{ $t(field.label) }}</div>
           </v-list-item-content>
-          <v-list-item-action>
+          <v-list-item-action class="d-flex justify-end">
             <div>{{ field.count }}</div>
           </v-list-item-action>
         </template>

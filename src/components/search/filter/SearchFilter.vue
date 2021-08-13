@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col v-if="$vuetify.breakpoint.smAndDown" class="pl-0 pr-0">
-      <div class="flex-row flex-align-items-center"><SearchFilterDialog /></div>
+      <div class="d-flex align-center"><SearchFilterDialog /></div>
     </v-col>
     <v-col v-if="pagedSearchTopics.total" class="pl-0 pr-0">
       <div

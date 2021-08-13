@@ -6,9 +6,7 @@
     <v-expansion-panel-content>
       <SearchFilterFacets :fields="fields" />
       <template v-if="more.length">
-        <a
-          class="flex-row flex-align-items-center justify-center"
-          @click="show = !show"
+        <a class="d-flex align-center justify-center" @click="show = !show"
           ><span v-if="show">Show less</span><span v-else>Show more</span></a
         >
         <SearchFilterFacets v-if="show" :fields="more" />

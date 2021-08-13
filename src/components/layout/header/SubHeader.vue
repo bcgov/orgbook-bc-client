@@ -1,7 +1,7 @@
 <template>
   <v-toolbar color="secondary" flat>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-      <v-row v-if="links.length" class="flex-col-align-center">
+      <v-row v-if="links.length" class="d-flex align-center">
         <v-col class="pa-4">
           <v-btn
             v-for="link in links"

@@ -12,13 +12,13 @@
     </div>
     <v-card-text :class="{ 'pt-2': entityStatus === 'HIS' }">
       <router-link :to="'/entity/' + sourceId">{{ legalName }}</router-link>
-      <div>{{ entityType }}</div>
-      <div v-if="craBusinessNumber">
+      <div>{{ $t(`entity_type.${entityType}`) }}</div>
+      <div v-if="craBusinessNumber" class="text--primary">
         <span>Business number</span>
         <span>:&nbsp;</span>
         <span>{{ craBusinessNumber }}</span>
       </div>
-      <div>
+      <div class="text--primary">
         <span>Incorporation number</span>
         <span>:&nbsp;</span>
         <span>{{ sourceId }}</span>

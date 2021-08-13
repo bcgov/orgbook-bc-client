@@ -41,29 +41,6 @@ export default class App extends Vue {}
   margin: 0;
   padding: 0;
 }
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-.flex-justify-content-start {
-  justify-content: start;
-}
-.flex-justify-content-end {
-  justify-content: end;
-}
-.flex-justify-content-flex-end {
-  justify-content: flex-end;
-}
-.flex-align-content-center {
-  align-content: center;
-}
-.flex-align-items-center {
-  align-items: center;
-}
 .on-top {
   z-index: 1 !important;
 }

@@ -2,22 +2,17 @@
   <div>
     <v-app-bar app color="primary" dark flat>
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-        <v-row class="flex-col-align-center">
+        <v-row class="d-flex align-center">
           <v-col
             :class="{
               'pl-1': $vuetify.breakpoint.smAndDown,
               'pl-5': $vuetify.breakpoint.mdAndUp,
-              'flex-row flex-align-items-center': true,
+              'd-flex align-center': true,
             }"
           >
             <v-app-bar-title>Logo here!</v-app-bar-title>
           </v-col>
-          <v-col
-            class="
-              pa-0
-              flex-row flex-justify-content-flex-end flex-align-items-center
-            "
-          >
+          <v-col class="pa-0 d-flex justify-end align-center">
             <div v-if="$vuetify.breakpoint.mdAndUp">
               <v-btn
                 v-for="link in links"

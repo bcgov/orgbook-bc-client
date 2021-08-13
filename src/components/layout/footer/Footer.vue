@@ -31,7 +31,7 @@
               :to="link.path"
               :ripple="false"
               :block="$vuetify.breakpoint.smAndDown"
-              class="text-capitalize flex-justify-content-start"
+              class="d-inline-flex justify-start text-capitalize"
               >{{ link.label }}</v-btn
             >
           </v-col>
