@@ -6,9 +6,10 @@ import {
 
 export const defaultQuery: ISearchQuery = {
   q: null,
-  entity_status: "",
-  entity_type: "",
+  "category:entity_type": "",
   credential_type_id: "",
+  inactive: "",
+  page: "1",
 };
 
 export function fieldKeyFormatter(value = ""): string {
@@ -56,6 +57,7 @@ export function processField(
   filter: ISearchFilter
 ): ISearchFilter {
   return {
+    ...options,
     ...filter,
     label: `${options.label}.${options.valueSelector(filter)}`,
     key: options.key,
@@ -69,10 +71,26 @@ export function processFieldWithFallback(
   fallback: unknown
 ): ISearchFilter {
   return {
+    ...options,
     ...filter,
     label: `${options.label}.${options.valueSelector(filter) || fallback}`,
     key: options.key,
     value: options.valueSelector(filter) || fallback,
     count: filter.count || 0,
   };
+}
+
+export function getFilterValue(filter: ISearchFilter): unknown {
+  let returnValue = undefined;
+  const localValue = filter.value as string;
+  if (filter?.valueMapper) {
+    if (Object.values(filter.valueMapper).includes(localValue)) {
+      returnValue = localValue;
+    } else if (filter.valueMapper[localValue]) {
+      returnValue = filter.valueMapper[localValue];
+    }
+  } else {
+    returnValue = filter.value;
+  }
+  return returnValue;
 }

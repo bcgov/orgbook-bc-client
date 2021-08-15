@@ -10,10 +10,11 @@
         <template v-slot:default="{ active }">
           <v-list-item-action class="mr-2">
             <v-simple-checkbox
+              color="primary"
               :ripple="false"
               :value="isFilterActive(searchFilters, field)"
               :input-value="active"
-              color="primary"
+              @click="toggleSearchFilter(field)"
             ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content>
@@ -33,6 +34,7 @@ import {
   ISearchFilter,
   ISearchQuery,
 } from "@/interfaces/api/v4/search-topic.interface";
+import { getFilterValue } from "@/utils/search";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -51,7 +53,9 @@ export default class SearchFilterFacets extends Vue {
 
   isFilterActive(filters: ISearchFilter[], field: ISearchFilter): boolean {
     return !!filters.find(
-      (filter) => filter.key === field.key && filter.value === field.value
+      (filter) =>
+        filter.key === field.key &&
+        getFilterValue(filter) === getFilterValue(field)
     );
   }
 }

@@ -55,7 +55,7 @@ interface Data {
     ...mapGetters(["loading"]),
   },
   methods: {
-    ...mapActions(["fetchAutocomplete", "setSearchQuery"]),
+    ...mapActions(["fetchAutocomplete", "fetchSearch"]),
   },
 })
 export default class SearchBar extends Vue {
@@ -68,7 +68,7 @@ export default class SearchBar extends Vue {
   fetchAutocomplete!: (
     query: string
   ) => Promise<IApiPagedResult<ISearchAutocomplete>>;
-  setSearchQuery!: (query: ISearchQuery) => void;
+  fetchSearch!: (query: ISearchQuery) => void;
 
   debouncedAutocomplete = _.debounce(this.autocomplete, 500);
 
@@ -114,14 +114,16 @@ export default class SearchBar extends Vue {
   }
 
   onClick(): void {
-    this.setSearchQuery({ ...defaultQuery, ...{ q: this.search } });
+    const query = { ...defaultQuery, ...{ q: this.search } };
+    this.fetchSearch(query);
   }
 
   onChange(q: string): void {
     if (q === this.search) {
       return;
     }
-    this.setSearchQuery({ ...defaultQuery, ...{ q } });
+    const query = { ...defaultQuery, ...{ q } };
+    this.fetchSearch(query);
   }
 }
 </script>

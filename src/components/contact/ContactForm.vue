@@ -160,7 +160,7 @@ export default class ContactForm extends Vue {
       this.setLoading(true);
       await this.sendFeedback(this.formData);
       this.setLoading(false);
-      router.push("/");
+      router.push({ name: "Search" });
     }
   }
 }

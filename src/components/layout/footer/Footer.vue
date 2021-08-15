@@ -28,7 +28,7 @@
               plain
               text
               color="white"
-              :to="link.path"
+              :to="{ name: link.name }"
               :ripple="false"
               :block="$vuetify.breakpoint.smAndDown"
               class="d-inline-flex justify-start text-capitalize"

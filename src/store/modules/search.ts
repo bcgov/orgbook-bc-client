@@ -18,7 +18,10 @@ import {
   credentialTypeSpec,
   entityStatusSpec,
   entityTypeSpec,
+  pageSpec,
 } from "@/data/search";
+import { getFilterValue } from "@/utils/search";
+import { objHasProp } from "@/utils/general";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
@@ -27,6 +30,7 @@ const filterSpec: ISearchFilter[] = [
   entityStatusSpec,
   entityTypeSpec,
   credentialTypeSpec,
+  pageSpec,
 ];
 
 export interface State {
@@ -64,15 +68,15 @@ const actions = {
     query: ISearchQuery
   ): void {
     const filters = filterSpec.filter((filter) =>
-      Object.hasOwnProperty.call(query, filter.key)
+      objHasProp(query, filter.queryParameter)
     );
     for (const filter of filters) {
-      filter.value = query[filter.key];
+      filter.value = query[filter.queryParameter];
     }
     commit("setFilters", filters);
   },
   toggleSearchFilter(
-    { commit, getters }: ActionContext<State, RootState>,
+    { dispatch, getters }: ActionContext<State, RootState>,
     filter: ISearchFilter
   ): void {
     const query: ISearchQuery = { ...getters.searchQuery };
@@ -81,19 +85,20 @@ const actions = {
       (selected) => selected.key === filter.key
     );
     if (selectedFilter) {
-      selectedFilter.value =
-        selectedFilter.value !== filter.value ? filter.value : "";
+      const value = filter?.valueMapper
+        ? filter.valueMapper[filter.value as string]
+        : filter.value;
+      selectedFilter.value = selectedFilter.value !== value ? value : "";
       filters.splice(filters.indexOf(selectedFilter), 1, selectedFilter);
     } else {
       filters.push(filter);
     }
     for (const filter of filters) {
-      if (Object.hasOwnProperty.call(query, filter.key)) {
-        query[filter.key] = filter.value;
-      }
+      query[filter.queryParameter] = getQueryValueFromFilter(query, filter);
     }
-    commit("setFilters", filters);
-    commit("setQuery", query);
+    // Reset the page back to the first
+    query["page"] = 1;
+    dispatch("fetchSearch", query);
   },
 
   async fetchSearchFacetedTopics({
@@ -105,9 +110,10 @@ const actions = {
       const filters: ISearchFilter[] = [...getters.searchFilters];
       const apiQuery: ISearchQuery = { q: query.q };
       for (const filter of filters) {
-        if (Object.hasOwnProperty.call(query, filter.key)) {
-          apiQuery[filter.queryParameter] = filter.value;
-        }
+        apiQuery[filter.queryParameter] = getQueryValueFromFilter(
+          query,
+          filter
+        );
       }
       const res = await v4SearchService.facetedTopic(apiQuery);
       commit("setFacets", res.data.facets);
@@ -118,24 +124,31 @@ const actions = {
   },
   async fetchAutocomplete(
     _: ActionContext<State, RootState>,
-    query: string
+    q: string
   ): Promise<IApiPagedResult<ISearchAutocomplete>> {
     try {
-      const res = await v3SearchService.autocomplete(query);
+      const res = await v3SearchService.autocomplete(q);
       return res.data;
     } catch (e) {
       console.error(e);
       return defaultPageResult<ISearchAutocomplete>();
     }
   },
+  async fetchSearch(
+    { dispatch }: ActionContext<State, RootState>,
+    query: ISearchQuery
+  ): Promise<void> {
+    dispatch("setSearchQuery", query);
+    dispatch("setSearchFilters", query);
+    router
+      .push({ name: "Search", query: query as unknown as Dictionary<string> })
+      .catch(() => undefined);
+  },
 };
 
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
     state.query = { ...query };
-    router
-      .push({ query: query as unknown as Dictionary<string> })
-      .catch(() => undefined);
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
     state.page = { ...page };
@@ -154,3 +167,19 @@ export default {
   actions,
   mutations,
 };
+
+// Helper functions
+
+function getQueryValueFromFilter(
+  query: ISearchQuery,
+  filter: ISearchFilter
+): unknown {
+  let value = undefined;
+  if (objHasProp(query, filter.queryParameter)) {
+    value = getFilterValue(filter);
+  }
+  if (value === undefined && objHasProp(filter, "defaultValue")) {
+    value = filter.defaultValue;
+  }
+  return value;
+}

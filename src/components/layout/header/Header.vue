@@ -20,7 +20,7 @@
                 plain
                 text
                 color="white"
-                :to="link.path"
+                :to="{ name: link.name }"
                 :ripple="false"
                 class="text-capitalize"
                 >{{ link.label }}</v-btn
