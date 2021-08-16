@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels multiple flat accordion v-model="panel" class="on-bottom">
+  <v-expansion-panels multiple flat accordion v-model="panel">
     <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
       <template v-slot:title> Organization Type </template>
     </SearchFilterFacetPanel>

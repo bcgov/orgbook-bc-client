@@ -97,9 +97,9 @@ export default class Search extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search-bar {
-  color: white;
-  background: #b3b3b3;
+  background: $secondary-color;
+  color: $white;
 }
 </style>

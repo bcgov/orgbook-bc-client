@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Header class="on-top" />
+    <Header />
     <v-main>
       <Loading v-if="loading" />
       <router-view></router-view>
@@ -36,7 +36,13 @@ import { mapGetters } from "vuex";
 export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
+body {
+  color: $text-color !important;
+}
+a {
+  color: $link-color !important;
+}
 .row {
   margin: 0;
   padding: 0;

@@ -18,7 +18,7 @@
         </v-row>
       </v-container>
     </div>
-    <v-footer color="primary" class="pl-0 pr-0">
+    <v-footer color="primary" class="footer pl-0 pr-0">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row>
           <v-col class="pl-1 pr-2 pt-0 pb-0">
@@ -67,12 +67,18 @@ export default class Footer extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.footer {
+  background: $primary-color !important;
+  color: $white;
+}
 .footer-feedback {
-  background: #d3d3d3;
+  background: $background-color;
+  color: $text-color;
+  border-top: 1px solid $border-color;
 }
 .footer-about {
-  color: white;
-  background: #b3b3b3;
+  background: $secondary-color;
+  color: $white;
 }
 </style>

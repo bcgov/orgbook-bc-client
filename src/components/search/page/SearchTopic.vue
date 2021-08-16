@@ -1,9 +1,12 @@
 <template>
-  <v-card elevation="2" rounded="sm" class="mb-5">
-    <div
-      class="historical d-inline-flex rounded-sm"
-      v-if="entityStatus === 'HIS'"
-    >
+  <v-card
+    elevation="0"
+    rounded="sm"
+    class="card mb-5"
+    :ripple="false"
+    @click="$router.push({ path: `/entity/${sourceId}` })"
+  >
+    <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
       <v-icon small class="pa-1" color="white">mdi-alert-outline</v-icon>
       <span
         class="text-uppercase text-caption font-weight-medium pr-1 pt-1 pb-1"
@@ -62,10 +65,21 @@ export default class SearchTopic extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.card {
+  border: 1px solid $border-color !important;
+  box-shadow: 3px 3px 6px -3px $border-color !important;
+
+  &:hover {
+    padding: 0px;
+    border: 1px solid $link-color !important;
+    cursor: pointer;
+  }
+}
 .historical {
+  border-radius: 1px 0px 0px 0px !important;
   align-items: center;
-  background: orange;
-  color: white;
+  background: $accent-color;
+  color: $white;
 }
 </style>

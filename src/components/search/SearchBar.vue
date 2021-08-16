@@ -11,7 +11,6 @@
       cache-items
       hide-no-data
       hide-details
-      color="white"
       background-color="white"
       v-model="q"
       :disabled="loading"
@@ -20,6 +19,7 @@
       append-outer-icon="mdi-magnify"
       @input.native="updateModel"
       @change="onChange"
+      class="combobox"
     >
       <template v-slot:append-outer>
         <v-progress-circular
@@ -128,8 +128,8 @@ export default class SearchBar extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search-bar {
-  color: white;
+  color: $white;
 }
 </style>
