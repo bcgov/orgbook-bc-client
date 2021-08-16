@@ -32,10 +32,6 @@
         </v-toolbar-items>
       </v-toolbar>
       <EntityFilterFacetPanels class="filter-dialog" />
-      <v-card-actions class="filter-actions justify-center on-top">
-        <v-btn elevation="0">Reset</v-btn>
-        <v-btn elevation="0" color="primary">Apply</v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

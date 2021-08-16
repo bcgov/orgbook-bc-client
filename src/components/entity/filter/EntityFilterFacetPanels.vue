@@ -1,6 +1,6 @@
 <template>
   <v-expansion-panels multiple flat accordion v-model="panel" class="on-bottom">
-    <v-btn @click="test">TEST</v-btn>
+    <!-- <v-btn @click="test">TEST</v-btn> -->
     <EntityFilterFacetPanel filterField="Authorities" :fields="getAuthorities">
       <template v-slot:title> Authority </template>
     </EntityFilterFacetPanel>
@@ -20,7 +20,7 @@
       <template #title> Date effective</template>
       <template #content>
         <v-row>
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="12">
             <v-menu
               v-model="menuFrom"
               :close-on-content-click="false"
@@ -36,6 +36,8 @@
                     label="From:"
                     append-icon="mdi-calendar"
                     readonly
+                    clearable
+                    @click:clear="resetMinDate"
                     v-bind="attrs"
                     v-on="on"
                   ></v-text-field>
@@ -49,7 +51,7 @@
             </v-menu>
           </v-col>
 
-          <v-col cols="12" sm="6" md="4">
+          <v-col cols="12" sm="12">
             <v-menu
               v-model="menuTo"
               :close-on-content-click="false"
@@ -65,6 +67,8 @@
                     label="To:"
                     append-icon="mdi-calendar"
                     readonly
+                    clearable
+                    @click:clear="resetMaxDate"
                     v-bind="attrs"
                     v-on="on"
                   ></v-text-field>
@@ -157,6 +161,16 @@ export default class EntityFilterFacetPanels extends Vue {
     currFilters.Show_expired = newVal;
     this.setFilter(currFilters);
     console.log(this.getEntityFilters);
+  }
+  resetMinDate(): void {
+    var currFilters = { ...this.getEntityFilters };
+    currFilters.Date_min = '';
+    this.setFilter(currFilters);
+  }
+  resetMaxDate(): void {
+    var currFilters = { ...this.getEntityFilters };
+    currFilters.Date_max = '';
+    this.setFilter(currFilters);
   }
   handleMinDateChange(newVal: string): void {
     var currFilters = { ...this.getEntityFilters };

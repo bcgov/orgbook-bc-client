@@ -4,8 +4,7 @@
     ><a href="/" append-icon="mdi-map-marker">Back to search</a>
     <h3>{{ entityName }}</h3>
     <p>
-      Business number: <br />{{ entityActive }}
-      <span v-if="entityJurisdiction === 'BC'">• BC Corporation</span>
+      Business number: <br />{{ $t(entityState) }} • {{ $t(entityJurisdiction) }}
     </p>
 
     <v-tabs v-model="currentTab">
@@ -36,9 +35,8 @@
           </template>
           <template #content>
             <p>
-              {{ entityName }} is
-              <span v-if="entityJurisdiction !== 'BC'">not</span> a
-              <a>BC Corporation</a>
+              {{ entityName }} is a
+              <a>{{ $t(entityJurisdiction) }}</a>
             </p>
 
             <p>
@@ -91,6 +89,7 @@
                 <EntityFilterDialog />
               </div>
             </v-col>
+
             <v-col class="pl-0 pr-0">
               <div class="text-body-2 float-right">
                 <a @click="switchCredentialTimeOrder">Sort by date</a>
@@ -101,62 +100,77 @@
           </v-row>
         </v-container>
         <!-- body of the credential card -->
-        <v-timeline dense class="on-bottom">
-          <!-- creates a timeline item for each credential in the entity -->
-          <v-timeline-item
-            color="blue"
-            small
-            v-for="(cred, i) in filteredEntityCredentials"
-            :key="i"
+        <v-row>
+          <v-col
+            v-if="$vuetify.breakpoint.mdAndUp"
+            cols="12"
+            md="5"
+            class="pa-0 elevation-2"
           >
-            <v-container>
-              {{ cred.effective_date | formatDate }}
-              <EntityCard class="pl-0">
-                <template #expansionPanels>
-                  <CredentialItem
-                    :authority="entityRegistrationIssuer"
-                    :expired="cred.revoked"
-                    :reason="
-                      cred.latest && cred.local_name.type === 'entity_name'
-                        ? entityRegistrationReason
-                        : ''
-                    "
-                    :dropdownDivider="true"
-                  >
-                    <template #header>
-                      <v-row>
-                        <v-col v-if="cred.revoked">
-                          <span style="color: red">
-                            Expired {{ cred.revoked_date | formatDate }}
-                          </span>
-                        </v-col>
-                        <v-responsive width="100%"> </v-responsive>
+            <EntityFilterFacetPanels />
+          </v-col>
 
-                        <v-col>
-                          <h3>{{ entityTypeToName[cred.local_name.type] }}</h3>
-                        </v-col>
-                        <v-responsive width="100%"> </v-responsive>
+          <v-col cols="12" md="7">
+            <v-timeline dense class="on-bottom">
+              <!-- creates a timeline item for each credential in the entity -->
+              <v-timeline-item
+                color="blue"
+                small
+                v-for="(cred, i) in filteredEntityCredentials"
+                :key="i"
+              >
+                <v-container>
+                  {{ cred.effective_date | formatDate }}
+                  <EntityCard class="pl-0">
+                    <template #expansionPanels>
+                      <CredentialItem
+                        :authority="entityRegistrationIssuer"
+                        :expired="cred.revoked"
+                        :reason="
+                          cred.latest && cred.local_name.type === 'entity_name'
+                            ? entityRegistrationReason
+                            : ''
+                        "
+                        :dropdownDivider="true"
+                      >
+                        <template #header>
+                          <v-row>
+                            <v-col v-if="cred.revoked">
+                              <span style="color: red">
+                                Expired {{ cred.revoked_date | formatDate }}
+                              </span>
+                            </v-col>
+                            <v-responsive width="100%"> </v-responsive>
 
-                        <v-col>
-                          <p>
-                            {{ cred.local_name.text }}
-                          </p>
-                        </v-col>
-                      </v-row>
+                            <v-col>
+                              <h3>
+                                {{ entityTypeToName[cred.local_name.type] }}
+                              </h3>
+                            </v-col>
+                            <v-responsive width="100%"> </v-responsive>
+
+                            <v-col>
+                              <p>
+                                {{ cred.local_name.text }}
+                              </p>
+                            </v-col>
+                          </v-row>
+                        </template>
+                      </CredentialItem>
                     </template>
-                  </CredentialItem>
-                </template>
-              </EntityCard>
-            </v-container>
-          </v-timeline-item>
-        </v-timeline>
+                  </EntityCard>
+                </v-container>
+              </v-timeline-item>
+            </v-timeline>
+          </v-col>
+        </v-row>
       </template>
     </EntityCard>
   </div>
 </template>
 
 <script lang="ts">
-import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
+import { IFormattedTopic, ITopic, ITopicAttribute } from "@/interfaces/api/v2/topic.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
@@ -170,7 +184,7 @@ import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import moment from "moment";
 import SearchFilter from "@/components/search/filter/SearchFilter.vue";
 import SearchFilterChips from "@/components/search/filter/SearchFilterChips.vue";
-import SearchFilterFacetPanels from "@/components/search/filter/SearchFilterFacetPanels.vue";
+import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import { Filter } from "@/store/modules/entityFilters";
 
@@ -191,7 +205,7 @@ interface Data {
     CredentialItem,
     SearchFilter,
     SearchFilterChips,
-    SearchFilterFacetPanels,
+    EntityFilterFacetPanels,
     EntityFilterDialog,
   },
   computed: {
@@ -304,7 +318,7 @@ export default class EntityResult extends Vue {
 
   //class methods
   test(): void {
-    console.log(JSON.stringify(this.selectedTopicCredentialSet));
+    console.log(this.entityJurisdiction);
   }
 
   toggleShowCreds(): void {
@@ -365,16 +379,12 @@ export default class EntityResult extends Vue {
     );
   }
 
-  get entityActive(): string | undefined {
+  get entityState(): string | undefined {
     const state = selectFirstAttrItem(
       { key: "type", value: "entity_status" },
       this.selectedTopic?.attributes
-    )?.value;
-    if (!state) {
-      return state;
-    } else {
-      return state === "ACT" ? "Active" : "Inactive";
-    }
+    );
+   return state?.type+"."+state?.value
   }
 
   get entityRegistrationDate(): string | undefined {
@@ -399,10 +409,11 @@ export default class EntityResult extends Vue {
   }
 
   get entityJurisdiction(): string | undefined {
-    return selectFirstAttrItem(
+    const state = selectFirstAttrItem(
       { key: "type", value: "home_jurisdiction" },
       this.selectedTopic?.attributes
-    )?.value;
+    );
+    return "entity_type."+state?.value
   }
 
   get entityRegistrationIssuer(): IIssuer | undefined {
@@ -423,7 +434,7 @@ export default class EntityResult extends Vue {
       });
       const topic: ITopic = this.$store.getters.selectedTopic;
       if (topic?.id) {
-        await Promise.all([this.fetchIssuers(), this.fetchCredntialType()])
+        await Promise.all([this.fetchIssuers(), this.fetchCredntialType()]);
         await this.fetchTopicCredentialSet(topic.id);
         await this.fetchFilters(topic.id);
       }

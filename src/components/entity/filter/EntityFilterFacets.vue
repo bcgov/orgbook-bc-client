@@ -6,6 +6,7 @@
           <v-list-item-action>
             <v-checkbox
               @change="handleCheckBox($event, field.text)"
+              :value="isFilterActive(field)"
               :input-value="active"
               color="primary"
             ></v-checkbox>
@@ -27,6 +28,7 @@ import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
 import CredentialType from "@/services/api/v2/credential-type.service";
 import { Filter } from "@/store/modules/entityFilters";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { filter } from "vue/types/umd";
 import { mapGetters, mapActions } from "vuex";
 
 @Component({
@@ -42,6 +44,11 @@ export default class EntityFilterFacets extends Vue {
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
   getEntityFilters!: Filter;
   setFilter!: (filter: Filter) => void;
+
+  isFilterActive(field:IEntityFacetField): boolean{
+    const filterList = this.getEntityFilters[this.filterField] as Array<string>
+    return filterList.includes(field.value);
+  }
 
   handleCheckBox(e: Event, filterString: string): void {
     if (e) {
@@ -63,11 +70,9 @@ export default class EntityFilterFacets extends Vue {
     var baseFilter = this.getEntityFilters;
     var currFilters = baseFilter[this.filterField] as Array<string>;
     var idx = currFilters.indexOf(filterString);
-    console.log(idx);
     if (idx >= 0) {
       //if element exists
       currFilters.splice(idx, 1);
-      console.log(currFilters);
       baseFilter[this.filterField] = currFilters;
       this.setFilter(baseFilter);
     }
