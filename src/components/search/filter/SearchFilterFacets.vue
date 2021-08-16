@@ -30,34 +30,24 @@
 </template>
 
 <script lang="ts">
-import {
-  ISearchFilter,
-  ISearchQuery,
-} from "@/interfaces/api/v4/search-topic.interface";
-import { getFilterValue } from "@/utils/search";
+import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
+import { isFilterActive } from "@/utils/search";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters(["searchQuery", "searchFilters"]),
+    ...mapGetters(["searchFilters"]),
   },
   methods: {
     ...mapActions(["toggleSearchFilter"]),
   },
 })
 export default class SearchFilterFacets extends Vue {
-  searchQuery!: ISearchQuery | null;
-
   @Prop({ default: () => [] }) fields!: ISearchFilter[];
 
-  isFilterActive(filters: ISearchFilter[], field: ISearchFilter): boolean {
-    return !!filters.find(
-      (filter) =>
-        filter.key === field.key &&
-        getFilterValue(filter) === getFilterValue(field)
-    );
-  }
+  isFilterActive: (filters: ISearchFilter[], field: ISearchFilter) => boolean =
+    isFilterActive;
 }
 </script>
 

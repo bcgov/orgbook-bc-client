@@ -13,6 +13,7 @@ export interface ISearchQuery {
 }
 
 interface ISearchFilterBase {
+  display: boolean;
   type: string;
   key: string;
   queryParameter: string;

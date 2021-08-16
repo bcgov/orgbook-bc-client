@@ -3,6 +3,7 @@ import {
   ISearchFilterOptions,
   ISearchQuery,
 } from "@/interfaces/api/v4/search-topic.interface";
+import { objHasProp } from "./general";
 
 export const defaultQuery: ISearchQuery = {
   q: null,
@@ -93,4 +94,29 @@ export function getFilterValue(filter: ISearchFilter): unknown {
     returnValue = filter.value;
   }
   return returnValue;
+}
+
+export function isFilterActive(
+  filters: ISearchFilter[],
+  field: ISearchFilter
+): boolean {
+  return !!filters.find(
+    (filter) =>
+      filter.key === field.key &&
+      getFilterValue(filter) === getFilterValue(field)
+  );
+}
+
+export function getQueryValueFromFilter(
+  query: ISearchQuery,
+  filter: ISearchFilter
+): unknown {
+  let value = undefined;
+  if (objHasProp(query, filter.queryParameter)) {
+    value = getFilterValue(filter);
+  }
+  if (value === undefined && objHasProp(filter, "defaultValue")) {
+    value = filter.defaultValue;
+  }
+  return value;
 }

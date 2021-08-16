@@ -1,5 +1,5 @@
 import { ActionContext } from "vuex";
-import { State as RootState } from "../index";
+import store, { State as RootState } from "../index";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import {
   ISearchFilter,
@@ -20,11 +20,20 @@ import {
   entityTypeSpec,
   pageSpec,
 } from "@/data/search";
-import { getFilterValue } from "@/utils/search";
+import {
+  fieldKeyFormatter,
+  fieldValueFormatter,
+  processField,
+  topFieldSelector,
+  moreFieldSelector,
+  getQueryValueFromFilter,
+} from "@/utils/search";
 import { objHasProp } from "@/utils/general";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
+
+const topTypes: string[] = ["BC", "CP", "GP", "S", "SP"];
 
 const filterSpec: ISearchFilter[] = [
   entityStatusSpec,
@@ -54,6 +63,57 @@ const getters = {
     state.page,
   searchFilterFields: (state: State): ISearchFilterFieldRecord =>
     state?.facets?.fields || defaultFacetResult.fields,
+  topEntityTypes: (): ISearchFilter[] => {
+    return topFieldSelector(
+      {
+        ...entityTypeSpec,
+        inclusions: topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    );
+  },
+  moreEntityTypes: (): ISearchFilter[] => {
+    return moreFieldSelector(
+      {
+        ...entityTypeSpec,
+        exclusions: topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    );
+  },
+  entityStatuses: (): ISearchFilter[] => {
+    const options = {
+      ...entityStatusSpec,
+      keySelector: (filter?: ISearchFilter) =>
+        fieldKeyFormatter((filter?.value || "::") as string),
+      valueSelector: (filter?: ISearchFilter) =>
+        fieldValueFormatter((filter?.value || "::") as string),
+    };
+    return (
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    )
+      .filter((filter) => options.keySelector(filter) === options.key)
+      .map((filter) => processField(options, filter));
+  },
+  credentialTypes: (): ISearchFilter[] => {
+    const options = {
+      ...credentialTypeSpec,
+      keySelector: (filter?: ISearchFilter) => filter?.text || "",
+      valueSelector: (filter?: ISearchFilter) => filter?.value || "",
+    };
+    return (
+      store.getters.searchFilterFields
+        .credential_type_id as unknown as ISearchFilter[]
+    ).map((filter) => processField(options, filter));
+  },
 };
 
 const actions = {
@@ -167,19 +227,3 @@ export default {
   actions,
   mutations,
 };
-
-// Helper functions
-
-function getQueryValueFromFilter(
-  query: ISearchQuery,
-  filter: ISearchFilter
-): unknown {
-  let value = undefined;
-  if (objHasProp(query, filter.queryParameter)) {
-    value = getFilterValue(filter);
-  }
-  if (value === undefined && objHasProp(filter, "defaultValue")) {
-    value = filter.defaultValue;
-  }
-  return value;
-}

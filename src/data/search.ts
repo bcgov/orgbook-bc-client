@@ -10,6 +10,7 @@ export const entityStatusSpec: ISearchFilter = {
     HIS: "true",
   },
   defaultValue: "",
+  display: true,
 };
 
 export const entityTypeSpec: ISearchFilter = {
@@ -17,6 +18,7 @@ export const entityTypeSpec: ISearchFilter = {
   key: "entity_type",
   queryParameter: "category:entity_type",
   label: "entity_type",
+  display: true,
 };
 
 export const credentialTypeSpec: ISearchFilter = {
@@ -24,6 +26,7 @@ export const credentialTypeSpec: ISearchFilter = {
   key: "credential_type_id",
   queryParameter: "credential_type_id",
   label: "credential_type_id",
+  display: true,
 };
 
 export const pageSpec: ISearchFilter = {
@@ -31,4 +34,5 @@ export const pageSpec: ISearchFilter = {
   key: "page",
   queryParameter: "page",
   label: "page",
+  display: false,
 };

@@ -49,8 +49,8 @@ a {
   color: $link-color;
 }
 .row {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .on-top {
   z-index: 1;
