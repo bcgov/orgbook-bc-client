@@ -77,7 +77,6 @@
         v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'"
         @click="submit"
         depressed
-        color="primary"
         :disabled="loading"
         >Submit</v-btn
       >

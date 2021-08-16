@@ -18,7 +18,7 @@
         </v-row>
       </v-container>
     </div>
-    <v-footer color="primary" class="footer pl-0 pr-0">
+    <v-footer class="footer pl-0 pr-0">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row>
           <v-col class="pl-1 pr-2 pt-0 pb-0">

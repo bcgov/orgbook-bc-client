@@ -32,10 +32,6 @@
         </v-toolbar-items>
       </v-toolbar>
       <SearchFilterFacetPanels class="filter-dialog" />
-      <v-card-actions class="filter-actions justify-center">
-        <v-btn elevation="0">Reset</v-btn>
-        <v-btn elevation="0" color="primary">Apply</v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

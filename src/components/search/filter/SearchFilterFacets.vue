@@ -5,22 +5,22 @@
         v-for="field in fields"
         :key="field.label"
         @click="toggleSearchFilter(field)"
-        class="pa-0"
+        class="facet-filter pa-0"
       >
         <template v-slot:default="{ active }">
-          <v-list-item-action class="mr-2">
+          <v-list-item-action class="mt-1 mb-2 mr-1">
             <v-simple-checkbox
-              color="primary"
               :ripple="false"
               :value="isFilterActive(searchFilters, field)"
               :input-value="active"
               @click="toggleSearchFilter(field)"
+              class="checkbox"
             ></v-simple-checkbox>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content class="pt-1 pb-1">
             <div>{{ $t(field.label) }}</div>
           </v-list-item-content>
-          <v-list-item-action class="d-flex justify-end">
+          <v-list-item-action class="d-flex justify-end mt-1 mb-1">
             <div>{{ field.count }}</div>
           </v-list-item-action>
         </template>
@@ -60,3 +60,9 @@ export default class SearchFilterFacets extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.facet-filter {
+  min-height: 0 !important;
+}
+</style>

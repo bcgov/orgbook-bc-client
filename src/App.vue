@@ -58,4 +58,7 @@ a {
 .on-bottom {
   z-index: 0;
 }
+.checkbox {
+  color: $input-color;
+}
 </style>

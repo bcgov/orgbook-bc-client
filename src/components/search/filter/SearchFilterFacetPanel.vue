@@ -4,7 +4,7 @@
       <slot name="title">{{ title }}</slot>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <SearchFilterFacets :fields="fields" />
+      <SearchFilterFacets class="pt-0" :fields="fields" />
       <template v-if="more.length">
         <a class="d-flex align-center justify-center" @click="show = !show"
           ><span v-if="show">Show less</span><span v-else>Show more</span></a

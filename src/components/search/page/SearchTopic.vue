@@ -8,13 +8,14 @@
   >
     <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
       <v-icon small class="pa-1" color="white">mdi-alert-outline</v-icon>
-      <span
-        class="text-uppercase text-caption font-weight-medium pr-1 pt-1 pb-1"
+      <span class="text-uppercase text-caption font-weight-bold pr-1 pt-1 pb-1"
         >Historical</span
       >
     </div>
     <v-card-text :class="{ 'pt-2': entityStatus === 'HIS' }">
-      <router-link :to="'/entity/' + sourceId">{{ legalName }}</router-link>
+      <router-link class="font-weight-bold" :to="'/entity/' + sourceId">{{
+        legalName
+      }}</router-link>
       <div>{{ $t(`entity_type.${entityType}`) }}</div>
       <div v-if="craBusinessNumber" class="text--primary">
         <span>Business number</span>

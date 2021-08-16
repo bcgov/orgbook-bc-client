@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="primary" flat class="app-bar">
+    <v-app-bar app flat class="app-bar">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="d-flex align-center">
           <v-col

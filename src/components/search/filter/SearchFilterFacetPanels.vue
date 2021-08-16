@@ -48,7 +48,6 @@ interface Data {
 export default class SearchFilterFacetPanels extends Vue {
   private searchFilterFields!: ISearchFilterFieldRecord;
   private topTypes: string[] = ["BC", "CP", "GP", "S", "SP"];
-  private topStatuses: string[] = ["ACT", "HIS"];
 
   data(): Data {
     return {
