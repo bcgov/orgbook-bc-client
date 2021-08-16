@@ -1,5 +1,5 @@
 import { ActionContext } from "vuex";
-import { State as RootState } from "../index";
+import store, { State as RootState } from "../index";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import {
   ISearchFilter,
@@ -18,15 +18,28 @@ import {
   credentialTypeSpec,
   entityStatusSpec,
   entityTypeSpec,
+  pageSpec,
 } from "@/data/search";
+import {
+  fieldKeyFormatter,
+  fieldValueFormatter,
+  processField,
+  topFieldSelector,
+  moreFieldSelector,
+  getQueryValueFromFilter,
+} from "@/utils/search";
+import { objHasProp } from "@/utils/general";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
+
+const topTypes: string[] = ["BC", "CP", "GP", "S", "SP"];
 
 const filterSpec: ISearchFilter[] = [
   entityStatusSpec,
   entityTypeSpec,
   credentialTypeSpec,
+  pageSpec,
 ];
 
 export interface State {
@@ -50,6 +63,57 @@ const getters = {
     state.page,
   searchFilterFields: (state: State): ISearchFilterFieldRecord =>
     state?.facets?.fields || defaultFacetResult.fields,
+  topEntityTypes: (): ISearchFilter[] => {
+    return topFieldSelector(
+      {
+        ...entityTypeSpec,
+        inclusions: topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    );
+  },
+  moreEntityTypes: (): ISearchFilter[] => {
+    return moreFieldSelector(
+      {
+        ...entityTypeSpec,
+        exclusions: topTypes,
+        keySelector: (filter?: ISearchFilter) =>
+          fieldKeyFormatter((filter?.value || "::") as string),
+        valueSelector: (filter?: ISearchFilter) =>
+          fieldValueFormatter((filter?.value || "::") as string),
+      },
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    );
+  },
+  entityStatuses: (): ISearchFilter[] => {
+    const options = {
+      ...entityStatusSpec,
+      keySelector: (filter?: ISearchFilter) =>
+        fieldKeyFormatter((filter?.value || "::") as string),
+      valueSelector: (filter?: ISearchFilter) =>
+        fieldValueFormatter((filter?.value || "::") as string),
+    };
+    return (
+      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+    )
+      .filter((filter) => options.keySelector(filter) === options.key)
+      .map((filter) => processField(options, filter));
+  },
+  credentialTypes: (): ISearchFilter[] => {
+    const options = {
+      ...credentialTypeSpec,
+      keySelector: (filter?: ISearchFilter) => filter?.text || "",
+      valueSelector: (filter?: ISearchFilter) => filter?.value || "",
+    };
+    return (
+      store.getters.searchFilterFields
+        .credential_type_id as unknown as ISearchFilter[]
+    ).map((filter) => processField(options, filter));
+  },
 };
 
 const actions = {
@@ -64,15 +128,15 @@ const actions = {
     query: ISearchQuery
   ): void {
     const filters = filterSpec.filter((filter) =>
-      Object.hasOwnProperty.call(query, filter.key)
+      objHasProp(query, filter.queryParameter)
     );
     for (const filter of filters) {
-      filter.value = query[filter.key];
+      filter.value = query[filter.queryParameter];
     }
     commit("setFilters", filters);
   },
   toggleSearchFilter(
-    { commit, getters }: ActionContext<State, RootState>,
+    { dispatch, getters }: ActionContext<State, RootState>,
     filter: ISearchFilter
   ): void {
     const query: ISearchQuery = { ...getters.searchQuery };
@@ -81,19 +145,20 @@ const actions = {
       (selected) => selected.key === filter.key
     );
     if (selectedFilter) {
-      selectedFilter.value =
-        selectedFilter.value !== filter.value ? filter.value : "";
+      const value = filter?.valueMapper
+        ? filter.valueMapper[filter.value as string]
+        : filter.value;
+      selectedFilter.value = selectedFilter.value !== value ? value : "";
       filters.splice(filters.indexOf(selectedFilter), 1, selectedFilter);
     } else {
       filters.push(filter);
     }
     for (const filter of filters) {
-      if (Object.hasOwnProperty.call(query, filter.key)) {
-        query[filter.key] = filter.value;
-      }
+      query[filter.queryParameter] = getQueryValueFromFilter(query, filter);
     }
-    commit("setFilters", filters);
-    commit("setQuery", query);
+    // Reset the page back to the first
+    query["page"] = 1;
+    dispatch("fetchSearch", query);
   },
 
   async fetchSearchFacetedTopics({
@@ -105,9 +170,10 @@ const actions = {
       const filters: ISearchFilter[] = [...getters.searchFilters];
       const apiQuery: ISearchQuery = { q: query.q };
       for (const filter of filters) {
-        if (Object.hasOwnProperty.call(query, filter.key)) {
-          apiQuery[filter.queryParameter] = filter.value;
-        }
+        apiQuery[filter.queryParameter] = getQueryValueFromFilter(
+          query,
+          filter
+        );
       }
       const res = await v4SearchService.facetedTopic(apiQuery);
       commit("setFacets", res.data.facets);
@@ -118,24 +184,31 @@ const actions = {
   },
   async fetchAutocomplete(
     _: ActionContext<State, RootState>,
-    query: string
+    q: string
   ): Promise<IApiPagedResult<ISearchAutocomplete>> {
     try {
-      const res = await v3SearchService.autocomplete(query);
+      const res = await v3SearchService.autocomplete(q);
       return res.data;
     } catch (e) {
       console.error(e);
       return defaultPageResult<ISearchAutocomplete>();
     }
   },
+  async fetchSearch(
+    { dispatch }: ActionContext<State, RootState>,
+    query: ISearchQuery
+  ): Promise<void> {
+    dispatch("setSearchQuery", query);
+    dispatch("setSearchFilters", query);
+    router
+      .push({ name: "Search", query: query as unknown as Dictionary<string> })
+      .catch(() => undefined);
+  },
 };
 
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
     state.query = { ...query };
-    router
-      .push({ query: query as unknown as Dictionary<string> })
-      .catch(() => undefined);
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
     state.page = { ...page };

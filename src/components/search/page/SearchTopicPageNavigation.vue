@@ -1,5 +1,5 @@
 <template>
-  <div v-if="total" class="flex-row flex-align-items-center justify-center">
+  <div v-if="total" class="d-flex align-center justify-center">
     <span class="text-body-2"
       >Items displayed {{ first }} - {{ last }} of {{ total }}
     </span>
@@ -27,11 +27,11 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters(["pagedSearchTopics"]),
   },
   methods: {
-    ...mapActions(["setSearchQuery"]),
+    ...mapActions(["fetchSearch"]),
   },
 })
 export default class SearchTopicPageNavigation extends Vue {
-  setSearchQuery!: (query: ISearchQuery) => void;
+  fetchSearch!: (query: ISearchQuery) => void;
   pagedSearchTopics!: IApiPagedResult<ISearchTopic>;
 
   get first(): number {
@@ -58,7 +58,9 @@ export default class SearchTopicPageNavigation extends Vue {
 
   pageResults(url: URL): void {
     const query: Record<string, string | string[]> = {};
-    for (let key of url.searchParams.keys()) {
+    for (let key of Array.from(url.searchParams.keys()).filter(
+      (key) => key !== "revoked"
+    )) {
       let values: string | string[] = url.searchParams.getAll(key);
       if (values?.length > 1) {
         key = key.split("[]")[0];
@@ -67,7 +69,7 @@ export default class SearchTopicPageNavigation extends Vue {
       }
       query[key] = values;
     }
-    this.setSearchQuery({ ...defaultQuery, ...query });
+    this.fetchSearch({ ...defaultQuery, ...query });
   }
 }
 </script>
