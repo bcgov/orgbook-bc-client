@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts">
+import "@bcgov/bc-sans/css/BCSans.css";
+
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
@@ -37,20 +39,23 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-body {
-  color: $text-color !important;
+#app {
+  font-family: "BCSans", "Noto Sans", Verdana, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $text-color;
 }
 a {
-  color: $link-color !important;
+  color: $link-color;
 }
 .row {
   margin: 0;
   padding: 0;
 }
 .on-top {
-  z-index: 1 !important;
+  z-index: 1;
 }
 .on-bottom {
-  z-index: 0 !important;
+  z-index: 0;
 }
 </style>
