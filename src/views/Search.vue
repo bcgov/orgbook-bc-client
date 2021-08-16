@@ -81,7 +81,7 @@ export default class Search extends Vue {
     }
   }
 
-  private async extractQueryAndDispatchSearch(query: ISearchQuery) {
+  async extractQueryAndDispatchSearch(query: ISearchQuery): Promise<void> {
     this.q = query?.q || null;
     const newQuery = { ...defaultQuery, ...query };
     store.dispatch("setSearchQuery", newQuery);
@@ -89,7 +89,7 @@ export default class Search extends Vue {
     await this.search();
   }
 
-  private async search(): Promise<void> {
+  async search(): Promise<void> {
     this.setLoading(true);
     await this.fetchSearchFacetedTopics();
     this.setLoading(false);

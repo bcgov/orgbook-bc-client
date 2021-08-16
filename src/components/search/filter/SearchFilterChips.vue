@@ -37,13 +37,13 @@ import { mapActions, mapGetters } from "vuex";
   },
 })
 export default class SearchFilterChips extends Vue {
-  private searchFilters!: ISearchFilter[];
-  private topEntityTypes!: ISearchFilter[];
-  private moreEntityTypes!: ISearchFilter[];
-  private entityStatuses!: ISearchFilter[];
-  private credentialTypes!: ISearchFilter[];
+  searchFilters!: ISearchFilter[];
+  topEntityTypes!: ISearchFilter[];
+  moreEntityTypes!: ISearchFilter[];
+  entityStatuses!: ISearchFilter[];
+  credentialTypes!: ISearchFilter[];
 
-  private get searchFilterFeilds(): ISearchFilter[] {
+  get searchFilterFeilds(): ISearchFilter[] {
     return [
       ...this.topEntityTypes,
       ...this.moreEntityTypes,
