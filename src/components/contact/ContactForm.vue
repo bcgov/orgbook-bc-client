@@ -5,6 +5,7 @@
         <p class="font-weight-bold">Reason for contact</p>
         <v-select
           outlined
+          dense
           v-model="formData.reason"
           :items="requestTypes"
           label="Select a Reason"
@@ -34,6 +35,7 @@
 
         <v-text-field
           outlined
+          dense
           v-model="formData.from_name"
           required
           label="Name"
@@ -41,6 +43,7 @@
 
         <v-text-field
           outlined
+          dense
           v-model="formData.from_email"
           label="Email address"
         ></v-text-field>
@@ -48,6 +51,7 @@
         <div :hidden="incorrectHidden">
           <v-select
             outlined
+            dense
             v-model="formData.error"
             :items="credentialTypes"
             label="What Information is incorrect?"
@@ -55,6 +59,7 @@
 
           <v-text-field
             outlined
+            dense
             v-model="formData.identifier"
             label="Identifier (such as the incorporation number, registration number, or licence / permit number)"
           ></v-text-field>
@@ -62,6 +67,7 @@
 
         <v-textarea
           outlined
+          dense
           v-model="formData.comments"
           :label="labelMessage"
         ></v-textarea>
@@ -71,7 +77,6 @@
         v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'"
         @click="submit"
         depressed
-        color="primary"
         :disabled="loading"
         >Submit</v-btn
       >
@@ -160,7 +165,7 @@ export default class ContactForm extends Vue {
       this.setLoading(true);
       await this.sendFeedback(this.formData);
       this.setLoading(false);
-      router.push("/");
+      router.push({ name: "Search" });
     }
   }
 }

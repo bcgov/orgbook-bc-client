@@ -1,14 +1,14 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "@/views/Home.vue";
+import Search from "@/views/Search.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/search",
+    name: "Search",
+    component: Search,
   },
   {
     path: "/entity/:sourceId",
@@ -50,7 +50,7 @@ const routes: Array<RouteConfig> = [
     path: "*",
     name: "Not Found",
     beforeEnter: (to, from, next) => {
-      next("/");
+      next({ name: "Search" });
     },
   },
 ];

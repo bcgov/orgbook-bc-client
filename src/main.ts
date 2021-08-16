@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
+import i18n from "./i18n";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
@@ -11,6 +12,7 @@ Vue.config.productionTip = false;
 async function init() {
   const config: AppConfig = await getAppConfig();
   new Vue({
+    i18n,
     router,
     store,
     vuetify,

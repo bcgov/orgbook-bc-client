@@ -32,10 +32,6 @@
         </v-toolbar-items>
       </v-toolbar>
       <SearchFilterFacetPanels class="filter-dialog" />
-      <v-card-actions class="filter-actions justify-center on-top">
-        <v-btn elevation="0">Reset</v-btn>
-        <v-btn elevation="0" color="primary">Apply</v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -66,7 +62,7 @@ export default class SearchFilterDialog extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .disabled {
   pointer-events: none;
   color: gray;
