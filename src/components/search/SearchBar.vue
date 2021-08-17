@@ -1,7 +1,5 @@
 <template>
-  <div
-    :class="{ 'search-bar': true, 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }"
-  >
+  <div id="searchBar" :class="{ 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }">
     <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
@@ -28,7 +26,13 @@
           color="white"
           indeterminate
         ></v-progress-circular>
-        <v-icon v-else color="white" @click="onClick">mdi-magnify</v-icon>
+        <v-icon
+          v-else
+          id="searchButton"
+          :disabled="!search || loading"
+          @click="onClick"
+          >mdi-magnify</v-icon
+        >
       </template>
     </v-combobox>
   </div>
@@ -114,6 +118,9 @@ export default class SearchBar extends Vue {
   }
 
   onClick(): void {
+    if (!this.search) {
+      return;
+    }
     const query = { ...defaultQuery, ...{ q: this.search } };
     this.fetchSearch(query);
   }
@@ -129,7 +136,10 @@ export default class SearchBar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.search-bar {
-  color: $white;
+#searchBar {
+  color: $white !important;
+}
+#searchButton {
+  color: $white !important;
 }
 </style>

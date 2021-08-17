@@ -43,7 +43,7 @@ export default class SearchFilterChips extends Vue {
   entityStatuses!: ISearchFilter[];
   credentialTypes!: ISearchFilter[];
 
-  get searchFilterFeilds(): ISearchFilter[] {
+  get searchFilterFields(): ISearchFilter[] {
     return [
       ...this.topEntityTypes,
       ...this.moreEntityTypes,
@@ -53,7 +53,7 @@ export default class SearchFilterChips extends Vue {
   }
 
   get activeSearchFilters(): ISearchFilter[] {
-    return this.searchFilterFeilds.filter((field) =>
+    return this.searchFilterFields.filter((field) =>
       isFilterActive(this.searchFilters, field)
     );
   }

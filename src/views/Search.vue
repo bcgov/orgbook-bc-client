@@ -6,10 +6,8 @@
       </v-container>
     </div>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5 pt-0 pb-0">
-      <SearchResult
-        v-if="pagedSearchTopics.total"
-        :results="pagedSearchTopics"
-      />
+      <SearchLoading v-if="loading" />
+      <SearchResult v-else />
     </v-container>
   </div>
 </template>
@@ -19,6 +17,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import SearchBar from "@/components/search/SearchBar.vue";
 import SearchResult from "@/components/search/SearchResult.vue";
+import SearchLoading from "@/components/search/SearchLoading.vue";
 import { NavigationGuardNext, Route } from "vue-router";
 import { defaultQuery } from "@/utils/search";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
@@ -34,12 +33,13 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
   components: {
     SearchBar,
     SearchResult,
+    SearchLoading,
   },
   computed: {
-    ...mapGetters(["searchQuery", "pagedSearchTopics"]),
+    ...mapGetters(["loading", "searchQuery", "pagedSearchTopics"]),
   },
   methods: {
-    ...mapActions(["setLoading", "fetchSearchFacetedTopics"]),
+    ...mapActions(["setLoading", "fetchSearchFacetedTopics", "resetSearch"]),
   },
 })
 export default class Search extends Vue {
@@ -47,6 +47,7 @@ export default class Search extends Vue {
 
   setLoading!: (loading: boolean) => void;
   fetchSearchFacetedTopics!: () => void;
+  resetSearch!: () => void;
 
   data(): Data {
     return {
@@ -59,7 +60,7 @@ export default class Search extends Vue {
     if (query?.q) {
       await this.extractQueryAndDispatchSearch(query);
     } else {
-      // CLEAR THE SEARCH RESULTS
+      this.resetSearch();
     }
   }
 
@@ -78,6 +79,8 @@ export default class Search extends Vue {
     const query = this.$route.query as unknown as ISearchQuery;
     if (query?.q) {
       await this.extractQueryAndDispatchSearch(query);
+    } else {
+      this.resetSearch();
     }
   }
 

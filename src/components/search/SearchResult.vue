@@ -1,12 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col
-        v-if="$vuetify.breakpoint.mdAndUp"
-        cols="12"
-        md="4"
-        class="search-facet-panels pa-0"
-      >
+      <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" class="pa-0">
         <SearchFilterFacetPanels />
       </v-col>
       <v-col
@@ -45,11 +40,3 @@ import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
 })
 export default class SearchResult extends Vue {}
 </script>
-
-<style lang="scss" scoped>
-.search-facet-panels {
-  border-left: 1px solid $border-color;
-  border-right: 1px solid $border-color;
-  box-shadow: 3px 3px 6px -3px $border-color;
-}
-</style>
