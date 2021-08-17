@@ -2,12 +2,11 @@
   <v-list flat>
     <v-list-item-group multiple active-class="">
       <v-list-item v-for="field in fields" :key="field.value">
-        <template v-slot:default="{ active }">
+        <template v-slot>
           <v-list-item-action>
             <v-checkbox
-              @change="handleCheckBox($event, field.text)"
-              :value="isFilterActive(field)"
-              :input-value="active"
+              @change="toggleEntityFilter({filterString:field.text, filterField:filterField})"
+              :value="isEntityFilterActive(filterField, getEntityFilters, field.text)"
               color="primary"
             ></v-checkbox>
           </v-list-item-action>
@@ -25,57 +24,23 @@
 
 <script lang="ts">
 import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
-import CredentialType from "@/services/api/v2/credential-type.service";
 import { Filter } from "@/store/modules/entityFilters";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { filter } from "vue/types/umd";
 import { mapGetters, mapActions } from "vuex";
+import { isEntityFilterActive } from "@/utils/entityFilter"
 
 @Component({
   computed: {
     ...mapGetters(["getEntityFilters"]),
   },
   methods: {
-    ...mapActions(["setFilter"]),
+    ...mapActions(["toggleEntityFilter"]),
   },
 })
 export default class EntityFilterFacets extends Vue {
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
   getEntityFilters!: Filter;
-  setFilter!: (filter: Filter) => void;
-
-  isFilterActive(field:IEntityFacetField): boolean{
-    const filterList = this.getEntityFilters[this.filterField] as Array<string>
-    return filterList.includes(field.value);
-  }
-
-  handleCheckBox(e: Event, filterString: string): void {
-    if (e) {
-      this.pushNewFilter(filterString);
-    } else {
-      this.popNewFilter(filterString);
-    }
-  }
-  pushNewFilter(filterString: string): void {
-    var baseFilter = this.getEntityFilters;
-    var currFilters = baseFilter[this.filterField] as Array<string>;
-    if (!currFilters.includes(filterString)) {
-      currFilters.push(filterString);
-      baseFilter[this.filterField] = currFilters;
-      this.setFilter(baseFilter);
-    }
-  }
-  popNewFilter(filterString: string): void {
-    var baseFilter = this.getEntityFilters;
-    var currFilters = baseFilter[this.filterField] as Array<string>;
-    var idx = currFilters.indexOf(filterString);
-    if (idx >= 0) {
-      //if element exists
-      currFilters.splice(idx, 1);
-      baseFilter[this.filterField] = currFilters;
-      this.setFilter(baseFilter);
-    }
-  }
+  isEntityFilterActive: (filterField: string, getEntityFilters: Filter, filterString?: string) => boolean = isEntityFilterActive;
 }
 </script>

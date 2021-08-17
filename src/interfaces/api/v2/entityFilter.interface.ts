@@ -1,5 +1,5 @@
 export interface IEntityFacetField {
   value: string;
-  count: number;
+  count?: number;
   text: string;
 }

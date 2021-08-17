@@ -76,7 +76,6 @@ const actions = {
     try {
       const res = await (await issuerService.getIssuerList()).data.results.map(issuer => { return { text: issuer.abbreviation, value: issuer.name, count: 0 } });
       commit("setIssuers", res)
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -101,9 +100,27 @@ const actions = {
     commit("setFilterCounts", fullCredList);
   },
   setFilter({ commit }: ActionContext<State, RootState>, filter: Filter): void {
-    console.log(filter);
     commit("setFilter", filter);
   },
+  toggleEntityFilter({ commit }: ActionContext<State, RootState>, params:{filterString: string; filterField: string}) {
+    const baseFilter = getters.getEntityFilters(state);
+    let currFilters:string[] | string | boolean = baseFilter[params.filterField]===undefined? [] : baseFilter[params.filterField];
+    if (typeof currFilters === "string" && currFilters !== ""){ //we should only support clearing strings, adding strings should be done through setFilter
+      currFilters="";
+    }else if(typeof currFilters === "boolean"){
+      currFilters = !currFilters;
+    }else{
+      currFilters = currFilters as string[]
+      if (!currFilters.includes(params.filterString)) {
+        currFilters.push(params.filterString);
+      }else{
+        const idx = currFilters.indexOf(params.filterString);
+        currFilters.splice(idx, 1);
+      }
+    }
+    baseFilter[params.filterField] = currFilters;
+    commit("setFilter", baseFilter);
+  }
 };
 
 const mutations = {

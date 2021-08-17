@@ -32,7 +32,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <div class="text-body-2 float-middle">
                   <v-text-field
-                    v-model="fromDate"
+                    :value="getEntityFilters['Date_min']"
                     label="From:"
                     append-icon="mdi-calendar"
                     readonly
@@ -44,7 +44,7 @@
                 </div>
               </template>
               <v-date-picker
-                v-model="fromDate"
+                :value="isEntityFilterActive('Date_min', getEntityFilters)?fromDate:''"
                 @input="menuFrom = false"
                 @change="handleMinDateChange"
               ></v-date-picker>
@@ -63,7 +63,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <div class="text-body-2 float-middle">
                   <v-text-field
-                    v-model="toDate"
+                    :value="getEntityFilters['Date_max']"
                     label="To:"
                     append-icon="mdi-calendar"
                     readonly
@@ -75,7 +75,6 @@
                 </div>
               </template>
               <v-date-picker
-                v-model="toDate"
                 @input="menuTo = false"
                 @change="handleMaxDateChange"
               ></v-date-picker>
@@ -94,8 +93,9 @@
             <p>
               Show Expired
               <v-switch
+                :input-value="true"
+                :value="isEntityFilterActive('Show_expired', getEntityFilters)"
                 @change="handleSwitchChange"
-                v-model="showExpired"
               ></v-switch>
             </p>
           </v-col>
@@ -112,11 +112,11 @@ import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
 import { Filter } from "@/store/modules/entityFilters";
+import {isEntityFilterActive} from "@/utils/entityFilter"
 
 interface Data {
   menuFrom: boolean;
   menuTo: boolean;
-  showExpired: boolean;
   fromDate: string;
   toDate: string;
   panel: number[];
@@ -146,11 +146,11 @@ export default class EntityFilterFacetPanels extends Vue {
   private getRegistrationTypes!: Array<IEntityFacetField>;
   getEntityFilters!: Filter;
   setFilter!: (filter: Filter) => void;
+  isEntityFilterActive: (filterField: string, getEntityFilters: Filter, filterString?: string) => boolean = isEntityFilterActive;
   data(): Data {
     return {
       menuFrom: false,
       menuTo: false,
-      showExpired: true,
       fromDate: "",
       toDate: "",
       panel: [0, 1, 4],
@@ -160,7 +160,6 @@ export default class EntityFilterFacetPanels extends Vue {
     var currFilters = { ...this.getEntityFilters };
     currFilters.Show_expired = newVal;
     this.setFilter(currFilters);
-    console.log(this.getEntityFilters);
   }
   resetMinDate(): void {
     var currFilters = { ...this.getEntityFilters };

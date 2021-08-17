@@ -98,6 +98,7 @@
               </div>
             </v-col>
           </v-row>
+          <EntityFilterChips />
         </v-container>
         <!-- body of the credential card -->
         <v-row>
@@ -183,7 +184,7 @@ import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import moment from "moment";
 import SearchFilter from "@/components/search/filter/SearchFilter.vue";
-import SearchFilterChips from "@/components/search/filter/SearchFilterChips.vue";
+import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import { Filter } from "@/store/modules/entityFilters";
@@ -204,7 +205,7 @@ interface Data {
     EntityCard,
     CredentialItem,
     SearchFilter,
-    SearchFilterChips,
+    EntityFilterChips,
     EntityFilterFacetPanels,
     EntityFilterDialog,
   },
@@ -323,7 +324,6 @@ export default class EntityResult extends Vue {
 
   toggleShowCreds(): void {
     this.credItemsExpanded = !this.credItemsExpanded;
-    console.log(this.credItemsExpanded);
   }
 
   tabClick(refname: string): void {
