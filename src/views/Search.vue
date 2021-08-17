@@ -7,7 +7,7 @@
     </div>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5 pt-0 pb-0">
       <SearchLoading v-if="loading" />
-      <SearchResult v-else />
+      <SearchResult v-else-if="searchQuery" />
     </v-container>
   </div>
 </template>

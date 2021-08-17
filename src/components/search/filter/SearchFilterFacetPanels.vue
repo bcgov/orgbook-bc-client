@@ -1,5 +1,5 @@
 <template>
-  <div v-if="searchFilterFields.length" class="search-facet-panels">
+  <div class="search-facet-panels">
     <v-expansion-panels multiple flat accordion v-model="panel">
       <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
         <template v-slot:title> Organization Type </template>
@@ -38,20 +38,11 @@ interface Data {
   },
 })
 export default class SearchFilterFacetPanels extends Vue {
-  searchFilters!: ISearchFilter[];
   topEntityTypes!: ISearchFilter[];
   moreEntityTypes!: ISearchFilter[];
   entityStatuses!: ISearchFilter[];
   credentialTypes!: ISearchFilter[];
 
-  get searchFilterFields(): ISearchFilter[] {
-    return [
-      ...this.topEntityTypes,
-      ...this.moreEntityTypes,
-      ...this.entityStatuses,
-      ...this.credentialTypes,
-    ];
-  }
   data(): Data {
     return {
       panel: [0, 1, 2],

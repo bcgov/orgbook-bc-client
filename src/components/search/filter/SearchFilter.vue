@@ -3,7 +3,7 @@
     <v-col v-if="$vuetify.breakpoint.smAndDown" class="pl-0 pr-0">
       <div class="d-flex align-center"><SearchFilterDialog /></div>
     </v-col>
-    <v-col v-if="searchQuery && pagedSearchTopics" class="pl-0 pr-0">
+    <v-col class="pl-0 pr-0">
       <div
         :class="{
           'text-body-2 font-weight-bold': true,

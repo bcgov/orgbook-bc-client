@@ -24,36 +24,18 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters([
-      "topEntityTypes",
-      "moreEntityTypes",
-      "entityStatuses",
-      "credentialTypes",
-      "searchFilters",
-    ]),
+    ...mapGetters(["extendedSearchFilterFields", "searchFilters"]),
   },
   methods: {
     ...mapActions(["toggleSearchFilter"]),
   },
 })
 export default class SearchFilterChips extends Vue {
+  extendedSearchFilterFields!: ISearchFilter[];
   searchFilters!: ISearchFilter[];
-  topEntityTypes!: ISearchFilter[];
-  moreEntityTypes!: ISearchFilter[];
-  entityStatuses!: ISearchFilter[];
-  credentialTypes!: ISearchFilter[];
-
-  get searchFilterFields(): ISearchFilter[] {
-    return [
-      ...this.topEntityTypes,
-      ...this.moreEntityTypes,
-      ...this.entityStatuses,
-      ...this.credentialTypes,
-    ];
-  }
 
   get activeSearchFilters(): ISearchFilter[] {
-    return this.searchFilterFields.filter((field) =>
+    return this.extendedSearchFilterFields.filter((field) =>
       isFilterActive(this.searchFilters, field)
     );
   }

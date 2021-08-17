@@ -117,6 +117,14 @@ const getters = {
         []) as unknown as ISearchFilter[]
     ).map((filter) => processField(options, filter));
   },
+  extendedSearchFilterFields: (): ISearchFilter[] => {
+    return [
+      ...store.getters.topEntityTypes,
+      ...store.getters.moreEntityTypes,
+      ...store.getters.entityStatuses,
+      ...store.getters.credentialTypes,
+    ];
+  },
 };
 
 const actions = {
