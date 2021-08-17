@@ -31,6 +31,7 @@
           id="searchButton"
           :disabled="!search || loading"
           @click="onClick"
+          color="white"
           >mdi-magnify</v-icon
         >
       </template>

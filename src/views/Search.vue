@@ -2,12 +2,37 @@
   <div>
     <div class="search-bar">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
-        <SearchBar :query="q"></SearchBar>
+        <v-row>
+          <v-col class="d-flex flex-column flex-grow-1" cols="12" md="9">
+            <p
+              class="
+                font-weight-normal
+                flex-grow-1
+                text-md-h5 text-sm-h6 text-h6
+              "
+            >
+              A public directory of organizations registered in BC
+            </p>
+            <SearchBar :query="q" />
+          </v-col>
+          <v-col class="flex-grow-0 pt-0 pb-0" cols="12" md="3">
+            <SearchDescription
+              class="pt-4"
+              v-if="$vuetify.breakpoint.mdAndUp"
+            />
+            <SearchHelp v-if="$vuetify.breakpoint.smAndDown">
+              <template v-slot:content>
+                <SearchDescription />
+              </template>
+            </SearchHelp>
+          </v-col>
+        </v-row>
       </v-container>
     </div>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5 pt-0 pb-0">
       <SearchLoading v-if="loading" />
       <SearchResult v-else-if="searchQuery" />
+      <SearchHome v-else />
     </v-container>
   </div>
 </template>
@@ -16,6 +41,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import SearchBar from "@/components/search/SearchBar.vue";
+import SearchDescription from "@/components/search/SearchDescription.vue";
+import SearchHelp from "@/components/search/SearchHelp.vue";
+import SearchHome from "@/components/search/SearchHome.vue";
 import SearchResult from "@/components/search/SearchResult.vue";
 import SearchLoading from "@/components/search/SearchLoading.vue";
 import { NavigationGuardNext, Route } from "vue-router";
@@ -32,6 +60,9 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
 @Component({
   components: {
     SearchBar,
+    SearchDescription,
+    SearchHelp,
+    SearchHome,
     SearchResult,
     SearchLoading,
   },
