@@ -53,6 +53,7 @@
               v-if="$vuetify.breakpoint.smAndDown"
               class="mr-n2 app-bar-nav-icon"
               @click="drawer = true"
+              color="white"
             ></v-app-bar-nav-icon>
           </v-col>
         </v-row>
@@ -96,7 +97,6 @@ export default class Header extends Vue {
   border-bottom: 2px solid $accent-color !important;
 }
 .app-bar-title {
-  color: $white !important;
   .small-logo {
     vertical-align: middle;
     width: 48px;
@@ -105,9 +105,6 @@ export default class Header extends Vue {
     vertical-align: middle;
     height: 48px;
   }
-}
-.app-bar-nav-icon {
-  color: $white !important;
 }
 .beta-tag {
   color: $accent-color;

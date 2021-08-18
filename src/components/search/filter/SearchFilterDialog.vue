@@ -65,7 +65,7 @@ export default class SearchFilterDialog extends Vue {
 <style lang="scss" scoped>
 .disabled {
   pointer-events: none;
-  color: gray;
+  color: $gray;
 }
 .filter-dialog {
   padding-bottom: 3rem;
@@ -74,6 +74,6 @@ export default class SearchFilterDialog extends Vue {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: white;
+  background: $white;
 }
 </style>

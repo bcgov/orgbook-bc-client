@@ -1,29 +1,38 @@
 <template>
-  <div>
-    <v-row>
-      <v-col
-        v-if="$vuetify.breakpoint.mdAndUp"
-        cols="12"
-        md="4"
-        class="search-facet-panels pa-0"
-      >
+  <v-row
+    v-if="
+      extendedSearchFilterFields.length ||
+      activeSearchFilters.length ||
+      pagedSearchTopics
+    "
+  >
+    <template v-if="extendedSearchFilterFields.length">
+      <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" class="pa-0">
         <SearchFilterFacetPanels />
       </v-col>
+    </template>
+    <template v-if="activeSearchFilters.length || pagedSearchTopics">
       <v-col
         cols="12"
         md="8"
         :class="{
-          'pa-0': true,
+          'pa-0 d-flex flex-column': true,
           'pt-2 pb-5 pl-6 pr-8': $vuetify.breakpoint.mdAndUp,
         }"
       >
-        <SearchFilter />
-        <SearchFilterChips />
-        <SearchTopicPage />
-        <SearchTopicPageNavigation />
+        <template v-if="pagedSearchTopics">
+          <SearchFilter class="flex-grow-0" />
+        </template>
+        <template v-if="activeSearchFilters.length">
+          <SearchFilterChips class="flex-grow-0" />
+        </template>
+        <template v-if="pagedSearchTopics">
+          <SearchTopicPage class="flex-grow-1" />
+          <SearchTopicPageNavigation class="flex-grow-0" />
+        </template>
       </v-col>
-    </v-row>
-  </div>
+    </template>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -33,6 +42,9 @@ import SearchTopicPageNavigation from "./page/SearchTopicPageNavigation.vue";
 import SearchFilter from "./filter/SearchFilter.vue";
 import SearchFilterChips from "./filter/SearchFilterChips.vue";
 import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
+import { mapGetters } from "vuex";
+import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
+import { isFilterActive } from "@/utils/search";
 
 @Component({
   components: {
@@ -42,14 +54,23 @@ import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
     SearchFilterChips,
     SearchFilterFacetPanels,
   },
+  computed: {
+    ...mapGetters([
+      "searchQuery",
+      "extendedSearchFilterFields",
+      "searchFilters",
+      "pagedSearchTopics",
+    ]),
+  },
 })
-export default class SearchResult extends Vue {}
-</script>
+export default class SearchResult extends Vue {
+  extendedSearchFilterFields!: ISearchFilter[];
+  searchFilters!: ISearchFilter[];
 
-<style lang="scss" scoped>
-.search-facet-panels {
-  border-left: 1px solid $border-color;
-  border-right: 1px solid $border-color;
-  box-shadow: 3px 3px 6px -3px $border-color;
+  get activeSearchFilters(): ISearchFilter[] {
+    return this.extendedSearchFilterFields.filter((field) =>
+      isFilterActive(this.searchFilters, field)
+    );
+  }
 }
-</style>
+</script>
