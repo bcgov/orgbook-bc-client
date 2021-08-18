@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Filter } from "@/store/modules/entityFilters";
+import { Filter } from "@/store/modules/entityFilter";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 

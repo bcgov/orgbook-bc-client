@@ -93,7 +93,7 @@
             <p>
               Show Expired
               <v-switch
-                :input-value="true"
+                :input-value="isEntityFilterActive('Show_expired', getEntityFilters)"
                 :value="isEntityFilterActive('Show_expired', getEntityFilters)"
                 @change="handleSwitchChange"
               ></v-switch>
@@ -111,7 +111,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
-import { Filter } from "@/store/modules/entityFilters";
+import { Filter } from "@/store/modules/entityFilter";
 import {isEntityFilterActive} from "@/utils/entityFilter"
 
 interface Data {

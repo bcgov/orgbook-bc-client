@@ -2,10 +2,12 @@
   <v-container>
     <v-card>
       <v-card-title v-if="title">{{ title }}</v-card-title>
+      <v-btn @click="test">TEST</v-btn>
       <v-expansion-panels
         v-if="$slots.expansionPanels"
         accordion
         class="on-bottom"
+        :value="panelList"
       >
         <slot name="expansionPanels"></slot>
       </v-expansion-panels>
@@ -16,9 +18,31 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
-@Component
+@Component({
+   computed: {
+    ...mapGetters([
+      "getCredentialsExpanded"
+    ]),
+  },
+  methods: {
+    ...mapActions([
+      "toggleCredentialsExpanded"
+    ]),
+  },
+})
 export default class EntityCard extends Vue {
   @Prop({ default: "" }) title!: string;
+  getCredentialsExpanded!:boolean;
+  toggleCredentialsExpanded!:()=>void;
+
+   get panelList(): number[]{
+     return this.getCredentialsExpanded? [...Array(this.$slots.expansionPanels?.length).keys()] : []
+   }
+
+  test(): void {
+    console.log(this.panelList);
+  }
 }
 </script>

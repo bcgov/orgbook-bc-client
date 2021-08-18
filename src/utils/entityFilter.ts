@@ -1,5 +1,5 @@
 import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
-import { Filter } from "@/store/modules/entityFilters";
+import { Filter } from "@/store/modules/entityFilter";
 
 export function isEntityFilterActive(filterField: string, getEntityFilters: Filter, filterString?:string): boolean {
     //filter string only applies if we're filtering array 

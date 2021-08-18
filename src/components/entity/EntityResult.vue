@@ -16,11 +16,11 @@
       >
     </v-tabs>
     <v-divider></v-divider>
-    <v-btn @click="test">TEST</v-btn>
+    <!-- <v-btn @click="test">TEST</v-btn> -->
 
     <v-row>
       <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"
-        ><a @click="toggleShowCreds">Show all Credential statuses</a></v-col
+        ><a @click="toggleCredentialsExpanded">Show all Credential statuses</a></v-col
       >
     </v-row>
 
@@ -66,7 +66,6 @@
         <CredentialItem
           authority="CRA"
           effectiveDate="1914-01-30T08:00:00+00:00"
-          :expanded="credItemsExpanded"
         >
           <template #header>
             <h3>Mailing address</h3>
@@ -187,11 +186,10 @@ import SearchFilter from "@/components/search/filter/SearchFilter.vue";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import { Filter } from "@/store/modules/entityFilters";
+import { Filter } from "@/store/modules/entityFilter";
 
 interface Data {
   currentTab: string;
-  credItemsExpanded: boolean;
   credentialTimeOrder: number;
   tabItems: Array<{ text: string; refname: string }>;
   entityTypeToName: {
@@ -224,13 +222,14 @@ interface Data {
       "fetchIssuers",
       "fetchCredntialType",
       "fetchFilters",
+      "toggleCredentialsExpanded",
     ]),
   },
 })
 export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
-  credItemsExpanded!: boolean;
   currentTab!: string;
+  toggleCredentialsExpanded!:()=>void;
   fetchIssuers!: () => Promise<void>;
   fetchCredntialType!: () => Promise<void>;
   fetchFilters!: (id: number) => Promise<void>;
@@ -250,7 +249,6 @@ export default class EntityResult extends Vue {
   data(): Data {
     return {
       currentTab: "",
-      credItemsExpanded: false,
       credentialTimeOrder: 1,
       tabItems: [
         { text: "Registration", refname: "registration" },
@@ -319,12 +317,10 @@ export default class EntityResult extends Vue {
 
   //class methods
   test(): void {
-    console.log(this.entityJurisdiction);
+    console.log((this.$refs as any).addresses?.$slots?.expansionPanels);
   }
 
-  toggleShowCreds(): void {
-    this.credItemsExpanded = !this.credItemsExpanded;
-  }
+  
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {

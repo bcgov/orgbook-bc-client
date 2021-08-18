@@ -11,7 +11,8 @@ import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
 import entityFilter, {
   State as EntityFilterState,
-} from "./modules/entityFilters";
+} from "./modules/entityFilter";
+import entity, {State as EntityState} from "./modules/entity"
 
 Vue.use(Vuex);
 
@@ -23,6 +24,7 @@ export interface State {
   search: SearchState;
   topic: TopicState;
   entityFilter: EntityFilterState;
+  entity: EntityState;
 }
 
 export default new Vuex.Store({
@@ -34,5 +36,6 @@ export default new Vuex.Store({
     search,
     topic,
     entityFilter,
+    entity,
   },
 });

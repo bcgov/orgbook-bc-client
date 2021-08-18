@@ -121,6 +121,7 @@ const actions = {
     baseFilter[params.filterField] = currFilters;
     commit("setFilter", baseFilter);
   }
+  
 };
 
 const mutations = {
