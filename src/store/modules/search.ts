@@ -73,7 +73,8 @@ const getters = {
         valueSelector: (filter?: ISearchFilter) =>
           fieldValueFormatter((filter?.value || "::") as string),
       },
-      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+      (store.getters.searchFilterFields.category ||
+        []) as unknown as ISearchFilter[]
     );
   },
   moreEntityTypes: (): ISearchFilter[] => {
@@ -86,7 +87,8 @@ const getters = {
         valueSelector: (filter?: ISearchFilter) =>
           fieldValueFormatter((filter?.value || "::") as string),
       },
-      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+      (store.getters.searchFilterFields.category ||
+        []) as unknown as ISearchFilter[]
     );
   },
   entityStatuses: (): ISearchFilter[] => {
@@ -98,7 +100,8 @@ const getters = {
         fieldValueFormatter((filter?.value || "::") as string),
     };
     return (
-      store.getters.searchFilterFields.category as unknown as ISearchFilter[]
+      (store.getters.searchFilterFields.category ||
+        []) as unknown as ISearchFilter[]
     )
       .filter((filter) => options.keySelector(filter) === options.key)
       .map((filter) => processField(options, filter));
@@ -110,13 +113,27 @@ const getters = {
       valueSelector: (filter?: ISearchFilter) => filter?.value || "",
     };
     return (
-      store.getters.searchFilterFields
-        .credential_type_id as unknown as ISearchFilter[]
+      (store.getters.searchFilterFields.credential_type_id ||
+        []) as unknown as ISearchFilter[]
     ).map((filter) => processField(options, filter));
+  },
+  extendedSearchFilterFields: (): ISearchFilter[] => {
+    return [
+      ...store.getters.topEntityTypes,
+      ...store.getters.moreEntityTypes,
+      ...store.getters.entityStatuses,
+      ...store.getters.credentialTypes,
+    ];
   },
 };
 
 const actions = {
+  resetSearch({ commit }: ActionContext<State, RootState>): void {
+    commit("setQuery", null);
+    commit("setFilters", []);
+    commit("setPage", defaultPageResult<ISearchTopic>());
+    commit("setFacets", defaultFacetResult);
+  },
   setSearchQuery(
     { commit }: ActionContext<State, RootState>,
     query: ISearchQuery
@@ -160,7 +177,6 @@ const actions = {
     query["page"] = 1;
     dispatch("fetchSearch", query);
   },
-
   async fetchSearchFacetedTopics({
     commit,
     getters,
@@ -208,7 +224,7 @@ const actions = {
 
 const mutations = {
   setQuery(state: State, query: ISearchQuery): void {
-    state.query = { ...query };
+    state.query = query ? { ...query } : null;
   },
   setPage(state: State, page: IApiPagedResult<ISearchTopic>): void {
     state.page = { ...page };

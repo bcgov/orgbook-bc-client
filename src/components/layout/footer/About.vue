@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 class="pt-4">About this site</h2>
-    <p class="pt-2">
+    <p class="pt-4 text-h5 font-weight-bold">About this site</p>
+    <p>
       OrgBook BC is a public directory of organizations legally registered in
       BC, Canada. It's a Digital Trust initiative from the Ministry of Citizens'
       Services.

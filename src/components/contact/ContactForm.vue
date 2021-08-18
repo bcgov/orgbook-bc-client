@@ -2,13 +2,12 @@
   <div>
     <v-form ref="form" :disabled="loading">
       <div>
-        <p class="font-weight-bold">Reason for contact</p>
         <v-select
           outlined
           dense
           v-model="formData.reason"
           :items="requestTypes"
-          label="Select a Reason"
+          label="Reason for contact"
         ></v-select>
       </div>
 
@@ -74,6 +73,7 @@
       </div>
 
       <v-btn
+        id="contactSubmitButton"
         v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'"
         @click="submit"
         depressed
@@ -170,3 +170,10 @@ export default class ContactForm extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#contactSubmitButton {
+  background: $primary-color !important;
+  color: $white !important;
+}
+</style>
