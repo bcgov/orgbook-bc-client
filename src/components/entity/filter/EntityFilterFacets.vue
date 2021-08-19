@@ -7,7 +7,7 @@
             <v-simple-checkbox class="checkbox"
               @click="toggleEntityFilter({filterString:field.text, filterField:filterField})"
               :value="isEntityFilterActive(filterField, getEntityFilters, field.text)"
-              :input-value="active"
+              :ripple="false"
             ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content>

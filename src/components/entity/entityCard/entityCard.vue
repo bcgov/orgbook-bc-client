@@ -2,10 +2,11 @@
   <v-container>
     <v-card>
       <v-card-title v-if="title">{{ title }}</v-card-title>
-      <v-btn @click="test">TEST</v-btn>
+      <slot name="subtitle"></slot>
       <v-expansion-panels
         v-if="$slots.expansionPanels"
         accordion
+        multiple
         class="on-bottom"
         :value="panelList"
       >

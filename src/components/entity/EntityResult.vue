@@ -4,7 +4,8 @@
     ><a href="/" append-icon="mdi-map-marker">Back to search</a>
     <h3>{{ entityName }}</h3>
     <p>
-      Business number: <br />{{ $t(entityState) }} • {{ $t(entityJurisdiction) }}
+      Business number: <br />{{ $t(entityState) }} •
+      {{ $t(entityJurisdiction) }}
     </p>
 
     <v-tabs v-model="currentTab">
@@ -16,11 +17,13 @@
       >
     </v-tabs>
     <v-divider></v-divider>
-    <!-- <v-btn @click="test">TEST</v-btn> -->
+    <v-btn @click="test">TEST</v-btn>
 
     <v-row>
       <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"
-        ><a @click="toggleCredentialsExpanded">Show all Credential statuses</a></v-col
+        ><a @click="toggleCredentialsExpanded"
+          >Show all Credential statuses</a
+        ></v-col
       >
     </v-row>
 
@@ -72,6 +75,25 @@
           </template>
           <template #content>
             <p>Test Rd, Victoria BC</p>
+          </template>
+        </CredentialItem>
+      </template>
+    </EntityCard>
+
+    <EntityCard title="Relationships" ref="relationships" v-if="businessAsRelationship.length > 0">
+      <template #subtitle>
+        <v-container>
+          <p>{{ entityName }} is doing business as:</p>
+        </v-container>
+      </template>
+      <template #expansionPanels>
+        <CredentialItem v-for="(relationship,i) in businessAsRelationship"
+        :key="i"
+          authority="CRA"
+          :effectiveDate="relationship.credential.effective_date"
+        >
+          <template #header>
+            <h3><a>{{ getRelationshipName(relationship) }}</a></h3>
           </template>
         </CredentialItem>
       </template>
@@ -150,7 +172,15 @@
                             <v-responsive width="100%"> </v-responsive>
 
                             <v-col>
-                              <p>
+                              <p
+                                v-if="
+                                  cred.credential_type.description ===
+                                  'relationship.registries.ca'
+                                "
+                              >
+                                {{ getRelatedName(cred) }}
+                              </p>
+                              <p v-else>
                                 {{ cred.local_name.text }}
                               </p>
                             </v-col>
@@ -170,7 +200,12 @@
 </template>
 
 <script lang="ts">
-import { IFormattedTopic, ITopic, ITopicAttribute } from "@/interfaces/api/v2/topic.interface";
+import {
+  IFormattedTopic,
+  ITopic,
+  ITopicAttribute,
+} from "@/interfaces/api/v2/topic.interface";
+import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
@@ -178,7 +213,7 @@ import EntityCard from "@/components/entity/entityCard/entityCard.vue";
 import CredentialItem from "@/components/entity/credentialItem/credentialItem.vue";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
-import { selectFirstAttrItem } from "@/utils/attributeFilter";
+import { selectAllAttrItem, selectFirstAttrItem } from "@/utils/attributeFilter";
 import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import moment from "moment";
@@ -212,6 +247,7 @@ interface Data {
       "selectedTopic",
       "selectedTopicCredentialSet",
       "getEntityFilters",
+      "getRelationships",
     ]),
   },
   methods: {
@@ -223,16 +259,18 @@ interface Data {
       "fetchCredntialType",
       "fetchFilters",
       "toggleCredentialsExpanded",
+      "fetchRelationships",
     ]),
   },
 })
 export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
-  toggleCredentialsExpanded!:()=>void;
+  toggleCredentialsExpanded!: () => void;
   fetchIssuers!: () => Promise<void>;
   fetchCredntialType!: () => Promise<void>;
   fetchFilters!: (id: number) => Promise<void>;
+  fetchRelationships!: (id: number) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -245,6 +283,7 @@ export default class EntityResult extends Vue {
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
   getEntityFilters!: Filter;
+  getRelationships!: IRelationship[];
 
   data(): Data {
     return {
@@ -317,10 +356,16 @@ export default class EntityResult extends Vue {
 
   //class methods
   test(): void {
-    console.log((this.$refs as any).addresses?.$slots?.expansionPanels);
+    console.log(JSON.stringify(this.businessAsRelationship));
   }
 
-  
+  getRelatedName(cred: ICredential): string | undefined {
+    return cred.related_topics[0]?.local_name?.text;
+  }
+
+  getRelationshipName(relationship:IRelationship):string|undefined{
+    return selectFirstAttrItem({key:"type",value:"entity_name"},relationship.related_topic.names)?.text
+  }
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {
@@ -331,6 +376,14 @@ export default class EntityResult extends Vue {
 
   switchCredentialTimeOrder(): void {
     this.credentialTimeOrder *= -1;
+  }
+
+  get businessAsRelationship(): IRelationship[] {
+    return this.getRelationships.filter(relationship=>selectFirstAttrItem(
+        { key: "value", value: "Does Business As" },
+        relationship.attributes
+      )!==undefined)
+    
   }
 
   get entityName(): string | undefined {
@@ -380,7 +433,7 @@ export default class EntityResult extends Vue {
       { key: "type", value: "entity_status" },
       this.selectedTopic?.attributes
     );
-   return state?.type+"."+state?.value
+    return state?.type + "." + state?.value;
   }
 
   get entityRegistrationDate(): string | undefined {
@@ -409,7 +462,7 @@ export default class EntityResult extends Vue {
       { key: "type", value: "home_jurisdiction" },
       this.selectedTopic?.attributes
     );
-    return "entity_type."+state?.value
+    return "entity_type." + state?.value;
   }
 
   get entityRegistrationIssuer(): IIssuer | undefined {
@@ -430,7 +483,11 @@ export default class EntityResult extends Vue {
       });
       const topic: ITopic = this.$store.getters.selectedTopic;
       if (topic?.id) {
-        await Promise.all([this.fetchIssuers(), this.fetchCredntialType()]);
+        await Promise.all([
+          this.fetchIssuers(),
+          this.fetchCredntialType(),
+          this.fetchRelationships(topic.id),
+        ]);
         await this.fetchTopicCredentialSet(topic.id);
         await this.fetchFilters(topic.id);
       }

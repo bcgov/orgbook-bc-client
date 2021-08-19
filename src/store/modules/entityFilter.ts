@@ -128,7 +128,7 @@ const mutations = {
   setFilterCounts: (state: State, fullCredList: ICredential[]): void => {
     state.Authorities.forEach((obj) => {
       obj.count = fullCredList.filter(
-        (cred) => cred.local_name.text === obj.text
+        (cred) => cred.credential_type.description === obj.text
       ).length;
     });
     state.Credential_type.forEach((obj) => {
