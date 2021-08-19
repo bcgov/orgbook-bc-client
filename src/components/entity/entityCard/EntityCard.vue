@@ -11,6 +11,8 @@
         :value="panelList"
       >
         <slot name="expansionPanels"></slot>
+
+        <slot name="footer"></slot>
       </v-expansion-panels>
       <slot></slot>
     </v-card>

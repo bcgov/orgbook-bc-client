@@ -80,22 +80,77 @@
       </template>
     </EntityCard>
 
-    <EntityCard title="Relationships" ref="relationships" v-if="businessAsRelationship.length > 0">
+    <EntityCard
+      title="Relationships"
+      ref="relationships"
+      v-if="businessAsRelationship.length > 0"
+    >
       <template #subtitle>
         <v-container>
           <p>{{ entityName }} is doing business as:</p>
         </v-container>
       </template>
       <template #expansionPanels>
-        <CredentialItem v-for="(relationship,i) in businessAsRelationship"
-        :key="i"
+        <CredentialItem
+          v-for="(_, i) in Math.min(
+            businessAsRelationship.length - relationshipStartIndex,
+            itemsDisplayed
+          )"
+          :key="i"
           authority="CRA"
-          :effectiveDate="relationship.credential.effective_date"
+          :effectiveDate="
+            businessAsRelationship[i + relationshipStartIndex].credential
+              .effective_date
+          "
         >
           <template #header>
-            <h3><a>{{ getRelationshipName(relationship) }}</a></h3>
+            <h3>
+              <a>{{
+                getRelationshipName(
+                  businessAsRelationship[i + relationshipStartIndex]
+                )
+              }}</a>
+            </h3>
           </template>
         </CredentialItem>
+      </template>
+      <template #footer>
+        <v-container>
+          <v-row>
+            <v-col cols="12">
+              <p>Items displayed</p>
+            </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="itemsDisplayed"
+                :items="[5, 10, 100]"
+              ></v-select>
+            </v-col>
+            <v-col cols="2">
+              <p>
+                {{ relationshipStartIndex + 1 }} -
+                {{
+                  Math.min(
+                    Math.min(itemsDisplayed, businessAsRelationship.length) +
+                      relationshipStartIndex,
+                    businessAsRelationship.length
+                  )
+                }}
+                of {{ businessAsRelationship.length }}
+              </p>
+            </v-col>
+            <v-col cols="1"
+              ><v-icon @click="incRelationshipStartIndex(-1)"
+                >mdi-chevron-left</v-icon
+              ></v-col
+            >
+            <v-col cols="1"
+              ><v-icon @click="incRelationshipStartIndex(1)"
+                >mdi-chevron-right</v-icon
+              ></v-col
+            >
+          </v-row>
+        </v-container>
       </template>
     </EntityCard>
 
@@ -209,11 +264,14 @@ import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
-import EntityCard from "@/components/entity/entityCard/entityCard.vue";
-import CredentialItem from "@/components/entity/credentialItem/credentialItem.vue";
+import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
+import CredentialItem from "@/components/entity/credentialItem/CredentialItem.vue";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
-import { selectAllAttrItem, selectFirstAttrItem } from "@/utils/attributeFilter";
+import {
+  selectAllAttrItem,
+  selectFirstAttrItem,
+} from "@/utils/attributeFilter";
 import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import moment from "moment";
@@ -231,6 +289,8 @@ interface Data {
     business_number: string;
     entity_name: string;
   };
+  itemsDisplayed: number;
+  relationshipStartIndex: number;
 }
 
 @Component({
@@ -284,6 +344,8 @@ export default class EntityResult extends Vue {
   credentialTimeOrder!: number;
   getEntityFilters!: Filter;
   getRelationships!: IRelationship[];
+  relationshipStartIndex!: number;
+  itemsDisplayed!: number;
 
   data(): Data {
     return {
@@ -299,6 +361,8 @@ export default class EntityResult extends Vue {
         business_number: "Business number issued",
         entity_name: "DBA name registered",
       },
+      itemsDisplayed: 100,
+      relationshipStartIndex: 0,
     };
   }
 
@@ -363,8 +427,11 @@ export default class EntityResult extends Vue {
     return cred.related_topics[0]?.local_name?.text;
   }
 
-  getRelationshipName(relationship:IRelationship):string|undefined{
-    return selectFirstAttrItem({key:"type",value:"entity_name"},relationship.related_topic.names)?.text
+  getRelationshipName(relationship: IRelationship): string | undefined {
+    return selectFirstAttrItem(
+      { key: "type", value: "entity_name" },
+      relationship.related_topic.names
+    )?.text;
   }
 
   tabClick(refname: string): void {
@@ -374,16 +441,31 @@ export default class EntityResult extends Vue {
     });
   }
 
+  incRelationshipStartIndex(num: number): void {
+    const interval = Math.min(
+      this.businessAsRelationship.length,
+      this.itemsDisplayed
+    );
+    if (
+      this.relationshipStartIndex + num * interval >= 0 &&
+      this.relationshipStartIndex + num * interval <
+        this.businessAsRelationship.length
+    )
+      this.relationshipStartIndex += num * interval;
+  }
+
   switchCredentialTimeOrder(): void {
     this.credentialTimeOrder *= -1;
   }
 
   get businessAsRelationship(): IRelationship[] {
-    return this.getRelationships.filter(relationship=>selectFirstAttrItem(
-        { key: "value", value: "Does Business As" },
-        relationship.attributes
-      )!==undefined)
-    
+    return this.getRelationships.filter(
+      (relationship) =>
+        selectFirstAttrItem(
+          { key: "value", value: "Does Business As" },
+          relationship.attributes
+        ) !== undefined
+    );
   }
 
   get entityName(): string | undefined {
