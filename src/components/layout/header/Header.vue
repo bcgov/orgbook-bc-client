@@ -31,7 +31,7 @@
                 }"
               >
                 <span>OrgBook BC</span>
-                <span class="beta-tag text-uppercase">&nbsp;Beta</span>
+                <!-- <span class="beta-tag text-uppercase">&nbsp;Beta</span> -->
               </span>
             </v-toolbar-title>
           </v-col>

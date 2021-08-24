@@ -4,8 +4,18 @@
     ><a href="/" append-icon="mdi-map-marker">Back to search</a>
     <h3>{{ entityName }}</h3>
     <p>
-      Business number: <br />{{ $t(entityState) }} •
+      Business number: {{ entitybusinessNumber }} <br />
+      {{ $t(entityState) }} •
       {{ $t(entityJurisdiction) }}
+    </p>
+    <p>
+      <!-- prevents flash of incorrect state -->
+      <span
+        v-if="$t(entityState) === 'Active' || $t(entityState) === 'Historical'"
+        :class="$t(entityState) === 'Active' ? 'standing' : 'notStanding'"
+        ><span v-if="$t(entityState) !== 'Active'">NOT</span> IN GOOD
+        STANDING</span
+      >
     </p>
 
     <v-tabs v-model="currentTab">
@@ -124,6 +134,7 @@
               <v-select
                 v-model="itemsDisplayed"
                 :items="[5, 10, 100]"
+                @change="() => (relationshipStartIndex = 0)"
               ></v-select>
             </v-col>
             <v-col cols="2">
@@ -151,6 +162,28 @@
             >
           </v-row>
         </v-container>
+      </template>
+    </EntityCard>
+
+    <EntityCard
+      title="Relationships"
+      :ref="'relationships' ? businessAsRelationship.length <= 0 : ''"
+      v-if="ownedByRelationship !== undefined"
+    >
+      <template #subtitle>
+        <v-container>{{ entityName }} is owned by:</v-container></template
+      >
+      <template #expansionPanels>
+        <CredentialItem
+          authority="CRA"
+          :effectiveDate="ownedByRelationship.credential.effective_date"
+        >
+          <template #header>
+            <h3>
+              <a>{{ getRelationshipName(ownedByRelationship) }}</a>
+            </h3>
+          </template>
+        </CredentialItem>
       </template>
     </EntityCard>
 
@@ -261,7 +294,7 @@ import {
   ITopicAttribute,
 } from "@/interfaces/api/v2/topic.interface";
 import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
@@ -284,7 +317,6 @@ import { Filter } from "@/store/modules/entityFilter";
 interface Data {
   currentTab: string;
   credentialTimeOrder: number;
-  tabItems: Array<{ text: string; refname: string }>;
   entityTypeToName: {
     business_number: string;
     entity_name: string;
@@ -316,7 +348,7 @@ interface Data {
       "fetchFormattedIdentifiedTopic",
       "fetchTopicCredentialSet",
       "fetchIssuers",
-      "fetchCredntialType",
+      "setCredentialType",
       "fetchFilters",
       "toggleCredentialsExpanded",
       "fetchRelationships",
@@ -328,7 +360,7 @@ export default class EntityResult extends Vue {
   currentTab!: string;
   toggleCredentialsExpanded!: () => void;
   fetchIssuers!: () => Promise<void>;
-  fetchCredntialType!: () => Promise<void>;
+  setCredentialType!: (creds: ICredential[]) => void;
   fetchFilters!: (id: number) => Promise<void>;
   fetchRelationships!: (id: number) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
@@ -351,12 +383,6 @@ export default class EntityResult extends Vue {
     return {
       currentTab: "",
       credentialTimeOrder: 1,
-      tabItems: [
-        { text: "Registration", refname: "registration" },
-        { text: "Addresses", refname: "addresses" },
-        { text: "Relationships", refname: "relationships" },
-        { text: "Credentials", refname: "credentials" },
-      ],
       entityTypeToName: {
         business_number: "Business number issued",
         entity_name: "DBA name registered",
@@ -366,6 +392,12 @@ export default class EntityResult extends Vue {
     };
   }
 
+  @Watch("selectedTopicCredentialSet")
+  onCredSetChange(selectedTopicCredentialSet: Array<ICredentialSet> | null) {
+    if (selectedTopicCredentialSet && this.entityCredentials !== undefined) {
+      this.setCredentialType(this.entityCredentials);
+    }
+  }
   // Credential Filters
 
   credentialFilters: { (creds: Array<ICredential>): Array<ICredential> }[] = [
@@ -420,17 +452,19 @@ export default class EntityResult extends Vue {
 
   //class methods
   test(): void {
-    console.log(JSON.stringify(this.businessAsRelationship));
+    console.log(JSON.stringify(this.selectedTopic));
   }
 
-  getRelatedName(cred: ICredential): string | undefined {
-    return cred.related_topics[0]?.local_name?.text;
+  getRelatedName(cred: ICredential | undefined): string | undefined {
+    return cred?.related_topics[0]?.local_name?.text;
   }
 
-  getRelationshipName(relationship: IRelationship): string | undefined {
+  getRelationshipName(
+    relationship: IRelationship | undefined
+  ): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "entity_name" },
-      relationship.related_topic.names
+      relationship?.related_topic.names
     )?.text;
   }
 
@@ -458,6 +492,28 @@ export default class EntityResult extends Vue {
     this.credentialTimeOrder *= -1;
   }
 
+  get hasAnyRelationships(): boolean {
+    return (
+      this.businessAsRelationship.length > 0 ||
+      this.ownedByRelationship !== undefined
+    );
+  }
+
+  get tabItems(): { text: string; refname: string }[] {
+    let baseTabItems = [
+      { text: "Registration", refname: "registration" },
+      { text: "Addresses", refname: "addresses" },
+      { text: "Credentials", refname: "credentials" },
+    ];
+    if (this.hasAnyRelationships) {
+      baseTabItems.splice(2, 0, {
+        text: "Relationships",
+        refname: "relationships",
+      });
+    }
+    return baseTabItems;
+  }
+
   get businessAsRelationship(): IRelationship[] {
     return this.getRelationships.filter(
       (relationship) =>
@@ -468,6 +524,18 @@ export default class EntityResult extends Vue {
     );
   }
 
+  get ownedByRelationship(): IRelationship | undefined {
+    const relationships = this.getRelationships.filter(
+      (relationship) =>
+        selectFirstAttrItem(
+          { key: "value", value: "IsOwned" },
+          relationship.attributes
+        ) !== undefined
+    );
+
+    return relationships.length > 0 ? relationships[0] : undefined;
+  }
+
   get entityName(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "entity_name" },
@@ -476,7 +544,15 @@ export default class EntityResult extends Vue {
   }
 
   get entitybusinessNumber(): string | undefined {
-    return this.selectedTopic?.source_id;
+    return selectFirstAttrItem(
+      { key: "type", value: "business_number" },
+      this.entityCredentials?.map((cred) => {
+        return {
+          type: cred.local_name.type,
+          text: cred.local_name.text,
+        };
+      })
+    )?.text;
   }
 
   get entityIncorporationNumber(): string | undefined {
@@ -484,18 +560,30 @@ export default class EntityResult extends Vue {
   }
 
   get filteredEntityCredentials(): Array<ICredential> | undefined {
-    if (this.entityCredentials === undefined) {
+    var filteredCreds = this.entityCredentialsSorted;
+    if (filteredCreds === undefined) {
       return undefined;
     }
-    var filteredCreds = this.entityCredentials;
+
     this.credentialFilters.forEach((filterFunc) => {
-      filteredCreds = filterFunc(filteredCreds);
+      filteredCreds = filterFunc(filteredCreds as ICredential[]);
     });
 
     return filteredCreds;
   }
 
   get entityCredentials(): Array<ICredential> | undefined {
+    if (!this.selectedTopicCredentialSet) {
+      return undefined;
+    }
+    var fullCredentials: ICredential[] = [];
+    this.selectedTopicCredentialSet.forEach((credSet) => {
+      fullCredentials.push(...credSet.credentials);
+    });
+    return fullCredentials;
+  }
+
+  get entityCredentialsSorted(): Array<ICredential> | undefined {
     if (!this.selectedTopicCredentialSet) {
       return undefined;
     }
@@ -511,6 +599,10 @@ export default class EntityResult extends Vue {
   }
 
   get entityState(): string | undefined {
+    if (this.selectedTopic === undefined) {
+      return undefined;
+    }
+
     const state = selectFirstAttrItem(
       { key: "type", value: "entity_status" },
       this.selectedTopic?.attributes
@@ -567,7 +659,6 @@ export default class EntityResult extends Vue {
       if (topic?.id) {
         await Promise.all([
           this.fetchIssuers(),
-          this.fetchCredntialType(),
           this.fetchRelationships(topic.id),
         ]);
         await this.fetchTopicCredentialSet(topic.id);
@@ -578,3 +669,14 @@ export default class EntityResult extends Vue {
   }
 }
 </script>
+<style scoped>
+.standing {
+  background-color: rgb(46, 133, 64);
+  border: 10px solid rgb(46, 133, 64);
+  color: white;
+}
+.notStanding {
+  background-color: rgb(252, 186, 25);
+  border: 10px solid rgb(252, 186, 25);
+}
+</style>

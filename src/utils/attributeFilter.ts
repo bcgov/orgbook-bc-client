@@ -7,7 +7,7 @@ export function selectAllAttrItem<T extends any, U extends keyof T>(
 
 export function selectFirstAttrItem<T extends any, U extends keyof T>(
   attr: { key: U; value: any },
-  array: Array<T>
+  array: Array<T> | undefined
 ): T | undefined {
   const filtered = selectAllAttrItem(attr, array);
   return filtered !== undefined && filtered.length > 0

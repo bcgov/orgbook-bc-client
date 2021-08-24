@@ -7,6 +7,7 @@ import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
 import CredentialType from "@/services/api/v2/credential-type.service"
+import topic from "./topic";
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
@@ -81,13 +82,34 @@ const actions = {
     }
 
   },
-  async fetchCredntialType({ commit }: ActionContext<State, RootState>): Promise<void> {
-    const credTypeListResp = await credentialTypeService.getCredentialTypes();
-    const credTypeList: IEntityFacetField[] = credTypeListResp.data.results.map(credType => {
-      return { text: credType.schema.name, value: credType.schema.name, count: 0 }
+  setCredentialType({ commit }: ActionContext<State, RootState>, creds:ICredential[]): void {
+   
+    const filterFields:IEntityFacetField[] = [];
+
+    const credTypeList = creds.forEach(cred=>{
+      const idx = filterFields.map(field=>field.text).indexOf(cred.credential_type.description)
+      if (idx >= 0){
+        (filterFields[idx].count as number) += 1;
+      }else{
+        filterFields.push({text: cred.credential_type.description, value: cred.credential_type.description, count:1})
+      }
     })
-    commit("setCredTypes", credTypeList);
+    commit("setCredTypes", filterFields);
   },
+
+  setRegistrationType({ commit }: ActionContext<State, RootState>, creds:ICredential[]): void{
+    const filterFields:IEntityFacetField[] = [];
+
+    const credTypeList = creds.forEach(cred=>{
+      const idx = filterFields.map(field=>field.text).indexOf(cred.credential_type.description)
+      if (idx >= 0){
+        (filterFields[idx].count as number) += 1;
+      }else{
+        filterFields.push({text: cred.credential_type.description, value: cred.credential_type.description, count:1})
+      }
+    })
+  },
+
   async fetchFilters(
     { commit }: ActionContext<State, RootState>,
     id: number
@@ -127,11 +149,6 @@ const actions = {
 const mutations = {
   setFilterCounts: (state: State, fullCredList: ICredential[]): void => {
     state.Authorities.forEach((obj) => {
-      obj.count = fullCredList.filter(
-        (cred) => cred.credential_type.description === obj.text
-      ).length;
-    });
-    state.Credential_type.forEach((obj) => {
       obj.count = fullCredList.filter(
         (cred) => cred.credential_type.description === obj.text
       ).length;
