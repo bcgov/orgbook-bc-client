@@ -4,6 +4,7 @@
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
       <h1>About goes here!</h1>
       <router-view></router-view>
+      <!-- <div v-html="content"></div> -->
     </v-container>
   </div>
 </template>
@@ -16,6 +17,7 @@ import { subHeaderLinks } from "@/data/nav";
 
 interface Data {
   links: INavLink[];
+  content: string;
 }
 
 @Component({
@@ -27,7 +29,19 @@ export default class About extends Vue {
   data(): Data {
     return {
       links: subHeaderLinks || [],
+      content: "",
     };
+  }
+
+  async created(): Promise<void> {
+    try {
+      const docs = await import(
+        /* webpackChunkName: "docs" */ "@/assets/docs.json"
+      );
+      console.log(docs);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 </script>
