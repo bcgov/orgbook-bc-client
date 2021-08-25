@@ -2,6 +2,7 @@ import { ActionContext } from "vuex";
 import store, { State as RootState } from "@/store/index";
 import { IDoc, IDocRoute } from "@/services/doc/doc.service";
 import router from "@/router";
+import { defaultDoc } from "@/utils/doc";
 
 export interface State {
   docs: IDoc[];
@@ -16,6 +17,11 @@ const getters = {
   docLinks: (state: State): IDocRoute[] => {
     return state.docs
       .filter((doc) => !doc.attributes.index)
+      .map(processDocRoute);
+  },
+  showcaseLinks: (state: State): IDocRoute[] => {
+    return state.docs
+      .filter((doc) => doc.attributes.showcase)
       .map(processDocRoute);
   },
   docRoutes: (state: State): IDocRoute[] => {
@@ -41,7 +47,7 @@ const actions = {
 
 const mutations = {
   setDocs(state: State, docs: IDoc[]): void {
-    state.docs = [...docs];
+    state.docs = [defaultDoc, ...docs];
   },
 };
 
@@ -53,11 +59,12 @@ export default {
 };
 
 function processDocRoute(doc: IDoc) {
-  const { path, name, showcase } = doc?.attributes;
+  const { path, name, index, showcase, showcaseTitle, showcaseDescription } =
+    doc?.attributes;
   const { html } = doc;
   return {
     path: `/about/${path || ""}`,
-    data: { showcase, html },
+    data: { index, showcase, showcaseTitle, showcaseDescription, html },
     label: name,
     name,
     component: () =>

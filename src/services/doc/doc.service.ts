@@ -4,6 +4,8 @@ export interface IDoc {
     name: string;
     index?: boolean;
     showcase?: boolean;
+    showcaseTitle?: string;
+    showcaseDescription?: string;
   };
   html: string;
 }
@@ -12,11 +14,16 @@ export interface IDocRoute {
   path: string;
   name: string;
   label: string;
-  data?: {
-    showcase?: boolean;
-    html: string;
-  };
+  data?: IDocRouteData;
   component?: unknown;
+}
+
+export interface IDocRouteData {
+  index?: boolean;
+  showcase?: boolean;
+  showcaseTitle?: string;
+  showcaseDescription?: string;
+  html: string;
 }
 
 export async function getDocs(): Promise<IDoc[]> {

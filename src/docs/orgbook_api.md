@@ -2,6 +2,8 @@
 name: OrgBook API
 path: orgbook-api
 showcase: true
+showcaseTitle: "The API: Using OrgBook’s Data"
+showcaseDescription: Learn about the developer tools—the “API”—for adding OrgBook BC data to your own digital services.
 ---
 
 **The API: Using Data From OrgBook BC**

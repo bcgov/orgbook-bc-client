@@ -2,6 +2,8 @@
 name: Digital Trust
 path: digital-trust
 showcase: true
+showcaseTitle: Digital Trust & OrgBook BC
+showcaseDescription: Find out how OrgBook BC uses a technology called Verifiable Credentials to make its information trustworthy and of a verifiable origin.
 ---
 
 **The Digital Trust Behind OrgBook BC**
