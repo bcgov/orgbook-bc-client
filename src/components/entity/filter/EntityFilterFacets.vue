@@ -4,9 +4,17 @@
       <v-list-item v-for="field in fields" :key="field.value">
         <template v-slot>
           <v-list-item-action>
-            <v-simple-checkbox class="checkbox"
-              @click="toggleEntityFilter({filterString:field.text, filterField:filterField})"
-              :value="isEntityFilterActive(filterField, getEntityFilters, field.text)"
+            <v-simple-checkbox
+              class="checkbox"
+              @click="
+                toggleEntityFilter({
+                  filterString: field.text,
+                  filterField: filterField,
+                })
+              "
+              :value="
+                isEntityFilterActive(filterField, getEntityFilters, field.text)
+              "
               :ripple="false"
             ></v-simple-checkbox>
           </v-list-item-action>
@@ -27,7 +35,7 @@ import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
 import { Filter } from "@/store/modules/entityFilter";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters, mapActions } from "vuex";
-import { isEntityFilterActive } from "@/utils/entityFilter"
+import { isEntityFilterActive } from "@/utils/entityFilter";
 
 @Component({
   computed: {
@@ -41,6 +49,10 @@ export default class EntityFilterFacets extends Vue {
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
   getEntityFilters!: Filter;
-  isEntityFilterActive: (filterField: string, getEntityFilters: Filter, filterString?: string) => boolean = isEntityFilterActive;
+  isEntityFilterActive: (
+    filterField: string,
+    getEntityFilters: Filter,
+    filterString?: string
+  ) => boolean = isEntityFilterActive;
 }
 </script>

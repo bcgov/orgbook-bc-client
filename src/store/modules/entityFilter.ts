@@ -6,14 +6,12 @@ import { State as RootState } from "@/store/index";
 import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
 import { ICredential } from "@/interfaces/api/v2/credential.interface";
-import CredentialType from "@/services/api/v2/credential-type.service"
-import topic from "./topic";
+import CredentialType from "@/services/api/v2/credential-type.service";
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
 const issuerService = new IssuerService();
 const topicService = new Topic();
-const credentialTypeService = new CredentialType();
 
 export interface State {
   selected: {
@@ -75,39 +73,59 @@ const actions = {
     commit,
   }: ActionContext<State, RootState>): Promise<void> {
     try {
-      const res = await (await issuerService.getIssuerList()).data.results.map(issuer => { return { text: issuer.abbreviation, value: issuer.name, count: 0 } });
-      commit("setIssuers", res)
+      const res = await (
+        await issuerService.getIssuerList()
+      ).data.results.map((issuer) => {
+        return { text: issuer.abbreviation, value: issuer.name, count: 0 };
+      });
+      commit("setIssuers", res);
     } catch (e) {
       console.error(e);
     }
-
   },
-  setCredentialType({ commit }: ActionContext<State, RootState>, creds:ICredential[]): void {
-   
-    const filterFields:IEntityFacetField[] = [];
+  setCredentialType(
+    { commit }: ActionContext<State, RootState>,
+    creds: ICredential[]
+  ): void {
+    const filterFields: IEntityFacetField[] = [];
 
-    const credTypeList = creds.forEach(cred=>{
-      const idx = filterFields.map(field=>field.text).indexOf(cred.credential_type.description)
-      if (idx >= 0){
+    creds.forEach((cred) => {
+      const idx = filterFields
+        .map((field) => field.text)
+        .indexOf(cred.credential_type.description);
+      if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
-      }else{
-        filterFields.push({text: cred.credential_type.description, value: cred.credential_type.description, count:1})
+      } else {
+        filterFields.push({
+          text: cred.credential_type.description,
+          value: cred.credential_type.description,
+          count: 1,
+        });
       }
-    })
+    });
     commit("setCredTypes", filterFields);
   },
 
-  setRegistrationType({ commit }: ActionContext<State, RootState>, creds:ICredential[]): void{
-    const filterFields:IEntityFacetField[] = [];
+  setRegistrationType(
+    { commit }: ActionContext<State, RootState>,
+    creds: ICredential[]
+  ): void {
+    const filterFields: IEntityFacetField[] = [];
 
-    const credTypeList = creds.forEach(cred=>{
-      const idx = filterFields.map(field=>field.text).indexOf(cred.credential_type.description)
-      if (idx >= 0){
+    creds.forEach((cred) => {
+      const idx = filterFields
+        .map((field) => field.text)
+        .indexOf(cred.credential_type.description);
+      if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
-      }else{
-        filterFields.push({text: cred.credential_type.description, value: cred.credential_type.description, count:1})
+      } else {
+        filterFields.push({
+          text: cred.credential_type.description,
+          value: cred.credential_type.description,
+          count: 1,
+        });
       }
-    })
+    });
   },
 
   async fetchFilters(
@@ -124,26 +142,32 @@ const actions = {
   setFilter({ commit }: ActionContext<State, RootState>, filter: Filter): void {
     commit("setFilter", filter);
   },
-  toggleEntityFilter({ commit }: ActionContext<State, RootState>, params:{filterString: string; filterField: string}) {
+  toggleEntityFilter(
+    { commit }: ActionContext<State, RootState>,
+    params: { filterString: string; filterField: string }
+  ): void {
     const baseFilter = getters.getEntityFilters(state);
-    let currFilters:string[] | string | boolean = baseFilter[params.filterField]===undefined? [] : baseFilter[params.filterField];
-    if (typeof currFilters === "string" && currFilters !== ""){ //we should only support clearing strings, adding strings should be done through setFilter
-      currFilters="";
-    }else if(typeof currFilters === "boolean"){
+    let currFilters: string[] | string | boolean =
+      baseFilter[params.filterField] === undefined
+        ? []
+        : baseFilter[params.filterField];
+    if (typeof currFilters === "string" && currFilters !== "") {
+      //we should only support clearing strings, adding strings should be done through setFilter
+      currFilters = "";
+    } else if (typeof currFilters === "boolean") {
       currFilters = !currFilters;
-    }else{
-      currFilters = currFilters as string[]
+    } else {
+      currFilters = currFilters as string[];
       if (!currFilters.includes(params.filterString)) {
         currFilters.push(params.filterString);
-      }else{
+      } else {
         const idx = currFilters.indexOf(params.filterString);
         currFilters.splice(idx, 1);
       }
     }
     baseFilter[params.filterField] = currFilters;
     commit("setFilter", baseFilter);
-  }
-  
+  },
 };
 
 const mutations = {
@@ -154,10 +178,10 @@ const mutations = {
       ).length;
     });
   },
-  setCredTypes(state: State, credTypes: IEntityFacetField[]) {
+  setCredTypes(state: State, credTypes: IEntityFacetField[]): void {
     state.Credential_type = credTypes;
   },
-  setIssuers(state: State, issuers: IEntityFacetField[]) {
+  setIssuers(state: State, issuers: IEntityFacetField[]): void {
     state.Authorities = issuers;
   },
   setFilter: (state: State, filter: Filter): Filter | null => {

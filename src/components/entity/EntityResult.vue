@@ -27,7 +27,7 @@
       >
     </v-tabs>
     <v-divider></v-divider>
-    <v-btn @click="test">TEST</v-btn>
+    <!-- <v-btn @click="test">TEST</v-btn> -->
 
     <v-row>
       <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"

@@ -24,25 +24,23 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
-   computed: {
-    ...mapGetters([
-      "getCredentialsExpanded"
-    ]),
+  computed: {
+    ...mapGetters(["getCredentialsExpanded"]),
   },
   methods: {
-    ...mapActions([
-      "toggleCredentialsExpanded"
-    ]),
+    ...mapActions(["toggleCredentialsExpanded"]),
   },
 })
 export default class EntityCard extends Vue {
   @Prop({ default: "" }) title!: string;
-  getCredentialsExpanded!:boolean;
-  toggleCredentialsExpanded!:()=>void;
+  getCredentialsExpanded!: boolean;
+  toggleCredentialsExpanded!: () => void;
 
-   get panelList(): number[]{
-     return this.getCredentialsExpanded? [...Array(this.$slots.expansionPanels?.length).keys()] : []
-   }
+  get panelList(): number[] {
+    return this.getCredentialsExpanded
+      ? [...Array(this.$slots.expansionPanels?.length).keys()]
+      : [];
+  }
 
   test(): void {
     console.log(this.panelList);

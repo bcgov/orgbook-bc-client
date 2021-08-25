@@ -12,7 +12,7 @@ import topic, { State as TopicState } from "./modules/topic";
 import entityFilter, {
   State as EntityFilterState,
 } from "./modules/entityFilter";
-import entity, {State as EntityState} from "./modules/entity"
+import entity, { State as EntityState } from "./modules/entity";
 
 Vue.use(Vuex);
 

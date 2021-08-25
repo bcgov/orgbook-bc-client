@@ -8,20 +8,20 @@ export interface IRelationshipAttribute extends IApiProperty {
   format: string;
 }
 
-export interface IRelationshipTopicName extends IApiProperty{
-  credential_id:number;
-  id:number;
-  language:string|null;
-  text:string;
-  type:string;
+export interface IRelationshipTopicName extends IApiProperty {
+  credential_id: number;
+  id: number;
+  language: string | null;
+  text: string;
+  type: string;
 }
 
-export interface IRelationshipTopic extends IApiProperty{
-  create_timestamp:string;
-  id:number;
-  names:IRelationshipTopicName[];
-  source_id:string;
-  type:string;
+export interface IRelationshipTopic extends IApiProperty {
+  create_timestamp: string;
+  id: number;
+  names: IRelationshipTopicName[];
+  source_id: string;
+  type: string;
 }
 
 export interface IRelationship extends IApiResource {
@@ -32,4 +32,3 @@ export interface IRelationship extends IApiResource {
   topic: IRelationshipTopic;
   related_topic: IRelationshipTopic;
 }
-

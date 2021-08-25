@@ -44,7 +44,11 @@
                 </div>
               </template>
               <v-date-picker
-                :value="isEntityFilterActive('Date_min', getEntityFilters)?fromDate:''"
+                :value="
+                  isEntityFilterActive('Date_min', getEntityFilters)
+                    ? fromDate
+                    : ''
+                "
                 @input="menuFrom = false"
                 @change="handleMinDateChange"
               ></v-date-picker>
@@ -93,7 +97,9 @@
             <p>
               Show Expired
               <v-switch
-                :input-value="isEntityFilterActive('Show_expired', getEntityFilters)"
+                :input-value="
+                  isEntityFilterActive('Show_expired', getEntityFilters)
+                "
                 :value="isEntityFilterActive('Show_expired', getEntityFilters)"
                 @change="handleSwitchChange"
               ></v-switch>
@@ -112,7 +118,7 @@ import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
 import { Filter } from "@/store/modules/entityFilter";
-import {isEntityFilterActive} from "@/utils/entityFilter"
+import { isEntityFilterActive } from "@/utils/entityFilter";
 
 interface Data {
   menuFrom: boolean;
@@ -146,7 +152,11 @@ export default class EntityFilterFacetPanels extends Vue {
   private getRegistrationTypes!: Array<IEntityFacetField>;
   getEntityFilters!: Filter;
   setFilter!: (filter: Filter) => void;
-  isEntityFilterActive: (filterField: string, getEntityFilters: Filter, filterString?: string) => boolean = isEntityFilterActive;
+  isEntityFilterActive: (
+    filterField: string,
+    getEntityFilters: Filter,
+    filterString?: string
+  ) => boolean = isEntityFilterActive;
   data(): Data {
     return {
       menuFrom: false,
@@ -163,12 +173,12 @@ export default class EntityFilterFacetPanels extends Vue {
   }
   resetMinDate(): void {
     var currFilters = { ...this.getEntityFilters };
-    currFilters.Date_min = '';
+    currFilters.Date_min = "";
     this.setFilter(currFilters);
   }
   resetMaxDate(): void {
     var currFilters = { ...this.getEntityFilters };
-    currFilters.Date_max = '';
+    currFilters.Date_max = "";
     this.setFilter(currFilters);
   }
   handleMinDateChange(newVal: string): void {

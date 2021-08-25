@@ -59,7 +59,7 @@ export default class EntityFilterChips extends Vue {
           filterField: key,
           filterString: this.getEntityFilters[key] as string,
         });
-      } else if(this.getEntityFilters[key]){
+      } else if (this.getEntityFilters[key]) {
         chips.push({
           filterField: key,
           filterString: key as string,
