@@ -2,7 +2,6 @@ import { ActionContext } from "vuex";
 import store, { State as RootState } from "@/store/index";
 import { IDoc, IDocRoute } from "@/services/doc/doc.service";
 import router from "@/router";
-import About from "@/views/About.vue";
 
 export interface State {
   docs: IDoc[];
@@ -34,7 +33,9 @@ const getters = {
 const actions = {
   setDocs({ commit }: ActionContext<State, RootState>, docs: IDoc[]): void {
     commit("setDocs", docs);
-    router.addRoutes(store.getters.docRoutes);
+    store.getters.docRoutes.forEach((docRoute: IDocRoute) => {
+      router.addRoute("About", docRoute);
+    });
   },
 };
 
@@ -59,6 +60,7 @@ function processDocRoute(doc: IDoc) {
     data: { showcase, html },
     label: name,
     name,
-    component: About,
+    component: () =>
+      import(/* webpackChunkName: "about" */ "@/views/About.vue"),
   };
 }

@@ -12,4 +12,4 @@ Developers can review the API specification (see screenshot below) and the API d
 
 Any use of the API is subject to the terms of service.
 
-If you have any questions about the API or its potential, get in touch with our team.
+If you have any questions about the API or its potential, [get in touch](/contact) with our team.

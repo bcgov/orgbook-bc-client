@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12" md="8">
+  <v-row heigh>
+    <v-col cols="12" md="7">
       <p class="text-h5 font-weight-bold">OrgBook BC</p>
       <div class="pb-2">
         OrgBook BC provides verified data about organizations including:
@@ -17,7 +17,9 @@
       </ul>
     </v-col>
 
-    <v-col id="searchHomeGrapic" cols="12" md="4">Image here</v-col>
+    <v-col id="searchHomeGrapic" cols="12" md="5">
+      <img src="@/assets/img/graphic.png" alt="" srcset="" />
+    </v-col>
   </v-row>
 </template>
 
@@ -53,7 +55,8 @@ ul.description {
   }
 }
 #searchHomeGrapic {
-  background: $gray;
-  color: $white;
+  img {
+    width: 100%;
+  }
 }
 </style>
