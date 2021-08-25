@@ -1,43 +1,42 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store";
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v2/credential-type.service";
-import { defaultPageResult } from "@/utils/result";
 
 const credentialTypeSerivice = new CredentialType();
 
 export interface State {
-  page: IApiPagedResult<ICredentialType>;
+  types: ICredentialType[];
   selected: ICredentialType | null;
 }
 
 const state: State = {
-  page: defaultPageResult<ICredentialType>(),
+  types: [],
   selected: null,
 };
 
 const getters = {
-  pagedCredentialTypes: (state: State): IApiPagedResult<ICredentialType> =>
-    state.page,
+  credentialTypes: (state: State): ICredentialType[] => state.types,
 };
 
 const actions = {
-  async fetchCredentialTypes({
-    commit,
-  }: ActionContext<State, RootState>): Promise<void> {
+  async fetchCredentialTypes(
+    { commit }: ActionContext<State, RootState>,
+    paging = true
+  ): Promise<void> {
     try {
-      const res = await credentialTypeSerivice.getCredentialTypes();
-      commit("setPage", res.data);
+      const res = await credentialTypeSerivice.getCredentialTypes(paging);
+      commit("setTypes", res.data);
     } catch (e) {
       console.error(e);
+      commit("setTypes", []);
     }
   },
 };
 
 const mutations = {
-  setPage(state: State, page: IApiPagedResult<ICredentialType>): void {
-    state.page = { ...state.page, ...page };
+  setTypes(state: State, types: ICredentialType[]): void {
+    state.types = [...types];
   },
 };
 

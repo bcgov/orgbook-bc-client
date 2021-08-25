@@ -21,24 +21,6 @@ const routes: Array<RouteConfig> = [
     name: "About",
     component: () =>
       import(/* webpackChunkName: "about" */ "@/views/About.vue"),
-    children: [
-      {
-        path: "orgbook-data",
-        name: "OrgBook Data",
-      },
-      {
-        path: "digital-trust",
-        name: "Digital Trust",
-      },
-      {
-        path: "orgbook-api",
-        name: "OrgBook API",
-      },
-      {
-        path: "becoming-an-issuer",
-        name: "Becoming an Issuer",
-      },
-    ],
   },
   {
     path: "/contact",

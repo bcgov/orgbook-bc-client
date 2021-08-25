@@ -52,7 +52,7 @@
             outlined
             dense
             v-model="formData.error"
-            :items="credentialTypes"
+            :items="formattedCredentialTypes"
             label="What Information is incorrect?"
           ></v-select>
 
@@ -93,7 +93,6 @@ import {
   contactReason,
 } from "@/store/modules/contact";
 import router from "@/router";
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 
 interface Data {
@@ -104,7 +103,7 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["pagedCredentialTypes", "loading"]),
+    ...mapGetters(["credentialTypes", "loading"]),
   },
   methods: {
     ...mapActions(["fetchCredentialTypes", "sendFeedback", "setLoading"]),
@@ -112,10 +111,10 @@ interface Data {
 })
 export default class ContactForm extends Vue {
   formData!: ContactRequest | IncorrectInfoContactRequest;
-  pagedCredentialTypes!: IApiPagedResult<ICredentialType>;
+  credentialTypes!: ICredentialType[];
 
   setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: () => Promise<void>;
+  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
   sendFeedback!: (
     feedback: ContactRequest | IncorrectInfoContactRequest
   ) => Promise<void>;
@@ -133,8 +132,8 @@ export default class ContactForm extends Vue {
     }));
   }
 
-  get credentialTypes(): Array<{ text: string; value: number }> {
-    return this.pagedCredentialTypes.results.map((type) => ({
+  get formattedCredentialTypes(): Array<{ text: string; value: number }> {
+    return this.credentialTypes.map((type) => ({
       text: type.description,
       value: type.id,
     }));
@@ -152,7 +151,7 @@ export default class ContactForm extends Vue {
 
   async created(): Promise<void> {
     this.setLoading(true);
-    await this.fetchCredentialTypes();
+    await this.fetchCredentialTypes(false);
     this.setLoading(false);
   }
 
