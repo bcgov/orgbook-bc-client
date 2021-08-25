@@ -14,13 +14,13 @@
               <img
                 class="small-logo"
                 v-if="$vuetify.breakpoint.smAndDown"
-                src="logo.svg"
+                src="/logo.svg"
                 alt="British Columbia"
               />
               <img
                 class="large-logo"
                 v-if="$vuetify.breakpoint.mdAndUp"
-                src="logo-banner.svg"
+                src="/logo-banner.svg"
                 alt="British Columbia"
               />
               <span

@@ -6,21 +6,6 @@ export const headerLinks = [
   { path: "/contact", label: "Contact", name: "Contact" },
 ] as INavLink[];
 
-export const subHeaderLinks = [
-  { path: "/about/orgbook-data", label: "OrgBook Data", name: "OrgBook Data" },
-  {
-    path: "/about/digital-trust",
-    label: "Digital Trust",
-    name: "Digital Trust",
-  },
-  { path: "/about/orgbook-api", label: "OrgBook API", name: "OrgBook API" },
-  {
-    path: "/about/becoming-an-issuer",
-    label: "Becoming an Issuer",
-    name: "Becoming an Issuer",
-  },
-] as INavLink[];
-
 export const footerLinks = [
   { path: "/search", label: "Home", name: "Search" },
   { path: "/disclamer", label: "Disclaimer" },
