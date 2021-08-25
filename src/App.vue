@@ -4,11 +4,6 @@
     <v-main>
       <Loading v-if="loading" />
       <router-view></router-view>
-      <Notification
-        v-for="alert in alerts"
-        :key="alert.id"
-        :alert="alert"
-      ></Notification>
     </v-main>
     <Footer class="on-top" />
   </v-app>
@@ -21,21 +16,31 @@ import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
 import Loading from "@/components/shared/Loading.vue";
-import Notification from "@/components/shared/Notification.vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
   components: {
     Header,
     Footer,
     Loading,
-    Notification,
   },
   computed: {
-    ...mapGetters(["loading", "alerts"]),
+    ...mapGetters(["loading"]),
+  },
+  methods: {
+    ...mapActions(["setLoading", "fetchCredentialTypes"]),
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  setLoading!: (loading: boolean) => void;
+  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
+
+  async created(): Promise<void> {
+    this.setLoading(true);
+    await this.fetchCredentialTypes(false);
+    this.setLoading(false);
+  }
+}
 </script>
 
 <style lang="scss">
@@ -60,5 +65,6 @@ a {
 }
 .checkbox {
   color: $input-color;
+  height: 24px;
 }
 </style>

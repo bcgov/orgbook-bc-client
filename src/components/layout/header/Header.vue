@@ -14,13 +14,13 @@
               <img
                 class="small-logo"
                 v-if="$vuetify.breakpoint.smAndDown"
-                src="logo.svg"
+                src="@/assets/img/logo.svg"
                 alt="British Columbia"
               />
               <img
                 class="large-logo"
                 v-if="$vuetify.breakpoint.mdAndUp"
-                src="logo-banner.svg"
+                src="@/assets/img/logo-banner.svg"
                 alt="British Columbia"
               />
               <span
@@ -31,7 +31,6 @@
                 }"
               >
                 <span>OrgBook BC</span>
-                <span class="beta-tag text-uppercase">&nbsp;Beta</span>
               </span>
             </v-toolbar-title>
           </v-col>
@@ -105,10 +104,5 @@ export default class Header extends Vue {
     vertical-align: middle;
     height: 48px;
   }
-}
-.beta-tag {
-  color: $accent-color;
-  vertical-align: super;
-  font-size: small;
 }
 </style>
