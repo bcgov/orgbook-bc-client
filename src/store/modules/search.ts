@@ -106,7 +106,7 @@ const getters = {
       .filter((filter) => options.keySelector(filter) === options.key)
       .map((filter) => processField(options, filter));
   },
-  credentialTypes: (): ISearchFilter[] => {
+  credentialSearchTypes: (): ISearchFilter[] => {
     const options = {
       ...credentialTypeSpec,
       keySelector: (filter?: ISearchFilter) => filter?.text || "",
@@ -122,7 +122,7 @@ const getters = {
       ...store.getters.topEntityTypes,
       ...store.getters.moreEntityTypes,
       ...store.getters.entityStatuses,
-      ...store.getters.credentialTypes,
+      ...store.getters.credentialSearchTypes,
     ];
   },
 };

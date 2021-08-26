@@ -7,7 +7,7 @@
       <SearchFilterFacetPanel :fields="entityStatuses">
         <template v-slot:title> Organization Status </template>
       </SearchFilterFacetPanel>
-      <SearchFilterFacetPanel :fields="credentialTypes">
+      <SearchFilterFacetPanel :fields="credentialSearchTypes">
         <template v-slot:title> Credential </template>
       </SearchFilterFacetPanel>
     </v-expansion-panels>
@@ -33,7 +33,7 @@ interface Data {
       "topEntityTypes",
       "moreEntityTypes",
       "entityStatuses",
-      "credentialTypes",
+      "credentialSearchTypes",
     ]),
   },
 })
@@ -41,7 +41,7 @@ export default class SearchFilterFacetPanels extends Vue {
   topEntityTypes!: ISearchFilter[];
   moreEntityTypes!: ISearchFilter[];
   entityStatuses!: ISearchFilter[];
-  credentialTypes!: ISearchFilter[];
+  credentialSearchTypes!: ISearchFilter[];
 
   data(): Data {
     return {

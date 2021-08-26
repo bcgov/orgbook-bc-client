@@ -1,7 +1,5 @@
-import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
 import Http, { HttpResponse } from "@/services/http.service";
 import ApiResource from "@/services/api/resource.service";
-import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 
 export default class Relationship extends ApiResource {

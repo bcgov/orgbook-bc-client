@@ -5,8 +5,9 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
-import { ICredential } from "@/interfaces/api/v2/credential.interface";
-import CredentialType from "@/services/api/v2/credential-type.service";
+import { ICredential } from "@/interfaces/api/v4/credential.interface";
+import { selectFirstAttrItem } from "@/utils/attributeFilter";
+import { isRegType } from "@/utils/entityFilter";
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
@@ -32,18 +33,7 @@ const state: State = {
   EntityFilter: null,
   Authorities: [],
   Credential_type: [],
-  Registration_type: [
-    { text: "AMALGAMATION", value: "Amalgamation", count: 0 },
-    {
-      text: "CHANGE",
-      value: "Change of name, address, or other articles",
-      count: 0,
-    },
-    { text: "DISSOLUTION", value: "Dissolution", count: 0 },
-    { text: "INCORP", value: "Incorporation or registration", count: 0 },
-    { text: "REINSTATEMENT", value: "Reinstatement", count: 0 },
-    { text: "WARNING", value: "Warning issued", count: 0 },
-  ],
+  Registration_type: [],
 };
 
 const getters = {
@@ -68,20 +58,30 @@ const getters = {
   },
 };
 
+
+
 const actions = {
-  async fetchIssuers({
-    commit,
-  }: ActionContext<State, RootState>): Promise<void> {
-    try {
-      const res = await (
-        await issuerService.getIssuerList()
-      ).data.results.map((issuer) => {
-        return { text: issuer.abbreviation, value: issuer.name, count: 0 };
-      });
-      commit("setIssuers", res);
-    } catch (e) {
-      console.error(e);
-    }
+  setIssuers(
+    { commit }: ActionContext<State, RootState>,
+    creds: ICredential[]
+  ): void {
+    const filterFields: IEntityFacetField[] = [];
+
+    creds.forEach((cred) => {
+      const idx = filterFields
+        .map((field) => field.value)
+        .indexOf(cred.credential_type.issuer.name);
+      if (idx >= 0) {
+        (filterFields[idx].count as number) += 1;
+      } else {
+        filterFields.push({
+          text: cred.credential_type.issuer.abbreviation,
+          value: cred.credential_type.issuer.name,
+          count: 1,
+        });
+      }
+    });
+    commit("setIssuers", filterFields);
   },
   setCredentialType(
     { commit }: ActionContext<State, RootState>,
@@ -91,7 +91,7 @@ const actions = {
 
     creds.forEach((cred) => {
       const idx = filterFields
-        .map((field) => field.text)
+        .map((field) => field.value)
         .indexOf(cred.credential_type.description);
       if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
@@ -113,32 +113,41 @@ const actions = {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
-      const idx = filterFields
-        .map((field) => field.text)
-        .indexOf(cred.credential_type.description);
-      if (idx >= 0) {
-        (filterFields[idx].count as number) += 1;
-      } else {
-        filterFields.push({
-          text: cred.credential_type.description,
-          value: cred.credential_type.description,
-          count: 1,
-        });
+      if(isRegType(cred)){
+        const regDesc = selectFirstAttrItem({key:"type", value:"reason_description"},cred.attributes)?.value as string | undefined
+        if(regDesc !== undefined){
+          const idx = filterFields
+            .map((field) => field.value)
+            .indexOf(regDesc);
+          if (idx >= 0) {
+            (filterFields[idx].count as number) += 1;
+          } else {
+            filterFields.push({
+              text: regDesc,
+              value: regDesc,
+              count: 1,
+            });
+          }
+        }
+        
       }
+      
     });
+
+    commit("setRegTypes", filterFields);
   },
 
-  async fetchFilters(
-    { commit }: ActionContext<State, RootState>,
-    id: number
-  ): Promise<void> {
-    const credList = await topicService.getTopicCredentialSet(id);
-    let fullCredList: ICredential[] = [];
-    (credList.data as unknown as Array<ICredentialSet>).forEach((credSet) => {
-      fullCredList = [...fullCredList, ...credSet.credentials];
-    });
-    commit("setFilterCounts", fullCredList);
-  },
+  // async fetchFilters(
+  //   { commit }: ActionContext<State, RootState>,
+  //   id: number
+  // ): Promise<void> {
+  //   const credList = await topicService.getTopicCredentialSet(id);
+  //   let fullCredList: ICredential[] = [];
+  //   (credList.data as unknown as Array<ICredentialSet>).forEach((credSet) => {
+  //     fullCredList = [...fullCredList, ...credSet.credentials];
+  //   });
+  //   commit("setFilterCounts", fullCredList);
+  // },
   setFilter({ commit }: ActionContext<State, RootState>, filter: Filter): void {
     commit("setFilter", filter);
   },
@@ -171,18 +180,21 @@ const actions = {
 };
 
 const mutations = {
-  setFilterCounts: (state: State, fullCredList: ICredential[]): void => {
-    state.Authorities.forEach((obj) => {
-      obj.count = fullCredList.filter(
-        (cred) => cred.credential_type.description === obj.text
-      ).length;
-    });
-  },
+  // setFilterCounts: (state: State, fullCredList: ICredential[]): void => {
+  //   state.Authorities.forEach((obj) => {
+  //     obj.count = fullCredList.filter(
+  //       (cred) => cred.credential_type.description === obj.text
+  //     ).length;
+  //   });
+  // },
   setCredTypes(state: State, credTypes: IEntityFacetField[]): void {
     state.Credential_type = credTypes;
   },
   setIssuers(state: State, issuers: IEntityFacetField[]): void {
     state.Authorities = issuers;
+  },
+  setRegTypes(state: State, regTypes: IEntityFacetField[]): void {
+    state.Registration_type = regTypes;
   },
   setFilter: (state: State, filter: Filter): Filter | null => {
     //need a deep clone since we are copying a nested object

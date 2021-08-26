@@ -48,6 +48,7 @@ export default class EntityFilterChips extends Vue {
       if (Array.isArray(this.getEntityFilters[key])) {
         chips.push(
           ...(this.getEntityFilters[key] as string[]).map((item) => {
+            console.log(this.getEntityFilters)
             return { filterField: key, filterString: item };
           })
         );

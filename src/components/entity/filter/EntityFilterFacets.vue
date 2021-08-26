@@ -8,12 +8,12 @@
               class="checkbox"
               @click="
                 toggleEntityFilter({
-                  filterString: field.text,
+                  filterString: field.value,
                   filterField: filterField,
                 })
               "
               :value="
-                isEntityFilterActive(filterField, getEntityFilters, field.text)
+                isEntityFilterActive(filterField, getEntityFilters, field.value)
               "
               :ripple="false"
             ></v-simple-checkbox>

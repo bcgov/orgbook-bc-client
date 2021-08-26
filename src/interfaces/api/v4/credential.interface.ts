@@ -1,5 +1,5 @@
 import { IApiResource } from "../resource.interface";
-import { ICredentialType } from "./credential-type.interface";
+import { ICredentialType } from "../v2/credential-type.interface";
 
 interface ICredentialName {
   id: number;
@@ -9,27 +9,24 @@ interface ICredentialName {
   credential_id: number;
 }
 
-interface ICredentialTopic {
-  id: number;
-  source_id: string;
-  type: string;
-  names: ICredentialName[];
-  local_name: ICredentialName;
-  remote_name: ICredentialName;
+interface ICredentialAttribute{
+  id:number;
+  type:string;
+  format:string;
+  value:string|number|boolean
 }
 
 export interface ICredential extends IApiResource {
   id: number;
   credential_id: string;
+  credential_def_id: string;
   latest: boolean;
   revoked: boolean;
   inactive: boolean;
   effective_date: Date;
   revoked_date: Date;
+  revoked_by:number;
   names: ICredentialName[];
-  local_name: ICredentialName;
-  remote_name: ICredentialName;
-  topic: ICredentialTopic;
-  related_topics: ICredentialTopic[];
   credential_type: ICredentialType;
+  attributes: ICredentialAttribute[]
 }

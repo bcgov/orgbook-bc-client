@@ -1,5 +1,5 @@
 import { IApiProperty, IApiResource } from "../resource.interface";
-import { ICredential } from "./credential.interface";
+import { ICredential } from "../v4/credential.interface";
 
 export interface IRelationshipAttribute extends IApiProperty {
   id: number;

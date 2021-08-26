@@ -1,3 +1,4 @@
+import { ICredential } from "@/interfaces/api/v4/credential.interface";
 import { Filter } from "@/store/modules/entityFilter";
 
 export function isEntityFilterActive(
@@ -20,4 +21,9 @@ export function isEntityFilterActive(
   }
 
   return retval;
+}
+
+export function isRegType(cred:ICredential):boolean{
+  const regTypes = ["registration.registries.ca"]
+  return regTypes.includes(cred.credential_type.description)
 }
