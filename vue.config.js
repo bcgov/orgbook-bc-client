@@ -20,4 +20,11 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
   },
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://dev.orgbook.gov.bc.ca",
+      },
+    },
+  },
 };

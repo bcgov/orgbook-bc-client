@@ -25,10 +25,3 @@ export interface IDocRouteData {
   showcaseDescription?: string;
   html: string;
 }
-
-export async function getDocs(): Promise<IDoc[]> {
-  const docs = await import(
-    /* webpackChunkName: "docs" */ "@/assets/docs.json"
-  );
-  return Promise.resolve(docs.default as IDoc[]);
-}

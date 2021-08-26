@@ -9,8 +9,6 @@ import vuetify from "./plugins/vuetify";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 
-import { IAppConfig, getAppConfig } from "./services/config/config.service";
-
 Vue.config.productionTip = false;
 
 const docRoutes = [defaultDoc, ...docs].map(processDocRoute);
@@ -19,14 +17,12 @@ docRoutes.forEach((docRoute) => {
 });
 
 async function init() {
-  const config: IAppConfig = await getAppConfig();
   new Vue({
     i18n,
     router,
     store,
     vuetify,
     created: () => {
-      store.dispatch("setApiUrl", new URL(config.apiUrl));
       store.dispatch("setDocRoutes", docRoutes);
     },
     render: (h) => h(App),

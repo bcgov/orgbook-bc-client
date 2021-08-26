@@ -28,4 +28,4 @@ Most users of the OrgBook BC website won’t notice any difference from what the
 
 These Digital Trust technologies, including Verifiable Credentials, are being used in several worldwide projects. New ecosystems are emerging. OrgBook BC, with its use of these technologies, can play an active role in improving online identity and trust.
 
-If you want to know more about Digital Trust, or want to use or contribute to the technologies, get in touch and we’ll direct you to the best resources.
+If you want to know more about Digital Trust, or want to use or contribute to the technologies, [get in touch](/contact) and we’ll direct you to the best resources.

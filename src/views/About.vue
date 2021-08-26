@@ -22,7 +22,7 @@ import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
 import { mapActions, mapGetters } from "vuex";
-import { IDocRoute, IDocRouteData } from "@/services/doc/doc.service";
+import { IDocRoute, IDocRouteData } from "@/interfaces/doc.interface";
 
 @Component({
   components: {

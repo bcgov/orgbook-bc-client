@@ -1,6 +1,6 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
-import { IDocRoute } from "@/services/doc/doc.service";
+import { IDocRoute } from "@/interfaces/doc.interface";
 
 export interface State {
   docRoutes: IDocRoute[];

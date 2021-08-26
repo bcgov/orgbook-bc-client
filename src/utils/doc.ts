@@ -1,4 +1,4 @@
-import { IDoc, IDocRoute } from "@/services/doc/doc.service";
+import { IDoc, IDocRoute } from "@/interfaces/doc.interface";
 
 export const defaultDoc: IDoc = {
   attributes: {
