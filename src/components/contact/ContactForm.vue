@@ -103,10 +103,10 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["credentialTypes", "loading"]),
+    ...mapGetters(["loading", "credentialTypes"]),
   },
   methods: {
-    ...mapActions(["sendFeedback", "setLoading"]),
+    ...mapActions(["setLoading", "sendFeedback"]),
   },
 })
 export default class ContactForm extends Vue {

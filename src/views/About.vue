@@ -21,7 +21,7 @@ import BackToSearch from "@/components/shared/BackToSearch.vue";
 import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { IDocRoute, IDocRouteData } from "@/services/doc/doc.service";
 
 @Component({
@@ -34,9 +34,15 @@ import { IDocRoute, IDocRouteData } from "@/services/doc/doc.service";
   computed: {
     ...mapGetters(["docLinks", "docRoute", "showcaseLinks"]),
   },
+  methods: {
+    ...mapActions(["setLoading", "fetchCredentialTypes"]),
+  },
 })
 export default class About extends Vue {
   docRoute!: (name: string) => IDocRoute;
+
+  setLoading!: (loading: boolean) => Promise<void>;
+  fetchCredentialTypes!: (paged: boolean) => Promise<void>;
 
   get docRouteInfo(): IDocRoute {
     return this.docRoute(this.$route.name || "");
@@ -48,6 +54,12 @@ export default class About extends Vue {
 
   get html(): string {
     return this.docRouteData?.html || "";
+  }
+
+  async created(): Promise<void> {
+    this.setLoading(true);
+    this.fetchCredentialTypes(false);
+    this.setLoading(false);
   }
 }
 </script>

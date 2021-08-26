@@ -1,53 +1,44 @@
 import { ActionContext } from "vuex";
-import store, { State as RootState } from "@/store/index";
-import { IDoc, IDocRoute } from "@/services/doc/doc.service";
-import router from "@/router";
-import { defaultDoc } from "@/utils/doc";
+import { State as RootState } from "@/store/index";
+import { IDocRoute } from "@/services/doc/doc.service";
 
 export interface State {
-  docs: IDoc[];
+  docRoutes: IDocRoute[];
 }
 
 const state: State = {
-  docs: [],
+  docRoutes: [],
 };
 
 const getters = {
-  docs: (state: State): IDoc[] => state.docs,
   docLinks: (state: State): IDocRoute[] => {
-    return state.docs
-      .filter((doc) => !doc.attributes.index)
-      .map(processDocRoute);
+    return state.docRoutes.filter((docRoute) => !docRoute?.data?.index);
   },
   showcaseLinks: (state: State): IDocRoute[] => {
-    return state.docs
-      .filter((doc) => doc.attributes.showcase)
-      .map(processDocRoute);
+    return state.docRoutes.filter((docRoute) => docRoute?.data?.showcase);
   },
   docRoutes: (state: State): IDocRoute[] => {
-    return state.docs.map(processDocRoute);
+    return state.docRoutes;
   },
   docRoute:
     (state: State) =>
     (name: string): IDocRoute => {
-      return state.docs
-        .filter((doc) => doc.attributes.name === name)
-        .map(processDocRoute)[0];
+      return state.docRoutes.filter((docRoute) => docRoute.name === name)[0];
     },
 };
 
 const actions = {
-  setDocs({ commit }: ActionContext<State, RootState>, docs: IDoc[]): void {
-    commit("setDocs", docs);
-    store.getters.docRoutes.forEach((docRoute: IDocRoute) => {
-      router.addRoute("About", docRoute);
-    });
+  setDocRoutes(
+    { commit }: ActionContext<State, RootState>,
+    docRoutes: IDocRoute[]
+  ): void {
+    commit("setDocRoutes", docRoutes);
   },
 };
 
 const mutations = {
-  setDocs(state: State, docs: IDoc[]): void {
-    state.docs = [defaultDoc, ...docs];
+  setDocRoutes(state: State, docRoutes: IDocRoute[]): void {
+    state.docRoutes = [...docRoutes];
   },
 };
 
@@ -57,17 +48,3 @@ export default {
   actions,
   mutations,
 };
-
-function processDocRoute(doc: IDoc) {
-  const { path, name, index, showcase, showcaseTitle, showcaseDescription } =
-    doc?.attributes;
-  const { html } = doc;
-  return {
-    path: `/about/${path || ""}`,
-    data: { index, showcase, showcaseTitle, showcaseDescription, html },
-    label: name,
-    name,
-    component: () =>
-      import(/* webpackChunkName: "about" */ "@/views/About.vue"),
-  };
-}

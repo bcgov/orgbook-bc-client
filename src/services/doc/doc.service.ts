@@ -1,7 +1,7 @@
 export interface IDoc {
   attributes: {
-    path: string;
     name: string;
+    path?: string;
     index?: boolean;
     showcase?: boolean;
     showcaseTitle?: string;

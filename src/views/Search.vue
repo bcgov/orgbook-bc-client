@@ -72,13 +72,19 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
     ...mapGetters(["loading", "searchQuery", "pagedSearchTopics"]),
   },
   methods: {
-    ...mapActions(["setLoading", "fetchSearchFacetedTopics", "resetSearch"]),
+    ...mapActions([
+      "setLoading",
+      "fetchCredentialTypes",
+      "fetchSearchFacetedTopics",
+      "resetSearch",
+    ]),
   },
 })
 export default class Search extends Vue {
   q!: unknown;
 
   setLoading!: (loading: boolean) => void;
+  fetchCredentialTypes!: (paged: boolean) => Promise<void>;
   fetchSearchFacetedTopics!: () => Promise<void>;
   resetSearch!: () => void;
 
@@ -127,7 +133,10 @@ export default class Search extends Vue {
 
   async search(): Promise<void> {
     this.setLoading(true);
-    await this.fetchSearchFacetedTopics();
+    await Promise.all([
+      this.fetchCredentialTypes(false),
+      this.fetchSearchFacetedTopics(),
+    ]);
     this.setLoading(false);
   }
 }
