@@ -3,7 +3,7 @@
     <div class="search-bar">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
         <v-row>
-          <v-col class="d-flex flex-column flex-grow-1" cols="12" md="9">
+          <v-col class="d-flex flex-column flex-grow-1 ml-n3" cols="12" md="9">
             <p
               class="
                 font-weight-normal
@@ -15,7 +15,7 @@
             </p>
             <SearchBar :query="q" />
           </v-col>
-          <v-col class="flex-grow-0 pt-0 pb-0" cols="12" md="3">
+          <v-col class="flex-grow-0 pt-0 pb-0 ml-n3" cols="12" md="3">
             <SearchDescription
               class="pt-4"
               v-if="$vuetify.breakpoint.mdAndUp"
@@ -44,7 +44,6 @@ import SearchBar from "@/components/search/SearchBar.vue";
 import SearchDescription from "@/components/search/SearchDescription.vue";
 import SearchHelp from "@/components/search/SearchHelp.vue";
 import SearchHome from "@/components/search/SearchHome.vue";
-import SearchResult from "@/components/search/SearchResult.vue";
 import SearchLoading from "@/components/search/SearchLoading.vue";
 import { NavigationGuardNext, Route } from "vue-router";
 import { defaultQuery } from "@/utils/search";
@@ -63,8 +62,11 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
     SearchDescription,
     SearchHelp,
     SearchHome,
-    SearchResult,
     SearchLoading,
+    SearchResult: () =>
+      import(
+        /* webpackChunkName: "search-result" */ "@/components/search/SearchResult.vue"
+      ),
   },
   computed: {
     ...mapGetters(["loading", "searchQuery", "pagedSearchTopics"]),
@@ -77,7 +79,7 @@ export default class Search extends Vue {
   q!: unknown;
 
   setLoading!: (loading: boolean) => void;
-  fetchSearchFacetedTopics!: () => void;
+  fetchSearchFacetedTopics!: () => Promise<void>;
   resetSearch!: () => void;
 
   data(): Data {

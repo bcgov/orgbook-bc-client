@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
+      <BackToSearch />
       <p class="font-weight-bold">Contact</p>
       <p>
         OrgBook BC is continuously evolving. More information and features will
@@ -14,10 +15,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import BackToSearch from "@/components/shared/BackToSearch.vue";
 import ContactForm from "@/components/contact/ContactForm.vue";
 
 @Component({
   components: {
+    BackToSearch,
     ContactForm,
   },
 })

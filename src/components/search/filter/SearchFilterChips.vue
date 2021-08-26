@@ -10,7 +10,8 @@
         class="ma-1"
         @click:close="toggleSearchFilter(field)"
       >
-        {{ $t(field.label) }}
+        <div v-if="field.translated">{{ field.label }}</div>
+        <div v-else v-t="field.label"></div>
       </v-chip>
     </v-col>
   </v-row>

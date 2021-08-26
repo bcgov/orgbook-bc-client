@@ -7,7 +7,7 @@
       :key="showcaseLink.name"
     >
       <v-card elevation="0" rounded="sm" class="card">
-        <v-card-title>
+        <v-card-title class="font-weight-bold">
           <router-link :to="showcaseLink.path">
             {{
               (showcaseLink.data && showcaseLink.data.showcaseTitle) ||

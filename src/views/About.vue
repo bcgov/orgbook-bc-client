@@ -2,12 +2,7 @@
   <div>
     <SubHeader v-if="$vuetify.breakpoint.mdAndUp" :links="docLinks" />
     <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
-      <div class="mb-4">
-        <v-icon dense color="black">mdi-arrow-left</v-icon>
-        <router-link to="/search" class="text-body-2"
-          >Back to search
-        </router-link>
-      </div>
+      <BackToSearch />
       <div v-html="html"></div>
       <OrgBookData
         v-if="docRouteInfo && docRouteInfo.name === 'OrgBook Data'"
@@ -22,6 +17,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import BackToSearch from "@/components/shared/BackToSearch.vue";
 import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
@@ -30,6 +26,7 @@ import { IDocRoute, IDocRouteData } from "@/services/doc/doc.service";
 
 @Component({
   components: {
+    BackToSearch,
     OrgBookData,
     SubHeader,
     ShowcaseLinks,

@@ -18,11 +18,13 @@ interface ISearchFilterBase {
   key: string;
   queryParameter: string;
   label?: string;
+  translated?: boolean;
 }
 
 export interface ISearchFilterOptions extends ISearchFilterBase {
   keySelector: (filter?: ISearchFilter) => unknown;
   valueSelector: (filter?: ISearchFilter) => unknown;
+  labelFormatter?: (filter?: ISearchFilter) => string;
   inclusions?: string[];
   exclusions?: string[];
 }
