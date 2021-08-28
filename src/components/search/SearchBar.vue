@@ -14,10 +14,10 @@
       :disabled="loading"
       :items="items"
       :search-input.sync="search"
-      append-outer-icon="mdi-magnify"
       @input.native="updateModel"
       @change="onChange"
       class="combobox"
+      aria-label="search-input"
     >
       <template v-slot:append-outer>
         <v-progress-circular
@@ -32,7 +32,8 @@
           :disabled="!search || loading"
           @click="onClick"
           color="white"
-          >mdi-magnify</v-icon
+          aria-label="search-button"
+          >{{ mdiMagnify }}</v-icon
         >
       </template>
     </v-combobox>
@@ -57,7 +58,7 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["loading"]),
+    ...mapGetters(["loading", "mdiMagnify"]),
   },
   methods: {
     ...mapActions(["fetchAutocomplete", "fetchSearch"]),

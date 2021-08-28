@@ -6,7 +6,7 @@
         :key="field.key"
         outlined
         close
-        close-icon="mdi-close"
+        :close-icon="mdiClose"
         class="ma-1"
         @click:close="toggleSearchFilter(field)"
       >
@@ -25,7 +25,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters(["extendedSearchFilterFields", "searchFilters"]),
+    ...mapGetters(["extendedSearchFilterFields", "searchFilters", "mdiClose"]),
   },
   methods: {
     ...mapActions(["toggleSearchFilter"]),

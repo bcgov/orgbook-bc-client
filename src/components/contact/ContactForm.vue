@@ -78,6 +78,7 @@
         @click="submit"
         depressed
         :disabled="loading"
+        aria-label="submit-button"
         >Submit</v-btn
       >
     </v-form>

@@ -7,6 +7,7 @@ import credentialType, {
   State as CredentialTypeState,
 } from "./modules/credential-type";
 import doc, { State as DocState } from "./modules/doc";
+import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
 
@@ -18,6 +19,7 @@ export interface State {
   contact: ContactState;
   credentialType: CredentialTypeState;
   doc: DocState;
+  icon: IconState;
   search: SearchState;
   topic: TopicState;
 }
@@ -29,6 +31,7 @@ export default new Vuex.Store({
     contact,
     credentialType,
     doc,
+    icon,
     search,
     topic,
   },

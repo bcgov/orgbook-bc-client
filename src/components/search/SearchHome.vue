@@ -12,13 +12,15 @@
             v-for="description of descriptions"
             :key="description"
           >
-            <v-icon>mdi-check-bold</v-icon>
+            <v-icon>{{ mdiCheckBold }}</v-icon>
             <span class="pl-4">{{ description }}</span>
           </li>
         </ul>
         <div>
-          <v-icon dense color="black">mdi-shield-check-outline</v-icon>
-          <router-link to="/about/digital-trust"
+          <v-icon class="icon-dense" dense color="black">{{
+            mdiShieldCheckOutline
+          }}</v-icon>
+          <router-link class="vertical-align-middle" to="/about/digital-trust"
             >Powered by digital trust</router-link
           >
         </div>
@@ -51,7 +53,7 @@ interface Data {
     ShowcaseLinks,
   },
   computed: {
-    ...mapGetters(["showcaseLinks"]),
+    ...mapGetters(["showcaseLinks", "mdiCheckBold", "mdiShieldCheckOutline"]),
   },
 })
 export default class SearchHome extends Vue {
