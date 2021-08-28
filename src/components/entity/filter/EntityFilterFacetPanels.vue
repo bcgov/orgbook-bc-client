@@ -196,3 +196,9 @@ export default class EntityFilterFacetPanels extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.date-color{
+  color: red;
+}
+</style>

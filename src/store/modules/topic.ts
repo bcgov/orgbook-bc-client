@@ -67,9 +67,7 @@ const actions = {
     id: number
   ): Promise<void> {
     try {
-      console.log("got here")
       const res = await v4topicService.getTopicCredentialSet(id);
-      console.log(JSON.stringify(res.data))
       commit("setSelectedFullCredentialSet", res.data);
     } catch (e) {
       console.error(e);

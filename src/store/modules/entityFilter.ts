@@ -5,9 +5,10 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
-import { ICredential } from "@/interfaces/api/v4/credential.interface";
+import { ICredential, ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attributeFilter";
 import { isRegType } from "@/utils/entityFilter";
+import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
@@ -59,24 +60,23 @@ const getters = {
 };
 
 
-
 const actions = {
   setIssuers(
     { commit }: ActionContext<State, RootState>,
-    creds: ICredential[]
+    creds: Array<ICredentialDisplayType>
   ): void {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
       const idx = filterFields
         .map((field) => field.value)
-        .indexOf(cred.credential_type.issuer.name);
+        .indexOf(cred.authority);
       if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
       } else {
         filterFields.push({
-          text: cred.credential_type.issuer.abbreviation,
-          value: cred.credential_type.issuer.name,
+          text: cred.authority,
+          value: cred.authority,
           count: 1,
         });
       }
@@ -85,20 +85,21 @@ const actions = {
   },
   setCredentialType(
     { commit }: ActionContext<State, RootState>,
-    creds: ICredential[]
+    creds: Array<ICredentialDisplayType>
   ): void {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
+
       const idx = filterFields
         .map((field) => field.value)
-        .indexOf(cred.credential_type.description);
+        .indexOf(cred.credential_type);
       if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
       } else {
         filterFields.push({
-          text: cred.credential_type.description,
-          value: cred.credential_type.description,
+          text: cred.credential_type,
+          value: cred.credential_type,
           count: 1,
         });
       }
@@ -113,9 +114,9 @@ const actions = {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
-      if(isRegType(cred)){
-        const regDesc = selectFirstAttrItem({key:"type", value:"reason_description"},cred.attributes)?.value as string | undefined
-        if(regDesc !== undefined){
+      if (isRegType(cred)) {
+        const regDesc = selectFirstAttrItem({ key: "type", value: "reason_description" }, cred.attributes)?.value as string | undefined
+        if (regDesc !== undefined) {
           const idx = filterFields
             .map((field) => field.value)
             .indexOf(regDesc);
@@ -129,9 +130,9 @@ const actions = {
             });
           }
         }
-        
+
       }
-      
+
     });
 
     commit("setRegTypes", filterFields);

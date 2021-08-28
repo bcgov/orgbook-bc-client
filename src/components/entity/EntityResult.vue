@@ -230,15 +230,15 @@
                 :key="i"
               >
                 <v-container>
-                  {{ cred.effective_date | formatDate }}
+                  {{ cred.date_effective | formatDate }}
                   <EntityCard class="pl-0">
                     <template #expansionPanels>
                       <CredentialItem
-                        :authority="entityRegistrationIssuer(cred)"
+                        :authority="cred.authority"
                         :expired="cred.revoked"
                         :reason="
-                          credIsType(cred, 'entity_name')
-                            ? entityRegistrationReason(cred)
+                          cred.type === 'enity_name'
+                            ? cred.registration_reason
                             : ''
                         "
                         :dropdownDivider="true"
@@ -254,23 +254,17 @@
 
                             <v-col>
                               <h3>
-                                {{ entityTypeToName[getCredType(cred)] }}
+                                {{ entityTypeToName[cred.type] }}
                               </h3>
                             </v-col>
                             <v-responsive width="100%"> </v-responsive>
 
                             <v-col>
                               <p
-                                v-if="
-                                  cred.credential_type.description ===
-                                  'relationship.registries.ca'
-                                "
                               >
-                                <!-- {{ getRelatedName(cred) }} -->
+                                {{ cred.value }}
                               </p>
-                              <p v-else>
-                                {{ getCredValue(cred) }}
-                              </p>
+                              
                             </v-col>
                           </v-row>
                         </template>
@@ -299,7 +293,7 @@ import { mapActions, mapGetters } from "vuex";
 import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
 import CredentialItem from "@/components/entity/credentialItem/CredentialItem.vue";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
-import { ICredential } from "@/interfaces/api/v4/credential.interface";
+import { ICredential, ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import {
   selectFirstAttrItem,
 } from "@/utils/attributeFilter";
@@ -311,6 +305,8 @@ import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFace
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import { Filter } from "@/store/modules/entityFilter";
 import { isRegType } from "@/utils/entityFilter";
+import {getRelationshipName, credOrRelationshipToDisplay} from "@/utils/entity"
+
 
 interface Data {
   currentTab: string;
@@ -356,9 +352,9 @@ export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
   toggleCredentialsExpanded!: () => void;
-  setIssuers!:(creds: ICredential[])=>void;
-  setCredentialType!: (creds: ICredential[]) => void;
-  setRegistrationType!: (creds: ICredential[]) => void;
+  setIssuers!:(creds: ICredentialDisplayType[])=>void;
+  setCredentialType!: (creds: ICredentialDisplayType[]) => void;
+  setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
   fetchRelationships!: (id: number) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
@@ -368,6 +364,7 @@ export default class EntityResult extends Vue {
     type: string;
   }) => Promise<void>;
   fetchTopicFullCredentialSet!: (id: number) => Promise<void>;
+  getRelationshipName = getRelationshipName;
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
@@ -389,9 +386,9 @@ export default class EntityResult extends Vue {
     };
   }
 
-  @Watch("selectedTopicFullCredentialSet")
-  onCredSetChange(selectedTopicFullCredentialSet: Array<ICredential> | null): void {
-    if (selectedTopicFullCredentialSet && this.entityCredentials !== undefined) {
+  
+  loadingCallBack(): void {
+    if (this.selectedTopicFullCredentialSet && this.entityCredentials !== undefined) {
       this.setCredentialType(this.entityCredentials);
       this.setRegistrationType(this.entityCredentials)
       this.setIssuers(this.entityCredentials);
@@ -399,7 +396,7 @@ export default class EntityResult extends Vue {
   }
   // Credential Filters
 
-  credentialFilters: { (creds: Array<ICredential>): Array<ICredential> }[] = [
+  credentialFilters: { (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType> }[] = [
     this.applyDateFilter,
     this.applyExpiredFilter,
     this.applyCredentialTypeFilter,
@@ -408,7 +405,7 @@ export default class EntityResult extends Vue {
   ];
 
   private applyIssuerFilter(
-    creds: Array<ICredential>
+    creds: Array<ICredentialDisplayType>
   ){
     var filteredCreds = [...creds]
     if ((this.getEntityFilters.Authorities as string[]).length <= 0) {
@@ -416,47 +413,47 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.Authorities as string[]).includes(
-        cred.credential_type.issuer.name
+        cred.authority
       )
     );
   }
 
   private applyCredentialTypeFilter(
-    creds: Array<ICredential>
-  ): Array<ICredential> {
+    creds: Array<ICredentialDisplayType>
+  ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
     if ((this.getEntityFilters.Credential_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.Credential_type as string[]).includes(
-        cred.credential_type.description
+        cred.credential_type
       )
     );
   }
 
   private applyRegistrationTypeFilter(
-    creds: Array<ICredential>
-  ): Array<ICredential> {
+    creds: Array<ICredentialDisplayType>
+  ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
     if ((this.getEntityFilters.Registration_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
-      isRegType(cred) && (this.getEntityFilters.Registration_type as string[]).includes(
-        selectFirstAttrItem({key:"type", value:"reason_description"}, cred.attributes)?.value as string
+      cred.registration_reason !== undefined && (this.getEntityFilters.Registration_type as string[]).includes(
+        cred.registration_reason
       )
     );
   }
 
-  private applyDateFilter(creds: Array<ICredential>): Array<ICredential> {
+  private applyDateFilter(creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
 
     if (this.getEntityFilters.Date_min !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
         //take the negative condition so we don't have to do another check with isSame
         return !moment(this.getEntityFilters.Date_min as string).isAfter(
-          cred.effective_date
+          cred.date_effective
         );
       });
     }
@@ -464,14 +461,14 @@ export default class EntityResult extends Vue {
     if (this.getEntityFilters.Date_max !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
         return !moment(this.getEntityFilters.Date_max as string).isBefore(
-          cred.effective_date
+          cred.date_effective
         );
       });
     }
     return filteredCreds;
   }
 
-  private applyExpiredFilter(creds: Array<ICredential>): Array<ICredential> {
+  private applyExpiredFilter(creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
     if (!this.getEntityFilters.Show_expired) {
       filteredCreds = creds.filter((cred) => !cred.revoked);
@@ -482,21 +479,12 @@ export default class EntityResult extends Vue {
   //class methods
   test(): void {
     console.log(JSON.stringify(this.selectedTopic.id))
-    console.log(JSON.stringify(this.selectedTopicFullCredentialSet));
+    console.log(JSON.stringify(this.entityCredentials));
   }
 
-  getRelatedName(cred: ICredential | undefined): string | undefined {
-    return cred?.names[0]?.text
-  }
+  
 
-  getRelationshipName(
-    relationship: IRelationship | undefined
-  ): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      relationship?.related_topic.names
-    )?.text;
-  }
+  
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {
@@ -522,16 +510,9 @@ export default class EntityResult extends Vue {
     this.credentialTimeOrder *= -1;
   }
 
-  getCredType(cred: ICredential): string| undefined{
-    return cred.names[0]?.type
-  }
 
-  getCredValue(cred: ICredential): string | undefined{
-    return cred.names[0]?.text
-  }
-
-  credIsType(cred: ICredential, type:string):boolean{
-    return selectFirstAttrItem({key:"type", value:type}, cred.names) !== undefined
+  isRelationshipCred(cred: ICredential):boolean{
+    return cred.credential_type.description === "relationship.registries.ca"
   }
 
   get hasAnyRelationships(): boolean {
@@ -590,57 +571,58 @@ export default class EntityResult extends Vue {
       { key: "type", value: "business_number" },
       this.entityCredentials?.map((cred) => {
         return {
-          type: cred.names[0]?.type,
-          text: cred.names[0]?.text,
+          type: cred.type,
+          text: cred.value,
         };
       })
-    )?.text;
+    )?.text as string;
   }
 
   get entityIncorporationNumber(): string | undefined {
     return this.selectedTopic?.source_id;
   }
 
-  get filteredEntityCredentials(): Array<ICredential> | undefined {
+  get filteredEntityCredentials(): Array<ICredentialDisplayType> | undefined {
     var filteredCreds = this.entityCredentialsSorted;
     if (filteredCreds === undefined) {
       return undefined;
     }
 
     this.credentialFilters.forEach((filterFunc) => {
-      filteredCreds = filterFunc(filteredCreds as ICredential[]);
+      filteredCreds = filterFunc(filteredCreds as ICredentialDisplayType[]);
     });
 
     return filteredCreds;
   }
 
-  get entityCredentials(): Array<ICredential> | undefined {
+  get entityCredentials(): Array<ICredentialDisplayType> | undefined {
     if (!this.selectedTopicFullCredentialSet) {
       return undefined;
     }
    
-    var fullCredentials: ICredential[] = [];
-    this.selectedTopicFullCredentialSet.forEach((credSet) => {
-      fullCredentials.push(...credSet.credentials);
+    var fullCredentials: ICredentialDisplayType[] = [];
+    this.selectedTopicFullCredentialSet.forEach((credSet) => {//filter out all the raltionship credentials
+      fullCredentials.push(...credSet.credentials.filter(cred=>!this.isRelationshipCred(cred)).map(cred=> credOrRelationshipToDisplay(cred)));
     });
+    this.getRelationships.forEach(rel =>{
+      fullCredentials.push(credOrRelationshipToDisplay(rel));
+    })
     return fullCredentials;
   }
 
-  get entityCredentialsSorted(): Array<ICredential> | undefined {
-    if (!this.selectedTopicFullCredentialSet) {
-      return undefined;
-    }
-    
-    var fullCredentials: ICredential[] = [];
-    this.selectedTopicFullCredentialSet.forEach((credSet) => {
-      fullCredentials.push(...credSet.credentials);
-    });
-    return fullCredentials.sort(
-      (cred1, cred2) =>
-        (moment(cred1.effective_date).isBefore(cred2.effective_date) ? 1 : -1) *
+  get entityCredentialsSorted(): Array<ICredentialDisplayType> | undefined {
+    const cpa = (item1:ICredentialDisplayType, item2:ICredentialDisplayType) => {
+      return (moment(item1.date_effective).isBefore(item2.date_effective) ? 1 : -1) *
         this.credentialTimeOrder
+      }
+    return this.entityCredentials?.sort(
+      (cred1, cred2) =>{
+        return cpa(cred1, cred2)
+      }
+        
     );
   }
+
 
   get entityState(): string | undefined {
     if (this.selectedTopic === undefined) {
@@ -668,13 +650,8 @@ export default class EntityResult extends Vue {
     )?.value;
   }
 
-  entityRegistrationReason(cred: ICredential): string | undefined {
-    console.log("got here2")
-    return selectFirstAttrItem(
-      { key: "type", value: "reason_description" },
-      cred.attributes
-    )?.value as string | undefined;
-  }
+
+
 
   get entityJurisdiction(): string | undefined {
     const state = selectFirstAttrItem(
@@ -706,6 +683,7 @@ export default class EntityResult extends Vue {
       }
     }
     this.setLoading(false);
+    this.loadingCallBack();
   }
 }
 </script>
