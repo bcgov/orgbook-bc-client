@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
-
 module.exports = {
   transpileDependencies: ["vuetify"],
   pluginOptions: {
@@ -29,35 +26,5 @@ module.exports = {
         },
       },
     },
-    //   module: {
-    //     rules: [
-    //       {
-    //         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-    //         use: [
-    //           {
-    //             loader: "url-loader",
-    //             options: {
-    //               name: "[name].[ext]",
-    //               outputPath: "fonts/",
-    //             },
-    //           },
-    //         ],
-    //         include: [
-    //           path.resolve(
-    //             __dirname,
-    //             "./node_modules/@bcgov/bc-sans/fonts/BCSans-Regular.woff"
-    //           ),
-    //           path.resolve(
-    //             __dirname,
-    //             "./node_modules/@bcgov/bc-sans/fonts/BCSans-Bold.woff"
-    //           ),
-    //         ],
-    //         exclude: [
-    //           path.resolve(__dirname, "./src/assets/img/logo.svg"),
-    //           path.resolve(__dirname, "./src/assets/img/logo-banner.svg"),
-    //         ],
-    //       },
-    //     ],
-    //   },
   },
 };
