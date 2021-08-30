@@ -30,7 +30,7 @@ const getters = {
   selectedTopicCredentialSet: (state: State): ICredentialSet | null =>
     state?.selected?.credentialSet,
   selectedTopicFullCredentialSet: (state: State): ICredentialSet | null =>
-  state?.selected?.fullCredentialSet,
+    state?.selected?.fullCredentialSet,
 };
 
 const actions = {
@@ -86,7 +86,10 @@ const mutations = {
       credentialSet,
     };
   },
-  setSelectedFullCredentialSet(state: State, fullCredentialSet: ICredentialSet): void {
+  setSelectedFullCredentialSet(
+    state: State,
+    fullCredentialSet: ICredentialSet
+  ): void {
     state.selected = {
       ...state.selected,
       fullCredentialSet,

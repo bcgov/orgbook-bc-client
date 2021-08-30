@@ -5,10 +5,10 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import IssuerService from "@/services/api/v3/issuer.service";
 import Topic from "@/services/api/v2/topic.service";
-import { ICredential, ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
-import { selectFirstAttrItem } from "@/utils/attributeFilter";
+import {
+  ICredentialDisplayType,
+} from "@/interfaces/api/v4/credential.interface";
 import { isRegType } from "@/utils/entityFilter";
-import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
@@ -59,7 +59,6 @@ const getters = {
   },
 };
 
-
 const actions = {
   setIssuers(
     { commit }: ActionContext<State, RootState>,
@@ -90,7 +89,6 @@ const actions = {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
-
       const idx = filterFields
         .map((field) => field.value)
         .indexOf(cred.credential_type);
@@ -115,11 +113,9 @@ const actions = {
 
     creds.forEach((cred) => {
       if (isRegType(cred)) {
-        const regDesc = cred.registration_reason
+        const regDesc = cred.registration_reason;
         if (regDesc !== undefined) {
-          const idx = filterFields
-            .map((field) => field.value)
-            .indexOf(regDesc);
+          const idx = filterFields.map((field) => field.value).indexOf(regDesc);
           if (idx >= 0) {
             (filterFields[idx].count as number) += 1;
           } else {
@@ -130,9 +126,7 @@ const actions = {
             });
           }
         }
-
       }
-
     });
 
     commit("setRegTypes", filterFields);

@@ -16,7 +16,7 @@
           v-bind="attrs"
           v-on="on"
           :color="loading ? 'gray' : 'black'"
-          >{{mdiFilterOutline}}</v-icon
+          >{{ mdiFilterOutline }}</v-icon
         >
         Filters
       </a>
@@ -27,7 +27,7 @@
         <v-spacer></v-spacer>
         <v-toolbar-items class="mr-n2">
           <v-btn icon color="black" @click="dialog = false">
-            <v-icon>{{mdiClose}}</v-icon>
+            <v-icon>{{ mdiClose }}</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>

@@ -46,7 +46,6 @@ export default class Topic extends ApiResource {
     );
   }
 
-
   async getFormattedIdentifiedTopic(
     sourceId: string,
     type: string

@@ -5,7 +5,7 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content :class="dropdownDivider ? 'dropdown' : ''">
       Authority: <a :href="authorityLink">{{ authority }}</a> <br />
-      <v-icon>{{mdiShieldCheckOutline}}</v-icon> Credential verified <br />
+      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> Credential verified <br />
       <span v-if="effectiveDate"
         >Effective: {{ effectiveDate | formatDate }} <br
       /></span>
@@ -24,11 +24,9 @@ import "@/utils/dateFilter";
 import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import { mapGetters } from "vuex";
 @Component({
-  computed:{
-    ...mapGetters([
-      "mdiShieldCheckOutline"
-    ])
-  }
+  computed: {
+    ...mapGetters(["mdiShieldCheckOutline"]),
+  },
 })
 export default class CredentialItem extends Vue {
   @Prop({ default: "" }) authority!: string;
@@ -39,7 +37,6 @@ export default class CredentialItem extends Vue {
   @Prop({ default: false }) dropdownDivider!: boolean;
   @Prop({ default: "" }) reason!: string;
 }
-  
 </script>
 
 <style scoped>

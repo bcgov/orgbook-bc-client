@@ -11,7 +11,7 @@ import {
   mdiArrowUp,
   mdiArrowDown,
   mdiMapMarker,
-  mdiCalendar
+  mdiCalendar,
 } from "@mdi/js";
 
 export interface State {

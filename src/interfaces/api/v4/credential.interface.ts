@@ -9,11 +9,11 @@ interface ICredentialName {
   credential_id: number;
 }
 
-interface ICredentialAttribute{
-  id:number;
-  type:string;
-  format:string;
-  value:string|number|boolean
+interface ICredentialAttribute {
+  id: number;
+  type: string;
+  format: string;
+  value: string | number | boolean;
 }
 
 export interface ICredential extends IApiResource {
@@ -25,21 +25,21 @@ export interface ICredential extends IApiResource {
   inactive: boolean;
   effective_date: Date;
   revoked_date: Date;
-  revoked_by:number;
+  revoked_by: number;
   names: ICredentialName[];
   credential_type: ICredentialType;
-  attributes: ICredentialAttribute[]
+  attributes: ICredentialAttribute[];
 }
 
-export interface ICredentialDisplayType{
+export interface ICredentialDisplayType {
   credential_type: string;
-  type:string;
+  type: string;
   authority: string;
   authorityLink: string | URL;
   registration_reason?: string;
   date_effective: Date;
-  revoked:boolean;
-  revoked_date?:Date;
-  value: string|number;
+  revoked: boolean;
+  revoked_date?: Date;
+  value: string | number;
   relationship_types?: string[];
 }

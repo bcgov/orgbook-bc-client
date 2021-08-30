@@ -37,5 +37,4 @@ export default class V4Topic extends ApiResource {
       this.formatEndpointUrl(`${id}/credential-set`)
     );
   }
-
 }
