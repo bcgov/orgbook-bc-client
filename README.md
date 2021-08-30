@@ -1,4 +1,6 @@
-# orgbook-bc-client-vue
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](<Redirect-URL>)
+
+# OrgBook BC
 
 ## Project setup
 ```
