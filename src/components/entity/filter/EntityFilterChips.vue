@@ -6,7 +6,7 @@
         :key="i"
         outlined
         close
-        close-icon="mdi-close"
+        :close-icon="mdiClose"
         class="ma-1"
         @click:close="
           toggleEntityFilter({
@@ -33,7 +33,7 @@ export interface EntityChips {
 
 @Component({
   computed: {
-    ...mapGetters(["getEntityFilters"]),
+    ...mapGetters(["getEntityFilters","mdiClose"]),
   },
   methods: {
     ...mapActions(["toggleEntityFilter"]),

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-icon>mdi-arrow-left</v-icon
-    ><a href="/" append-icon="mdi-map-marker">Back to search</a>
+    <v-icon>{{mdiArrowLeft}}</v-icon
+    ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
     <h3>{{ entityName }}</h3>
     <p>
       Business number: {{ entitybusinessNumber }} <br />
@@ -154,12 +154,12 @@
             </v-col>
             <v-col cols="1"
               ><v-icon @click="incRelationshipStartIndex(-1)"
-                >mdi-chevron-left</v-icon
+                >{{mdiChevronLeft}}</v-icon
               ></v-col
             >
             <v-col cols="1"
               ><v-icon @click="incRelationshipStartIndex(1)"
-                >mdi-chevron-right</v-icon
+                >{{mdiChevronRight}}</v-icon
               ></v-col
             >
           </v-row>
@@ -204,8 +204,8 @@
             <v-col class="pl-0 pr-0">
               <div class="text-body-2 float-right">
                 <a @click="switchCredentialTimeOrder">Sort by date</a>
-                <v-icon v-if="credentialTimeOrder === 1">mdi-arrow-up</v-icon>
-                <v-icon v-else>mdi-arrow-down</v-icon>
+                <v-icon v-if="credentialTimeOrder === 1">{{mdiArrowUp}}</v-icon>
+                <v-icon v-else>{{mdiArrowDown}}</v-icon>
               </div>
             </v-col>
           </v-row>
@@ -335,6 +335,12 @@ interface Data {
       "selectedTopicFullCredentialSet",
       "getEntityFilters",
       "getRelationships",
+      "mdiArrowUp",
+      "mdiArrowDown",
+      "mdiArrowLeft",
+      "mdiMapMarker",
+      "mdiChevronLeft",
+      "mdiChevronRight",
     ]),
   },
   methods: {

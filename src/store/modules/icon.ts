@@ -8,6 +8,10 @@ import {
   mdiFilterOutline,
   mdiMagnify,
   mdiShieldCheckOutline,
+  mdiArrowUp,
+  mdiArrowDown,
+  mdiMapMarker,
+  mdiCalendar
 } from "@mdi/js";
 
 export interface State {
@@ -25,6 +29,10 @@ const state: State = {
     mdiFilterOutline: mdiFilterOutline,
     mdiMagnify: mdiMagnify,
     mdiShieldCheckOutline: mdiShieldCheckOutline,
+    mdiArrowUp: mdiArrowUp,
+    mdiArrowDown: mdiArrowDown,
+    mdiMapMarker: mdiMapMarker,
+    mdiCalendar: mdiCalendar,
   },
 };
 

@@ -34,7 +34,7 @@
                   <v-text-field
                     :value="getEntityFilters['Date_min']"
                     label="From:"
-                    append-icon="mdi-calendar"
+                    :append-icon="mdiCalendar"
                     readonly
                     clearable
                     @click:clear="resetMinDate"
@@ -70,7 +70,7 @@
                   <v-text-field
                     :value="getEntityFilters['Date_max']"
                     label="To:"
-                    append-icon="mdi-calendar"
+                    :append-icon="mdiCalendar"
                     readonly
                     clearable
                     @click:clear="resetMaxDate"
@@ -142,6 +142,7 @@ interface Data {
       "getCredentialTypes",
       "getRegistrationTypes",
       "getEntityFilters",
+      "mdiCalendar",
     ]),
   },
   methods: {
