@@ -60,7 +60,10 @@ export function processField(
   return {
     ...options,
     ...filter,
-    label: `${options.label}.${options.valueSelector(filter)}`,
+    label: options?.labelFormatter
+      ? options.labelFormatter(filter)
+      : `${options.label}.${options.valueSelector(filter)}`,
+    translated: !!(options?.labelFormatter && options.labelFormatter(filter)),
     key: options.key,
     value: options.valueSelector(filter),
   };
@@ -74,7 +77,10 @@ export function processFieldWithFallback(
   return {
     ...options,
     ...filter,
-    label: `${options.label}.${options.valueSelector(filter) || fallback}`,
+    label: options?.labelFormatter
+      ? options.labelFormatter(filter)
+      : `${options.label}.${options.valueSelector(filter) || fallback}`,
+    translated: !!(options?.labelFormatter && options.labelFormatter(filter)),
     key: options.key,
     value: options.valueSelector(filter) || fallback,
     count: filter.count || 0,

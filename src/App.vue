@@ -10,13 +10,11 @@
 </template>
 
 <script lang="ts">
-import "@bcgov/bc-sans/css/BCSans.css";
-
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
 import Loading from "@/components/shared/Loading.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
@@ -27,20 +25,8 @@ import { mapActions, mapGetters } from "vuex";
   computed: {
     ...mapGetters(["loading"]),
   },
-  methods: {
-    ...mapActions(["setLoading", "fetchCredentialTypes"]),
-  },
 })
-export default class App extends Vue {
-  setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
-
-  async created(): Promise<void> {
-    this.setLoading(true);
-    await this.fetchCredentialTypes(false);
-    this.setLoading(false);
-  }
-}
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">
@@ -66,5 +52,22 @@ a {
 .checkbox {
   color: $input-color;
   height: 24px;
+}
+.icon-dense {
+  width: 20px;
+  height: 20px;
+}
+.vertical-align-middle {
+  vertical-align: middle;
+}
+.fake-link {
+  color: $link-color;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &.disabled {
+    color: gray;
+    text-decoration: none;
+  }
 }
 </style>

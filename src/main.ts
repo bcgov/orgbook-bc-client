@@ -5,22 +5,25 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
-import { IAppConfig, getAppConfig } from "./services/config/config.service";
-import { IDoc, getDocs } from "./services/doc/doc.service";
+
+import docs from "@/assets/docs.json";
+import { defaultDoc, processDocRoute } from "./utils/doc";
 
 Vue.config.productionTip = false;
 
+const docRoutes = [defaultDoc, ...docs].map(processDocRoute);
+docRoutes.forEach((docRoute) => {
+  router.addRoute("About", docRoute);
+});
+
 async function init() {
-  const config: IAppConfig = await getAppConfig();
-  const docs: IDoc[] = await getDocs();
   new Vue({
     i18n,
     router,
     store,
     vuetify,
     created: () => {
-      store.dispatch("setApiUrl", new URL(config.apiUrl));
-      store.dispatch("setDocs", docs);
+      store.dispatch("setDocRoutes", docRoutes);
     },
     render: (h) => h(App),
   }).$mount("#app");

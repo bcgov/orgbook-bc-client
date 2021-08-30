@@ -12,16 +12,20 @@
           >
             <v-toolbar-title class="app-bar-title">
               <img
-                class="small-logo"
+                class="logo"
                 v-if="$vuetify.breakpoint.smAndDown"
                 src="@/assets/img/logo.svg"
                 alt="British Columbia"
+                width="48px"
+                height="42px"
               />
               <img
-                class="large-logo"
+                class="logo"
                 v-if="$vuetify.breakpoint.mdAndUp"
                 src="@/assets/img/logo-banner.svg"
                 alt="British Columbia"
+                width="172px"
+                height="48px"
               />
               <span
                 :class="{
@@ -53,6 +57,7 @@
               class="mr-n2 app-bar-nav-icon"
               @click="drawer = true"
               color="white"
+              aria-label="nav-menu-button"
             ></v-app-bar-nav-icon>
           </v-col>
         </v-row>
@@ -96,13 +101,8 @@ export default class Header extends Vue {
   border-bottom: 2px solid $accent-color !important;
 }
 .app-bar-title {
-  .small-logo {
+  .logo {
     vertical-align: middle;
-    width: 48px;
-  }
-  .large-logo {
-    vertical-align: middle;
-    height: 48px;
   }
 }
 </style>

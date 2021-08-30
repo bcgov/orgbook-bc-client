@@ -12,8 +12,18 @@ module.exports = {
     loaderOptions: {
       scss: {
         additionalData: `
-          @import "@/styles/variables.scss";
+          @import "@/styles/style.scss";
         `,
+      },
+    },
+  },
+  configureWebpack: {
+    devtool: "source-map",
+    devServer: {
+      proxy: {
+        "/api": {
+          target: "http://dev.orgbook.gov.bc.ca",
+        },
       },
     },
   },

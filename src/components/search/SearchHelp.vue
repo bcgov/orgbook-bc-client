@@ -6,10 +6,10 @@
         hide-actions
       >
         <template v-slot:default="{ open }">
-          <a class="flex-grow-1 search-help-text"> How to search? </a>
-          <v-icon class="flex-grow-0" color="white" v-if="open"
-            >mdi-close</v-icon
-          >
+          <span class="flex-grow-1 search-help-text"> How to search? </span>
+          <v-icon class="flex-grow-0" color="white" v-if="open">{{
+            mdiClose
+          }}</v-icon>
         </template>
       </v-expansion-panel-header>
       <v-expansion-panel-content class="ml-n6 search-help-content">
@@ -21,12 +21,17 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
 interface Data {
   open: boolean;
 }
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters(["mdiClose"]),
+  },
+})
 export default class SearchHelp extends Vue {
   data(): Data {
     return {

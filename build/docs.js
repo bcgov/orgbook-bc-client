@@ -18,7 +18,7 @@ async function buildDocs() {
         const content = fm(doc);
         return {
           ...content,
-          html: mk(content.body),
+          html: mk(content.body, { breaks: true }),
           path: path.relative(path.resolve(__dirname, "../src/docs/"), file),
         };
       })
