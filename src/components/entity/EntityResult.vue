@@ -27,7 +27,7 @@
       >
     </v-tabs>
     <v-divider></v-divider>
-    <v-btn @click="test">TEST</v-btn>
+    <!-- <v-btn @click="test">TEST</v-btn> -->
 
     <v-row>
       <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"
@@ -41,7 +41,8 @@
       <template #expansionPanels>
         <CredentialItem
           :authority="entityRegistrationIssuer"
-          effectiveDate="1914-01-30T08:00:00+00:00"
+          :authorityLink="entityRegistrationIssuerUrl"
+          :effectiveDate="entityEffectiveDate"
         >
           <template #header>
             <h3>Registration</h3>
@@ -62,7 +63,8 @@
       </template>
     </EntityCard>
 
-    <EntityCard title="Addresses" ref="addresses">
+    <!-- we will disable addresses for now -->
+    <!-- <EntityCard title="Addresses" ref="addresses">
       <template #expansionPanels>
         <CredentialItem
           authority="CRA"
@@ -88,7 +90,7 @@
           </template>
         </CredentialItem>
       </template>
-    </EntityCard>
+    </EntityCard> -->
 
     <EntityCard
       title="Relationships"
@@ -224,7 +226,7 @@
             <v-timeline dense class="on-bottom">
               <!-- creates a timeline item for each credential in the entity -->
               <v-timeline-item
-                color="blue"
+                color="#38598A"
                 small
                 v-for="(cred, i) in filteredEntityCredentials"
                 :key="i"
@@ -237,7 +239,7 @@
                         :authority="cred.authority"
                         :expired="cred.revoked"
                         :reason="
-                          cred.type === 'enity_name'
+                          cred.type === 'entity_name'
                             ? cred.registration_reason
                             : ''
                         "
@@ -478,8 +480,7 @@ export default class EntityResult extends Vue {
 
   //class methods
   test(): void {
-    console.log(JSON.stringify(this.selectedTopic.id))
-    console.log(JSON.stringify(this.entityCredentials));
+    console.log(JSON.stringify(this.filteredEntityCredentials))
   }
 
   
@@ -525,11 +526,10 @@ export default class EntityResult extends Vue {
   get tabItems(): { text: string; refname: string }[] {
     let baseTabItems = [
       { text: "Registration", refname: "registration" },
-      { text: "Addresses", refname: "addresses" },
       { text: "Credentials", refname: "credentials" },
     ];
     if (this.hasAnyRelationships) {
-      baseTabItems.splice(2, 0, {
+      baseTabItems.splice(1, 0, {
         text: "Relationships",
         refname: "relationships",
       });
@@ -612,7 +612,7 @@ export default class EntityResult extends Vue {
 
   get entityCredentialsSorted(): Array<ICredentialDisplayType> | undefined {
     const cpa = (item1:ICredentialDisplayType, item2:ICredentialDisplayType) => {
-      return (moment(item1.date_effective).isBefore(item2.date_effective) ? 1 : -1) *
+      return (moment(item1.date_effective).isBefore(item2.date_effective) ? -1 : 1) *
         this.credentialTimeOrder
       }
     return this.entityCredentials?.sort(
@@ -661,8 +661,18 @@ export default class EntityResult extends Vue {
     return "entity_type." + state?.value;
   }
 
-  entityRegistrationIssuer( cred:ICredential): IIssuer | undefined {
-    return cred.credential_type.issuer
+  get entityRegistrationIssuer(): string | undefined {
+    return selectFirstAttrItem(
+      { key: "type", value: "entity_name" },
+      this.selectedTopic?.names
+    )?.issuer?.name;
+  }
+
+  get entityRegistrationIssuerUrl(): string | URL | undefined {
+    return selectFirstAttrItem(
+      { key: "type", value: "entity_name" },
+      this.selectedTopic?.names
+    )?.issuer?.url;
   }
 
   async created(): Promise<void> {

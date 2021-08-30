@@ -51,6 +51,7 @@
                 "
                 @input="menuFrom = false"
                 @change="handleMinDateChange"
+                header-color="#38598A"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -81,6 +82,7 @@
               <v-date-picker
                 @input="menuTo = false"
                 @change="handleMaxDateChange"
+                header-color="#38598A"
               ></v-date-picker>
             </v-menu>
           </v-col>

@@ -109,13 +109,13 @@ const actions = {
 
   setRegistrationType(
     { commit }: ActionContext<State, RootState>,
-    creds: ICredential[]
+    creds: Array<ICredentialDisplayType>
   ): void {
     const filterFields: IEntityFacetField[] = [];
 
     creds.forEach((cred) => {
       if (isRegType(cred)) {
-        const regDesc = selectFirstAttrItem({ key: "type", value: "reason_description" }, cred.attributes)?.value as string | undefined
+        const regDesc = cred.registration_reason
         if (regDesc !== undefined) {
           const idx = filterFields
             .map((field) => field.value)
