@@ -8,7 +8,7 @@
         class="facet-filter pa-0"
       >
         <template v-slot:default="{ active }">
-          <v-list-item-action class="mt-1 mb-2 mr-1">
+          <v-list-item-action class="mt-1 mb-1 mr-1">
             <v-simple-checkbox
               :ripple="false"
               :value="isFilterActive(searchFilters, field)"
@@ -18,7 +18,8 @@
             ></v-simple-checkbox>
           </v-list-item-action>
           <v-list-item-content class="pt-1 pb-1">
-            <div>{{ $t(field.label) }}</div>
+            <div v-if="field.translated">{{ field.label }}</div>
+            <div v-else v-t="field.label"></div>
           </v-list-item-content>
           <v-list-item-action class="d-flex justify-end mt-1 mb-1">
             <div>{{ field.count }}</div>

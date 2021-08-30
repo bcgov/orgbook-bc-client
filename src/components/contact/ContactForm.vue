@@ -78,6 +78,7 @@
         @click="submit"
         depressed
         :disabled="loading"
+        aria-label="submit-button"
         >Submit</v-btn
       >
     </v-form>
@@ -103,10 +104,10 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["credentialTypes", "loading"]),
+    ...mapGetters(["loading", "credentialTypes"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "sendFeedback", "setLoading"]),
+    ...mapActions(["setLoading", "sendFeedback"]),
   },
 })
 export default class ContactForm extends Vue {
@@ -114,7 +115,6 @@ export default class ContactForm extends Vue {
   credentialTypes!: ICredentialType[];
 
   setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
   sendFeedback!: (
     feedback: ContactRequest | IncorrectInfoContactRequest
   ) => Promise<void>;
@@ -147,12 +147,6 @@ export default class ContactForm extends Vue {
     return this.formData.reason === "INCORRECT_INFO"
       ? "Describe the problem"
       : "Message";
-  }
-
-  async created(): Promise<void> {
-    this.setLoading(true);
-    await this.fetchCredentialTypes(false);
-    this.setLoading(false);
   }
 
   async submit(e: Event): Promise<void> {

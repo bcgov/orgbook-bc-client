@@ -29,6 +29,7 @@ import {
   getQueryValueFromFilter,
 } from "@/utils/search";
 import { objHasProp } from "@/utils/general";
+import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
@@ -63,7 +64,7 @@ const getters = {
     state.page,
   searchFilterFields: (state: State): ISearchFilterFieldRecord =>
     state?.facets?.fields || defaultFacetResult.fields,
-  topEntityTypes: (): ISearchFilter[] => {
+  topEntityTypeFilters: (): ISearchFilter[] => {
     return topFieldSelector(
       {
         ...entityTypeSpec,
@@ -77,7 +78,7 @@ const getters = {
         []) as unknown as ISearchFilter[]
     );
   },
-  moreEntityTypes: (): ISearchFilter[] => {
+  moreEntityTypeFilters: (): ISearchFilter[] => {
     return moreFieldSelector(
       {
         ...entityTypeSpec,
@@ -91,7 +92,7 @@ const getters = {
         []) as unknown as ISearchFilter[]
     );
   },
-  entityStatuses: (): ISearchFilter[] => {
+  entityStatusFilters: (): ISearchFilter[] => {
     const options = {
       ...entityStatusSpec,
       keySelector: (filter?: ISearchFilter) =>
@@ -106,11 +107,18 @@ const getters = {
       .filter((filter) => options.keySelector(filter) === options.key)
       .map((filter) => processField(options, filter));
   },
-  credentialTypes: (): ISearchFilter[] => {
+  credentialTypeFilters: (): ISearchFilter[] => {
     const options = {
       ...credentialTypeSpec,
       keySelector: (filter?: ISearchFilter) => filter?.text || "",
       valueSelector: (filter?: ISearchFilter) => filter?.value || "",
+      labelFormatter: (filter?: ISearchFilter) => {
+        return (
+          store.getters.credentialTypes.find(
+            (type: ICredentialType) => type.id.toString() === filter?.value
+          )?.description || ""
+        );
+      },
     };
     return (
       (store.getters.searchFilterFields.credential_type_id ||
@@ -119,10 +127,10 @@ const getters = {
   },
   extendedSearchFilterFields: (): ISearchFilter[] => {
     return [
-      ...store.getters.topEntityTypes,
-      ...store.getters.moreEntityTypes,
-      ...store.getters.entityStatuses,
-      ...store.getters.credentialTypes,
+      ...store.getters.topEntityTypeFilters,
+      ...store.getters.moreEntityTypeFilters,
+      ...store.getters.entityStatusFilters,
+      ...store.getters.credentialTypeFilters,
     ];
   },
 };

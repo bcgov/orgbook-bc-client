@@ -1,13 +1,16 @@
 <template>
   <div class="search-facet-panels">
-    <v-expansion-panels multiple flat accordion v-model="panel">
-      <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
+    <v-expansion-panels multiple flat accordion v-model="panels">
+      <SearchFilterFacetPanel
+        :fields="topEntityTypeFilters"
+        :more="moreEntityTypeFilters"
+      >
         <template v-slot:title> Organization Type </template>
       </SearchFilterFacetPanel>
-      <SearchFilterFacetPanel :fields="entityStatuses">
+      <SearchFilterFacetPanel :fields="entityStatusFilters">
         <template v-slot:title> Organization Status </template>
       </SearchFilterFacetPanel>
-      <SearchFilterFacetPanel :fields="credentialTypes">
+      <SearchFilterFacetPanel :fields="credentialTypeFilters">
         <template v-slot:title> Credential </template>
       </SearchFilterFacetPanel>
     </v-expansion-panels>
@@ -18,10 +21,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterFacetPanel from "@/components/search/filter/SearchFilterFacetPanel.vue";
-import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 
 interface Data {
-  panel: number[];
+  panels: number[];
 }
 
 @Component({
@@ -30,22 +32,17 @@ interface Data {
   },
   computed: {
     ...mapGetters([
-      "topEntityTypes",
-      "moreEntityTypes",
-      "entityStatuses",
-      "credentialTypes",
+      "topEntityTypeFilters",
+      "moreEntityTypeFilters",
+      "entityStatusFilters",
+      "credentialTypeFilters",
     ]),
   },
 })
 export default class SearchFilterFacetPanels extends Vue {
-  topEntityTypes!: ISearchFilter[];
-  moreEntityTypes!: ISearchFilter[];
-  entityStatuses!: ISearchFilter[];
-  credentialTypes!: ISearchFilter[];
-
   data(): Data {
     return {
-      panel: [0, 1, 2],
+      panels: [0, 1, 2],
     };
   }
 }

@@ -4,10 +4,10 @@
       >Items displayed {{ first }} - {{ last }} of {{ total }}
     </span>
     <v-btn icon :disabled="!previous" @click="pageResults(previous)">
-      <v-icon> mdi-chevron-left </v-icon>
+      <v-icon>{{ mdiChevronLeft }}</v-icon>
     </v-btn>
     <v-btn icon :disabled="!next" @click="pageResults(next)">
-      <v-icon> mdi-chevron-right </v-icon>
+      <v-icon>{{ mdiChevronRight }}</v-icon>
     </v-btn>
   </div>
 </template>
@@ -24,7 +24,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters(["pagedSearchTopics"]),
+    ...mapGetters(["pagedSearchTopics", "mdiChevronLeft", "mdiChevronRight"]),
   },
   methods: {
     ...mapActions(["fetchSearch"]),

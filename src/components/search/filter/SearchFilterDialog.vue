@@ -6,20 +6,27 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on, attrs }">
-      <a
+      <div
         @click="dialog = true"
         :class="{ disabled: loading || !pagedSearchTopics.total }"
         :aria-disabled="loading || !pagedSearchTopics.total"
       >
         <v-icon
+          class="icon-dense"
           dense
           v-bind="attrs"
           v-on="on"
           :color="loading || !pagedSearchTopics.total ? 'gray' : 'black'"
-          >mdi-filter-outline</v-icon
+          >{{ mdiFilterOutline }}</v-icon
         >
-        Filters
-      </a>
+        <span
+          :class="{
+            'fake-link text-body-2 vertical-align-middle': true,
+            disabled: loading || !pagedSearchTopics.total,
+          }"
+          >Filters</span
+        >
+      </div>
     </template>
     <v-card>
       <v-toolbar flat color="white">
@@ -27,7 +34,7 @@
         <v-spacer></v-spacer>
         <v-toolbar-items class="mr-n2">
           <v-btn icon color="black" @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
+            <v-icon>{{ mdiClose }}</v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -50,7 +57,12 @@ interface Data {
     SearchFilterFacetPanels,
   },
   computed: {
-    ...mapGetters(["loading", "pagedSearchTopics"]),
+    ...mapGetters([
+      "loading",
+      "pagedSearchTopics",
+      "mdiClose",
+      "mdiFilterOutline",
+    ]),
   },
 })
 export default class SearchFilterDialog extends Vue {

@@ -1,6 +1,9 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store";
-import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import {
+  ICredentialType,
+  ICredentialTypeByIssuer,
+} from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v2/credential-type.service";
 
 const credentialTypeSerivice = new CredentialType();
@@ -17,6 +20,26 @@ const state: State = {
 
 const getters = {
   credentialTypes: (state: State): ICredentialType[] => state.types,
+  credentialTypesByIssuer: (state: State): ICredentialTypeByIssuer[] =>
+    Object.values(
+      state.types.reduce(
+        (
+          acc: Record<number | string, ICredentialTypeByIssuer>,
+          type: ICredentialType
+        ) => {
+          if (!acc[type.issuer.id]) {
+            acc[type.issuer.id] = {
+              issuer: type.issuer,
+              credentialTypes: [type],
+            };
+          } else {
+            acc[type.issuer.id].credentialTypes.push(type);
+          }
+          return acc;
+        },
+        {}
+      )
+    ),
 };
 
 const actions = {

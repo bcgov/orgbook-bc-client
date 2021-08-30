@@ -7,7 +7,7 @@
     @click="$router.push({ path: `/entity/${sourceId}` })"
   >
     <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
-      <v-icon small class="pa-1" color="white">mdi-alert-outline</v-icon>
+      <v-icon class="ma-1" small color="white">{{ mdiAlertOutline }}</v-icon>
       <span class="text-uppercase text-caption font-weight-bold pr-1 pt-1 pb-1"
         >Historical</span
       >
@@ -35,8 +35,13 @@
 import { ISearchTopic } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { pluck } from "@/utils/resource";
+import { mapGetters } from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters(["mdiAlertOutline"]),
+  },
+})
 export default class SearchTopic extends Vue {
   @Prop({ default: null }) topic!: ISearchTopic;
 
