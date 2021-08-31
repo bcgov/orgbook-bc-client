@@ -41,7 +41,7 @@
           </template>
           <template #content>
             <p>
-              {{ entityName }} is a <a><span v-t="entityJurisdiction"></span></a>
+              {{ entityName }} is a <span class="fake-link" v-t="entityJurisdiction"></span>
             </p>
 
             <p>
