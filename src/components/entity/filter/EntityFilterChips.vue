@@ -15,14 +15,14 @@
           })
         "
       >
-        {{ $t(field.filterString) }}
+      <span v-t="field.filterString"></span>
       </v-chip>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
-import { Filter } from "@/store/modules/entityFilter";
+import { Filter } from "@/store/modules/entity";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -48,7 +48,6 @@ export default class EntityFilterChips extends Vue {
       if (Array.isArray(this.getEntityFilters[key])) {
         chips.push(
           ...(this.getEntityFilters[key] as string[]).map((item) => {
-            console.log(this.getEntityFilters);
             return { filterField: key, filterString: item };
           })
         );

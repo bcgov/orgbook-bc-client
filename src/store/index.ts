@@ -10,9 +10,6 @@ import doc, { State as DocState } from "./modules/doc";
 import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
-import entityFilter, {
-  State as EntityFilterState,
-} from "./modules/entityFilter";
 import entity, { State as EntityState } from "./modules/entity";
 
 Vue.use(Vuex);
@@ -26,7 +23,6 @@ export interface State {
   icon: IconState;
   search: SearchState;
   topic: TopicState;
-  entityFilter: EntityFilterState;
   entity: EntityState;
 }
 
@@ -40,7 +36,6 @@ export default new Vuex.Store({
     icon,
     search,
     topic,
-    entityFilter,
     entity,
   },
 });

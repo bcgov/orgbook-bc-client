@@ -32,10 +32,10 @@
 
 <script lang="ts">
 import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
-import { Filter } from "@/store/modules/entityFilter";
+import { Filter } from "@/store/modules/entity";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters, mapActions } from "vuex";
-import { isEntityFilterActive } from "@/utils/entityFilter";
+import { isEntityFilterActive } from "@/utils/entity";
 
 @Component({
   computed: {

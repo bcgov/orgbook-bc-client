@@ -41,9 +41,5 @@ export default class EntityCard extends Vue {
       ? [...Array(this.$slots.expansionPanels?.length).keys()]
       : [];
   }
-
-  test(): void {
-    console.log(this.panelList);
-  }
 }
 </script>

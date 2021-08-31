@@ -3,18 +3,13 @@
     <v-icon>{{ mdiArrowLeft }}</v-icon
     ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
     <h3>{{ entityName }}</h3>
+      <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''"> Business number: {{ entitybusinessNumber }} </p>
+      <p><span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span></p>
     <p>
-      Business number: {{ entitybusinessNumber }} <br />
-      {{ $t(entityState) }} •
-      {{ $t(entityJurisdiction) }}
-    </p>
-    <p>
-      <!-- prevents flash of incorrect state -->
       <span
-        v-if="$t(entityState) === 'Active' || $t(entityState) === 'Historical'"
-        :class="$t(entityState) === 'Active' ? 'standing' : 'notStanding'"
-        ><span v-if="$t(entityState) !== 'Active'">NOT</span> IN GOOD
-        STANDING</span
+        v-if="!loading"
+        :class="entityState === 'entity_status.ACT' ? 'standing' : 'notStanding'"
+        ><span v-if="entityState !== 'entity_status.ACT'">NOT</span> IN GOOD STANDING</span
       >
     </p>
 
@@ -27,16 +22,13 @@
       >
     </v-tabs>
     <v-divider></v-divider>
-    <!-- <v-btn @click="test">TEST</v-btn> -->
-
     <v-row>
-      <v-col :class="$vuetify.breakpoint.smAndUp ? 'text-right' : ''"
+      <v-col :class="{'text-right':$vuetify.breakpoint.smAndUp}"
         ><a @click="toggleCredentialsExpanded"
           >Show all Credential statuses</a
         ></v-col
       >
     </v-row>
-
     <EntityCard ref="registration">
       <template #expansionPanels>
         <CredentialItem
@@ -49,8 +41,7 @@
           </template>
           <template #content>
             <p>
-              {{ entityName }} is a
-              <a>{{ $t(entityJurisdiction) }}</a>
+              {{ entityName }} is a <a><span v-t="entityJurisdiction"></span></a>
             </p>
 
             <p>
@@ -62,36 +53,6 @@
         </CredentialItem>
       </template>
     </EntityCard>
-
-    <!-- we will disable addresses for now -->
-    <!-- <EntityCard title="Addresses" ref="addresses">
-      <template #expansionPanels>
-        <CredentialItem
-          authority="CRA"
-          effectiveDate="1914-01-30T08:00:00+00:00"
-        >
-          <template #header>
-            <h3>Physical address</h3>
-          </template>
-          <template #content>
-            <p>Credential Value Here</p>
-          </template>
-        </CredentialItem>
-
-        <CredentialItem
-          authority="CRA"
-          effectiveDate="1914-01-30T08:00:00+00:00"
-        >
-          <template #header>
-            <h3>Mailing address</h3>
-          </template>
-          <template #content>
-            <p>Test Rd, Victoria BC</p>
-          </template>
-        </CredentialItem>
-      </template>
-    </EntityCard> -->
-
     <EntityCard
       title="Relationships"
       ref="relationships"
@@ -136,7 +97,7 @@
               <v-select
                 v-model="itemsDisplayed"
                 :items="[5, 10, 100]"
-                @change="() => (relationshipStartIndex = 0)"
+                @change="relationshipStartIndex = 0"
               ></v-select>
             </v-col>
             <v-col cols="2">
@@ -286,7 +247,7 @@
 <script lang="ts">
 import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
 import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
@@ -298,17 +259,16 @@ import {
 } from "@/interfaces/api/v4/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attributeFilter";
 import "@/utils/dateFilter";
-import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import moment from "moment";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import { Filter } from "@/store/modules/entityFilter";
-import { isRegType } from "@/utils/entityFilter";
+import { Filter } from "@/store/modules/entity";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
 } from "@/utils/entity";
+import { State } from "@/store/modules/app";
 
 interface Data {
   currentTab: string;
@@ -331,6 +291,7 @@ interface Data {
   },
   computed: {
     ...mapGetters([
+      "entityTest",
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getEntityFilters",
@@ -341,6 +302,7 @@ interface Data {
       "mdiMapMarker",
       "mdiChevronLeft",
       "mdiChevronRight",
+      "loading",
     ]),
   },
   methods: {
@@ -380,6 +342,9 @@ export default class EntityResult extends Vue {
   getRelationships!: IRelationship[];
   relationshipStartIndex!: number;
   itemsDisplayed!: number;
+  loading!: boolean;
+
+  entityTest!: State;
 
   data(): Data {
     return {
@@ -490,10 +455,7 @@ export default class EntityResult extends Vue {
     return filteredCreds;
   }
 
-  //class methods
-  test(): void {
-    console.log(JSON.stringify(this.filteredEntityCredentials));
-  }
+  
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {

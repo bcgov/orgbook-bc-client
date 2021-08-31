@@ -1,6 +1,5 @@
 <template>
   <v-expansion-panels multiple flat accordion v-model="panel" class="on-bottom">
-    <!-- <v-btn @click="test">TEST</v-btn> -->
     <EntityFilterFacetPanel filterField="Authorities" :fields="getAuthorities">
       <template v-slot:title> Authority </template>
     </EntityFilterFacetPanel>
@@ -119,8 +118,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
-import { Filter } from "@/store/modules/entityFilter";
-import { isEntityFilterActive } from "@/utils/entityFilter";
+import { Filter } from "@/store/modules/entity";
+import { isEntityFilterActive } from "@/utils/entity";
 
 interface Data {
   menuFrom: boolean;
@@ -193,9 +192,6 @@ export default class EntityFilterFacetPanels extends Vue {
     var currFilters = { ...this.getEntityFilters };
     currFilters.Date_max = newVal;
     this.setFilter(currFilters);
-  }
-  test(): void {
-    console.log(this.getAuthorities);
   }
 }
 </script>

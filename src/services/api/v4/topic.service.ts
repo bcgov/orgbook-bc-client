@@ -7,29 +7,6 @@ export default class V4Topic extends ApiResource {
   baseVersion = "v4";
   basePath = "topic";
 
-  // async getTopics(): Promise<HttpResponse<IApiPagedResult<ITopic>>> {
-  //   return await Http.get<IApiPagedResult<ITopic>>(this.formatEndpointUrl(""));
-  // }
-
-  // async getTopic(id: number): Promise<HttpResponse<ITopic>> {
-  //   return await Http.get<ITopic>(this.formatEndpointUrl(`${id}`));
-  // }
-
-  // async getFormattedTopic(id: number): Promise<HttpResponse<IFormattedTopic>> {
-  //   return await Http.get<IFormattedTopic>(
-  //     this.formatEndpointUrl(`${id}/formatted`)
-  //   );
-  // }
-
-  // async getIdentifiedTopic(
-  //   sourceId: string,
-  //   type: string
-  // ): Promise<HttpResponse<ITopic>> {
-  //   return await Http.get<ITopic>(
-  //     this.formatEndpointUrl(`ident/${type}/${sourceId}`)
-  //   );
-  // }
-
   async getTopicCredentialSet(
     id: number
   ): Promise<HttpResponse<ICredentialSet>> {

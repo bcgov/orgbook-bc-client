@@ -13,7 +13,6 @@ export interface State {
   selected: {
     topic: ITopic | null;
     credentialSet: ICredentialSet | null;
-    fullCredentialSet: ICredentialSet | null;
   };
 }
 
@@ -21,7 +20,6 @@ const state: State = {
   selected: {
     topic: null,
     credentialSet: null,
-    fullCredentialSet: null,
   },
 };
 
@@ -30,7 +28,7 @@ const getters = {
   selectedTopicCredentialSet: (state: State): ICredentialSet | null =>
     state?.selected?.credentialSet,
   selectedTopicFullCredentialSet: (state: State): ICredentialSet | null =>
-    state?.selected?.fullCredentialSet,
+    state?.selected?.credentialSet,
 };
 
 const actions = {
@@ -68,10 +66,10 @@ const actions = {
   ): Promise<void> {
     try {
       const res = await v4topicService.getTopicCredentialSet(id);
-      commit("setSelectedFullCredentialSet", res.data);
+      commit("setSelectedCredentialSet", res.data);
     } catch (e) {
       console.error(e);
-      commit("setSelectedFullCredentialSet", null);
+      commit("setSelectedCredentialSet", null);
     }
   },
 };
@@ -84,15 +82,6 @@ const mutations = {
     state.selected = {
       ...state.selected,
       credentialSet,
-    };
-  },
-  setSelectedFullCredentialSet(
-    state: State,
-    fullCredentialSet: ICredentialSet
-  ): void {
-    state.selected = {
-      ...state.selected,
-      fullCredentialSet,
     };
   },
 };

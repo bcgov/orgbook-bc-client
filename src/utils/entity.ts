@@ -3,6 +3,7 @@ import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
+import { Filter } from "@/store/modules/entity";
 import { selectFirstAttrItem } from "./attributeFilter";
 
 export function isCredential(item: ICredential | IRelationship): boolean {
@@ -63,7 +64,30 @@ export function credOrRelationshipToDisplay(
     display.revoked_date = relItem.credential.revoked_date;
     display.relationship_types = relItem.attributes.map((attr) => attr.value);
     display.value = getRelationshipName(relItem);
-    console.log(display.value);
   }
   return display;
+}
+
+
+export function isEntityFilterActive(
+  filterField: string,
+  getEntityFilters: Filter,
+  filterString?: string
+): boolean {
+  //filter string only applies if we're filtering array
+  const filterList = getEntityFilters[filterField];
+  let retval = false;
+  if (typeof filterList === "boolean") {
+    retval = filterList;
+  } else if (typeof filterList === "string") {
+    retval = filterList !== "";
+  } else if (filterString) {
+    retval = filterList.includes(filterString);
+  }
+
+  return retval;
+}
+
+export function isRegType(cred: ICredentialDisplayType): boolean {
+  return cred.credential_type === "registration.registries.ca";
 }
