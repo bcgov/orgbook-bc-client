@@ -6,18 +6,25 @@
     <v-combobox
       outlined
       dense
-      cache-items
       hide-no-data
       hide-details
       background-color="white"
+      append-icon=""
       v-model="q"
+      :auto-select-first="false"
       :disabled="loading"
       :items="items"
       :search-input.sync="search"
-      @input.native="updateModel"
-      @change="onChange"
+      :menu-props="{
+        value: !!(search && items.length),
+      }"
+      @change="changeSearch"
+      @keydown="enterSearch"
+      @update:search-input="autocompleteSearch"
+      @update:list-index="(i) => (index = i)"
       class="combobox"
       aria-label="search-input"
+      ref="autocomplete"
     >
       <template v-slot:append-outer>
         <v-progress-circular
@@ -30,7 +37,7 @@
           v-else
           id="searchButton"
           :disabled="!search || loading"
-          @click="onClick"
+          @click="submitSearch"
           color="white"
           aria-label="search-button"
           >{{ mdiMagnify }}</v-icon
@@ -41,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import _ from "lodash-es";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
@@ -50,6 +57,7 @@ import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/search";
 
 interface Data {
+  index: number;
   items: string[];
   search: string;
   q: string;
@@ -65,6 +73,7 @@ interface Data {
   },
 })
 export default class SearchBar extends Vue {
+  index!: number;
   items!: Array<string>;
   search!: string;
   q!: string;
@@ -82,6 +91,7 @@ export default class SearchBar extends Vue {
 
   data(): Data {
     return {
+      index: -1,
       items: [],
       search: "",
       q: this.query || "",
@@ -89,50 +99,72 @@ export default class SearchBar extends Vue {
     };
   }
 
-  @Watch("search")
-  onChildChanged(q: string): void {
-    this.debouncedAutocomplete(q);
-  }
-
   async autocomplete(q: string): Promise<void> {
-    let results = [] as string[];
     try {
+      this.items = [] as string[];
       this.pending = true;
-      if (q && q !== this.q) {
-        const res = await this.fetchAutocomplete(q);
-        results = (res?.results || [])
-          .map((r) => r.value)
-          .filter(
-            (r) => (r || "").toLowerCase().indexOf((r || "").toLowerCase()) > -1
-          );
-      }
+      const response = await this.fetchAutocomplete(q);
+      this.items = (response?.results || [])
+        .map((result) => result.value)
+        .filter(
+          (result) =>
+            (result || "").toLowerCase().indexOf((result || "").toLowerCase()) >
+            -1
+        );
     } catch (e) {
       console.error(e);
     } finally {
       this.pending = false;
     }
-    this.items = results;
   }
 
-  updateModel(e: InputEvent): void {
-    const value = (e?.target as HTMLInputElement)?.value || "";
-    this.search = value;
+  autocompleteSearch(val: string): void {
+    if (!val) {
+      return;
+    }
+    this.resetAutocomplete();
+    this.debouncedAutocomplete(val);
   }
 
-  onClick(): void {
+  changeSearch(val: string): void {
+    if (val === this.search) {
+      return;
+    }
+    this.executeSearch(val);
+  }
+
+  enterSearch(e: KeyboardEvent): void {
+    if (e.key === "Escape" || e.code === "Escape") {
+      this.resetIndex();
+      this.resetAutocomplete();
+    } else if (e.key === "Enter" || e.code === "Enter") {
+      if (this.index >= 0) {
+        this.search = this.items[this.index];
+      }
+      this.submitSearch();
+    }
+  }
+
+  submitSearch(): void {
     if (!this.search) {
       return;
     }
-    const query = { ...defaultQuery, ...{ q: this.search } };
+    this.executeSearch(this.search);
+  }
+
+  private executeSearch(q: string) {
+    this.resetIndex();
+    this.resetAutocomplete();
+    const query = { ...defaultQuery, ...{ q } };
     this.fetchSearch(query);
   }
 
-  onChange(q: string): void {
-    if (q === this.search) {
-      return;
-    }
-    const query = { ...defaultQuery, ...{ q } };
-    this.fetchSearch(query);
+  private resetIndex(): void {
+    this.index = -1;
+  }
+
+  private resetAutocomplete(): void {
+    this.items = [];
   }
 }
 </script>
