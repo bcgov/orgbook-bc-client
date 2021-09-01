@@ -2,7 +2,7 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Relationship from "@/services/api/v2/relationship.service";
 import { ITopic } from "@/interfaces/api/v2/topic.interface";
-import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
+import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { isRegType } from "@/utils/entity";
@@ -18,12 +18,11 @@ export interface State {
     credentialSet: ICredentialSet | null;
   };
   entityFilter: Filter | null;
-  filterValues:{
+  filterValues: {
     authorities: Array<IEntityFacetField>;
     credentialType: Array<IEntityFacetField>;
     registrationType: Array<IEntityFacetField>;
   };
-  
 }
 
 const state: State = {
@@ -33,17 +32,18 @@ const state: State = {
     credentialSet: null,
   },
   entityFilter: null,
-  filterValues:{
-    authorities:[],
-    credentialType:[],
-    registrationType:[],
-  }
+  filterValues: {
+    authorities: [],
+    credentialType: [],
+    registrationType: [],
+  },
 };
 
 const getters = {
-  entityTest:(state:State):State=>state,
+  entityTest: (state: State): State => state,
   getRelationships: (state: State): Relationship[] => state.relationships,
-  getAuthorities: (state: State): Array<IEntityFacetField> => state.filterValues.authorities,
+  getAuthorities: (state: State): Array<IEntityFacetField> =>
+    state.filterValues.authorities,
   getCredentialTypes: (state: State): Array<IEntityFacetField> =>
     state.filterValues.credentialType,
   getRegistrationTypes: (state: State): Array<IEntityFacetField> =>
@@ -65,7 +65,6 @@ const getters = {
 };
 
 const actions = {
-
   async fetchRelationships(
     { commit }: ActionContext<State, RootState>,
     topic_id: number

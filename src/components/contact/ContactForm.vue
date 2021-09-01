@@ -88,13 +88,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import {
-  ContactRequest,
-  IncorrectInfoContactRequest,
-  contactReason,
-} from "@/store/modules/contact";
 import router from "@/router";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import {
+  IContactRequest,
+  IIncorrectInfoContactRequest,
+} from "@/interfaces/api/v2/contact.interface";
+import { contactReason } from "@/store/modules/contact";
 
 interface Data {
   formData: {
@@ -111,12 +111,12 @@ interface Data {
   },
 })
 export default class ContactForm extends Vue {
-  formData!: ContactRequest | IncorrectInfoContactRequest;
+  formData!: IContactRequest | IIncorrectInfoContactRequest;
   credentialTypes!: ICredentialType[];
 
   setLoading!: (loading: boolean) => void;
   sendFeedback!: (
-    feedback: ContactRequest | IncorrectInfoContactRequest
+    feedback: IContactRequest | IIncorrectInfoContactRequest
   ) => Promise<void>;
 
   data(): Data {

@@ -3,13 +3,20 @@
     <v-icon>{{ mdiArrowLeft }}</v-icon
     ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
     <h3>{{ entityName }}</h3>
-      <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''"> Business number: {{ entitybusinessNumber }} </p>
-      <p><span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span></p>
+    <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''">
+      Business number: {{ entitybusinessNumber }}
+    </p>
+    <p>
+      <span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span>
+    </p>
     <p>
       <span
         v-if="!loading"
-        :class="entityState === 'entity_status.ACT' ? 'standing' : 'notStanding'"
-        ><span v-if="entityState !== 'entity_status.ACT'">NOT</span> IN GOOD STANDING</span
+        :class="
+          entityState === 'entity_status.ACT' ? 'standing' : 'notStanding'
+        "
+        ><span v-if="entityState !== 'entity_status.ACT'">NOT</span> IN GOOD
+        STANDING</span
       >
     </p>
 
@@ -23,7 +30,7 @@
     </v-tabs>
     <v-divider></v-divider>
     <v-row>
-      <v-col :class="{'text-right':$vuetify.breakpoint.smAndUp}"
+      <v-col :class="{ 'text-right': $vuetify.breakpoint.smAndUp }"
         ><span class="fake-link" @click="toggleCredentialsExpanded"
           >Show all Credential statuses</span
         ></v-col
@@ -41,7 +48,8 @@
           </template>
           <template #content>
             <p>
-              {{ entityName }} is a <span class="fake-link" v-t="entityJurisdiction"></span>
+              {{ entityName }} is a
+              <span class="fake-link" v-t="entityJurisdiction"></span>
             </p>
 
             <p>
@@ -130,7 +138,7 @@
     </EntityCard>
 
     <EntityCard
-    :expanded="credentialsExpanded"
+      :expanded="credentialsExpanded"
       title="Relationships"
       :ref="'relationships' ? businessAsRelationship.length <= 0 : ''"
       v-if="ownedByRelationship !== undefined"
@@ -145,7 +153,9 @@
         >
           <template #header>
             <h3>
-              <span class="fake-link">{{ getRelationshipName(ownedByRelationship) }}</span>
+              <span class="fake-link">{{
+                getRelationshipName(ownedByRelationship)
+              }}</span>
             </h3>
           </template>
         </CredentialItem>
@@ -153,7 +163,11 @@
     </EntityCard>
 
     <!-- enitity card credential holder -->
-    <EntityCard :expanded="credentialsExpanded" title="Credentials" ref="credentials">
+    <EntityCard
+      :expanded="credentialsExpanded"
+      title="Credentials"
+      ref="credentials"
+    >
       <template>
         <v-container>
           <!-- header content for the credential card -->
@@ -166,7 +180,9 @@
 
             <v-col class="pl-0 pr-0">
               <div class="text-body-2 float-right">
-                <span class="fake-link" @click="switchCredentialTimeOrder">Sort by date</span>
+                <span class="fake-link" @click="switchCredentialTimeOrder"
+                  >Sort by date</span
+                >
                 <v-icon v-if="credentialTimeOrder === 1">{{
                   mdiArrowUp
                 }}</v-icon>
@@ -259,8 +275,8 @@ import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
-import { selectFirstAttrItem } from "@/utils/attributeFilter";
-import "@/utils/dateFilter";
+import { selectFirstAttrItem } from "@/utils/attribute";
+import "@/filters/date.filter";
 import moment from "moment";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
@@ -358,7 +374,7 @@ export default class EntityResult extends Vue {
       },
       itemsDisplayed: 100,
       relationshipStartIndex: 0,
-      credentialsExpanded:false,
+      credentialsExpanded: false,
     };
   }
 
@@ -373,8 +389,8 @@ export default class EntityResult extends Vue {
     }
   }
 
-  toggleCredentialsExpanded():void{
-    this.credentialsExpanded = !this.credentialsExpanded
+  toggleCredentialsExpanded(): void {
+    this.credentialsExpanded = !this.credentialsExpanded;
   }
   // Credential Filters
 
@@ -461,8 +477,6 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds;
   }
-
-  
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {

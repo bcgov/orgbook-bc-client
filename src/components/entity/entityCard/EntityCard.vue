@@ -25,7 +25,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class EntityCard extends Vue {
   @Prop({ default: "" }) title!: string;
-  @Prop({ default: false }) expanded!: boolean
+  @Prop({ default: false }) expanded!: boolean;
 
   get panelList(): number[] {
     return this.expanded

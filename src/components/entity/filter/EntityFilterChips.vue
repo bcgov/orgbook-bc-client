@@ -15,7 +15,7 @@
           })
         "
       >
-      <span v-t="field.filterString"></span>
+        <span v-t="field.filterString"></span>
       </v-chip>
     </v-col>
   </v-row>

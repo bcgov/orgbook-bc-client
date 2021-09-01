@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
+import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import EntityFilterFacets from "@/components/entity/filter/EntityFilterFacets.vue";
 

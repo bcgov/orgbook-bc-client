@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
+import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";

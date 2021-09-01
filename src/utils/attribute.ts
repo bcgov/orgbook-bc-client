@@ -1,12 +1,12 @@
-export function selectAllAttrItem<T extends any, U extends keyof T>(
-  attr: { key: U; value: any },
+export function selectAllAttrItem<T extends unknown, U extends keyof T>(
+  attr: { key: U; value: unknown },
   array: Array<T> | undefined
 ): T[] | undefined {
   return array?.filter((item) => item[attr.key] === attr.value);
 }
 
-export function selectFirstAttrItem<T extends any, U extends keyof T>(
-  attr: { key: U; value: any },
+export function selectFirstAttrItem<T extends unknown, U extends keyof T>(
+  attr: { key: U; value: unknown },
   array: Array<T> | undefined
 ): T | undefined {
   const filtered = selectAllAttrItem(attr, array);

@@ -4,10 +4,10 @@ import {
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
 import { Filter } from "@/store/modules/entity";
-import { selectFirstAttrItem } from "./attributeFilter";
+import { selectFirstAttrItem } from "@/utils/attribute";
 
 export function isCredential(item: ICredential | IRelationship): boolean {
-  return (item as any)?.credential_type !== undefined;
+  return (item as ICredential)?.credential_type !== undefined;
 }
 
 export function getRelationshipName(relationship: IRelationship): string {
@@ -67,7 +67,6 @@ export function credOrRelationshipToDisplay(
   }
   return display;
 }
-
 
 export function isEntityFilterActive(
   filterField: string,
