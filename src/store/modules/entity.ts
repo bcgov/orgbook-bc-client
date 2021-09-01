@@ -2,12 +2,13 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Relationship from "@/services/api/v2/relationship.service";
 import { ITopic } from "@/interfaces/api/v2/topic.interface";
-import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
+import {
+  IEntityFacetField,
+  IEntityFilter,
+} from "@/interfaces/entity-filter.interface";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { isRegType } from "@/utils/entity";
-
-export type Filter = { [key: string]: string | Array<string> | boolean };
 
 const relationshipService = new Relationship();
 
@@ -17,7 +18,7 @@ export interface State {
     topic: ITopic | null;
     credentialSet: ICredentialSet | null;
   };
-  entityFilter: Filter | null;
+  entityFilter: IEntityFilter | null;
   filterValues: {
     authorities: Array<IEntityFacetField>;
     credentialType: Array<IEntityFacetField>;
@@ -40,7 +41,6 @@ const state: State = {
 };
 
 const getters = {
-  entityTest: (state: State): State => state,
   getRelationships: (state: State): Relationship[] => state.relationships,
   getAuthorities: (state: State): Array<IEntityFacetField> =>
     state.filterValues.authorities,
@@ -48,7 +48,7 @@ const getters = {
     state.filterValues.credentialType,
   getRegistrationTypes: (state: State): Array<IEntityFacetField> =>
     state.filterValues.registrationType,
-  getEntityFilters: (state: State): Filter => {
+  getEntityFilters: (state: State): IEntityFilter => {
     if (!state.entityFilter) {
       return {
         Authorities: [],
@@ -150,7 +150,10 @@ const actions = {
     commit("setRegTypes", filterFields);
   },
 
-  setFilter({ commit }: ActionContext<State, RootState>, filter: Filter): void {
+  setFilter(
+    { commit }: ActionContext<State, RootState>,
+    filter: IEntityFilter
+  ): void {
     commit("setFilter", filter);
   },
   toggleEntityFilter(
@@ -196,7 +199,7 @@ const mutations = {
   setRegTypes(state: State, regTypes: IEntityFacetField[]): void {
     state.filterValues.registrationType = regTypes;
   },
-  setFilter: (state: State, filter: Filter): Filter | null => {
+  setFilter: (state: State, filter: IEntityFilter): IEntityFilter | null => {
     state.entityFilter = { ...filter };
     return state.entityFilter;
   },

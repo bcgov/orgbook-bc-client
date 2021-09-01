@@ -1,25 +1,12 @@
 <template>
   <div>
-    <v-icon>{{ mdiArrowLeft }}</v-icon
-    ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
-    <h3>{{ entityName }}</h3>
-    <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''">
-      Business number: {{ entitybusinessNumber }}
-    </p>
-    <p>
-      <span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span>
-    </p>
-    <p>
-      <span
-        v-if="!loading"
-        :class="
-          entityState === 'entity_status.ACT' ? 'standing' : 'notStanding'
-        "
-        ><span v-if="entityState !== 'entity_status.ACT'">NOT</span> IN GOOD
-        STANDING</span
-      >
-    </p>
-
+    <BackToSearch />
+    <EntityHeader
+      :name="entityName"
+      :businessNumber="entityBusinessNumber"
+      :jurisdiction="entityJurisdiction"
+      :state="entityState"
+    />
     <v-tabs v-model="currentTab">
       <v-tab
         v-for="(item, i) in tabItems"
@@ -263,30 +250,30 @@
 </template>
 
 <script lang="ts">
-import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
-import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
-import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
-import CredentialItem from "@/components/entity/credentialItem/CredentialItem.vue";
-import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
+import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
+import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
+import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
-import "@/filters/date.filter";
-import moment from "moment";
-import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
-import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
-import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import { Filter } from "@/store/modules/entity";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
 } from "@/utils/entity";
-import { State } from "@/store/modules/app";
+import BackToSearch from "@/components/shared/BackToSearch.vue";
+import CredentialItem from "@/components/entity/CredentialItem.vue";
+import EntityCard from "@/components/entity/EntityCard.vue";
+import EntityHeader from "@/components/entity/EntityHeader.vue";
+import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
+import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
+import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
+import moment from "moment";
+import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
 interface Data {
   currentTab: string;
@@ -302,8 +289,10 @@ interface Data {
 
 @Component({
   components: {
-    EntityCard,
+    BackToSearch,
     CredentialItem,
+    EntityCard,
+    EntityHeader,
     EntityFilterChips,
     EntityFilterFacetPanels,
     EntityFilterDialog,
@@ -355,14 +344,12 @@ export default class EntityResult extends Vue {
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
-  getEntityFilters!: Filter;
+  getEntityFilters!: IEntityFilter;
   getRelationships!: IRelationship[];
   relationshipStartIndex!: number;
   itemsDisplayed!: number;
   loading!: boolean;
   credentialsExpanded!: boolean;
-
-  entityTest!: State;
 
   data(): Data {
     return {
@@ -556,7 +543,7 @@ export default class EntityResult extends Vue {
     )?.text;
   }
 
-  get entitybusinessNumber(): string | undefined {
+  get entityBusinessNumber(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "business_number" },
       this.entityCredentials?.map((cred) => {
@@ -690,14 +677,3 @@ export default class EntityResult extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
-.standing {
-  background-color: $active;
-  border: 10px solid $active;
-  color: $white;
-}
-.notStanding {
-  background-color: $historical;
-  border: 10px solid $historical;
-}
-</style>

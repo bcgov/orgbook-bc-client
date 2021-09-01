@@ -15,7 +15,7 @@ $black: #000000;
 
 $border-color: lighten($input-color, 25%);
 
-$active:rgb(46, 133, 64);
-$historical: rgb(252, 186, 25);
+$active: $success-color;
+$historical: $accent-color;
 
 // Global Vuetify Variables

@@ -3,7 +3,7 @@ import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
-import { Filter } from "@/store/modules/entity";
+import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
 
 export function isCredential(item: ICredential | IRelationship): boolean {
@@ -70,7 +70,7 @@ export function credOrRelationshipToDisplay(
 
 export function isEntityFilterActive(
   filterField: string,
-  getEntityFilters: Filter,
+  getEntityFilters: IEntityFilter,
   filterString?: string
 ): boolean {
   //filter string only applies if we're filtering array

@@ -113,12 +113,14 @@
 </template>
 
 <script lang="ts">
-import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
-import { Filter } from "@/store/modules/entity";
+import {
+  IEntityFacetField,
+  IEntityFilter,
+} from "@/interfaces/entity-filter.interface";
 import { isEntityFilterActive } from "@/utils/entity";
 
 interface Data {
@@ -152,11 +154,11 @@ export default class EntityFilterFacetPanels extends Vue {
   private getAuthorities!: Array<IEntityFacetField>;
   private getCredentialTypes!: Array<IEntityFacetField>;
   private getRegistrationTypes!: Array<IEntityFacetField>;
-  getEntityFilters!: Filter;
-  setFilter!: (filter: Filter) => void;
+  getEntityFilters!: IEntityFilter;
+  setFilter!: (filter: IEntityFilter) => void;
   isEntityFilterActive: (
     filterField: string,
-    getEntityFilters: Filter,
+    getEntityFilters: IEntityFilter,
     filterString?: string
   ) => boolean = isEntityFilterActive;
   data(): Data {

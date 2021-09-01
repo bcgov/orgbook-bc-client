@@ -31,10 +31,12 @@
 </template>
 
 <script lang="ts">
-import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
-import { Filter } from "@/store/modules/entity";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters, mapActions } from "vuex";
+import {
+  IEntityFacetField,
+  IEntityFilter,
+} from "@/interfaces/entity-filter.interface";
 import { isEntityFilterActive } from "@/utils/entity";
 
 @Component({
@@ -48,10 +50,10 @@ import { isEntityFilterActive } from "@/utils/entity";
 export default class EntityFilterFacets extends Vue {
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
-  getEntityFilters!: Filter;
+  getEntityFilters!: IEntityFilter;
   isEntityFilterActive: (
     filterField: string,
-    getEntityFilters: Filter,
+    getEntityFilters: IEntityFilter,
     filterString?: string
   ) => boolean = isEntityFilterActive;
 }
