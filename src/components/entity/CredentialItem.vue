@@ -4,17 +4,29 @@
       <slot name="header"></slot>
     </v-expansion-panel-header>
     <v-expansion-panel-content :class="dropdownDivider ? 'dropdown' : ''">
-      Authority: <a :href="authorityLink">{{ authority }}</a> <br />
-      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> Credential verified <br />
-      <span v-if="effectiveDate"
-        >Effective: {{ effectiveDate | formatDate }} <br
-      /></span>
+      <div class="text-body-2 text--secondary">
+        <div>
+          <span>Authority:&nbsp;</span>
+          <a :href="authorityLink">
+            <span>{{ authority }}</span>
+            <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
+          </a>
+        </div>
+        <div>
+          <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
+          <span class="fake-link vertical-align-middle"
+            >Credential verified</span
+          >
+        </div>
+        <div v-if="effectiveDate">
+          <span>Effective:&nbsp;</span>
+          <span>{{ effectiveDate | formatDate }}</span>
+        </div>
+      </div>
       <span v-if="reason">Reason: {{ reason }}</span>
+      <slot name="content"></slot>
     </v-expansion-panel-content>
     <v-divider></v-divider>
-    <v-container v-if="$slots.content">
-      <slot name="content"></slot>
-    </v-container>
   </v-expansion-panel>
 </template>
 
@@ -24,7 +36,7 @@ import "@/filters/date.filter";
 import { mapGetters } from "vuex";
 @Component({
   computed: {
-    ...mapGetters(["mdiShieldCheckOutline"]),
+    ...mapGetters(["mdiOpenInNew", "mdiShieldCheckOutline"]),
   },
 })
 export default class CredentialItem extends Vue {

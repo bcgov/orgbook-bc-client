@@ -23,7 +23,7 @@
     <v-row>
       <v-col
         :class="{
-          'pa-0 pt-2 pb-2': true,
+          'pa-0 pt-2 pb-4': true,
           'text-right': $vuetify.breakpoint.smAndUp,
         }"
         ><span
@@ -33,6 +33,8 @@
         ></v-col
       >
     </v-row>
+
+    <!-- Topic -->
     <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
         <CredentialItem
@@ -41,33 +43,39 @@
           :effectiveDate="entityEffectiveDate"
         >
           <template #header>
-            <h3>Registration</h3>
-          </template>
-          <template #content>
-            <p>
-              {{ entityName }} is a
-              <span class="fake-link" v-t="entityJurisdiction"></span>
-            </p>
-
-            <p>
-              Incorporation number: {{ entityIncorporationNumber }} <br />
-              Registered on: {{ entityRegistrationDate | formatDate }} <br />
-              Business name effective: {{ entityEffectiveDate | formatDate }}
-            </p>
+            <div class="text-h6 font-weight-bold">Registration</div>
           </template>
         </CredentialItem>
       </template>
+      <template #content>
+        <div class="pa-6">
+          <div class="mb-6 text-body-2">
+            <span>{{ entityName }}</span>
+            <span>&nbsp;is a&nbsp;</span>
+            <span class="fake-link" v-t="entityJurisdiction"></span>
+          </div>
+          <div class="text-body-2">
+            <div>Incorporation number: {{ entityIncorporationNumber }}</div>
+            <div>Registered on: {{ entityRegistrationDate | formatDate }}</div>
+            <div>
+              Business name effective: {{ entityEffectiveDate | formatDate }}
+            </div>
+          </div>
+        </div>
+      </template>
     </EntityCard>
+
+    <!-- Relationships related to -->
     <EntityCard
       title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
-      v-if="businessAsRelationship.length > 0"
+      v-if="businessAsRelationship && businessAsRelationship.length > 0"
     >
       <template #subtitle>
-        <v-container>
-          <p>{{ entityName }} is doing business as:</p>
-        </v-container>
+        <div class="pl-6 pr-6 mb-5 text-body-2">
+          {{ entityName }} is doing business as:
+        </div>
       </template>
       <template #expansionPanels>
         <CredentialItem
@@ -83,77 +91,60 @@
           "
         >
           <template #header>
-            <h3>
-              <span class="fake-link">{{
+            <div class="fake-link font-weight-bold">
+              {{
                 getRelationshipName(
                   businessAsRelationship[i + relationshipStartIndex]
                 )
-              }}</span>
-            </h3>
+              }}
+            </div>
           </template>
         </CredentialItem>
       </template>
       <template #footer>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <p>Items displayed</p>
-            </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="itemsDisplayed"
-                :items="[5, 10, 100]"
-                @change="relationshipStartIndex = 0"
-              ></v-select>
-            </v-col>
-            <v-col cols="2">
-              <p>
-                {{ relationshipStartIndex + 1 }} -
-                {{
-                  Math.min(
-                    Math.min(itemsDisplayed, businessAsRelationship.length) +
-                      relationshipStartIndex,
-                    businessAsRelationship.length
-                  )
-                }}
-                of {{ businessAsRelationship.length }}
-              </p>
-            </v-col>
-            <v-col cols="1"
-              ><v-icon @click="incRelationshipStartIndex(-1)">{{
-                mdiChevronLeft
-              }}</v-icon></v-col
-            >
-            <v-col cols="1"
-              ><v-icon @click="incRelationshipStartIndex(1)">{{
-                mdiChevronRight
-              }}</v-icon></v-col
-            >
-          </v-row>
-        </v-container>
+        <div class="pa-4 d-flex align-center justify-end">
+          <span class="text-body-2"
+            >Items displayed {{ relationshipStartIndex + 1 }} -
+            {{
+              Math.min(
+                Math.min(itemsDisplayed, businessAsRelationship.length) +
+                  relationshipStartIndex,
+                businessAsRelationship.length
+              )
+            }}
+            of {{ businessAsRelationship.length }}
+          </span>
+          <v-btn icon @click="incRelationshipStartIndex(-1)">
+            <v-icon>{{ mdiChevronLeft }}</v-icon>
+          </v-btn>
+          <v-btn icon @click="incRelationshipStartIndex(1)">
+            <v-icon>{{ mdiChevronRight }}</v-icon>
+          </v-btn>
+        </div>
       </template>
     </EntityCard>
 
+    <!-- Relationships related from -->
     <EntityCard
-      :expanded="credentialsExpanded"
       title="Relationships"
-      :ref="'relationships' ? businessAsRelationship.length <= 0 : ''"
-      v-if="ownedByRelationship !== undefined"
+      ref="relationships"
+      :expanded="credentialsExpanded"
+      v-if="ownedByRelationship"
     >
       <template #subtitle>
-        <v-container>{{ entityName }} is owned by:</v-container></template
-      >
+        <div class="pl-6 pr-6 mb-5 text-body-2">
+          {{ entityName }} is owned by:
+        </div>
+      </template>
       <template #expansionPanels>
         <CredentialItem
           authority="CRA"
           :effectiveDate="ownedByRelationship.credential.effective_date"
         >
           <template #header>
-            <h3>
-              <span class="fake-link">{{
-                getRelationshipName(ownedByRelationship)
-              }}</span>
-            </h3>
+            <div class="fake-link font-weight-bold">
+              {{ getRelationshipName(ownedByRelationship) }}
+            </div>
           </template>
         </CredentialItem>
       </template>

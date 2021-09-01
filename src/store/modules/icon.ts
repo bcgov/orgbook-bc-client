@@ -11,6 +11,7 @@ import {
   mdiFilterOutline,
   mdiMagnify,
   mdiMapMarker,
+  mdiOpenInNew,
   mdiShieldCheckOutline,
 } from "@mdi/js";
 
@@ -20,19 +21,20 @@ export interface State {
 
 const state: State = {
   icons: {
-    mdiAlertOutline: mdiAlertOutline,
-    mdiArrowDown: mdiArrowDown,
-    mdiArrowLeft: mdiArrowLeft,
-    mdiArrowUp: mdiArrowUp,
-    mdiCalendar: mdiCalendar,
-    mdiCheckBold: mdiCheckBold,
-    mdiChevronLeft: mdiChevronLeft,
-    mdiChevronRight: mdiChevronRight,
-    mdiClose: mdiClose,
-    mdiFilterOutline: mdiFilterOutline,
-    mdiMagnify: mdiMagnify,
-    mdiMapMarker: mdiMapMarker,
-    mdiShieldCheckOutline: mdiShieldCheckOutline,
+    mdiAlertOutline,
+    mdiArrowDown,
+    mdiArrowLeft,
+    mdiArrowUp,
+    mdiCalendar,
+    mdiCheckBold,
+    mdiChevronLeft,
+    mdiChevronRight,
+    mdiClose,
+    mdiFilterOutline,
+    mdiMagnify,
+    mdiMapMarker,
+    mdiOpenInNew,
+    mdiShieldCheckOutline,
   },
 };
 
