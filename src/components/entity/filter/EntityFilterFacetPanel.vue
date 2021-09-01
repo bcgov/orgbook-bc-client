@@ -6,10 +6,10 @@
     <v-expansion-panel-content>
       <EntityFilterFacets :filterField="filterField" :fields="fields" />
       <template v-if="more.length">
-        <a
-          class="flex-row flex-align-items-center justify-center"
+        <span
+          class="flex-row flex-align-items-center justify-center fake-link"
           @click="show = !show"
-          ><span v-if="show">Show less</span><span v-else>Show more</span></a
+          ><span v-if="show">Show less</span><span v-else>Show more</span></span
         >
         <EntityFilterFacets v-if="show" :fields="more" />
       </template>

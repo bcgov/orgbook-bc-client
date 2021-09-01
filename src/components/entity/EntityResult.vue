@@ -24,12 +24,12 @@
     <v-divider></v-divider>
     <v-row>
       <v-col :class="{'text-right':$vuetify.breakpoint.smAndUp}"
-        ><a @click="toggleCredentialsExpanded"
-          >Show all Credential statuses</a
+        ><span class="fake-link" @click="toggleCredentialsExpanded"
+          >Show all Credential statuses</span
         ></v-col
       >
     </v-row>
-    <EntityCard ref="registration">
+    <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
         <CredentialItem
           :authority="entityRegistrationIssuer"
@@ -56,6 +56,7 @@
     <EntityCard
       title="Relationships"
       ref="relationships"
+      :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
       <template #subtitle>
@@ -78,11 +79,11 @@
         >
           <template #header>
             <h3>
-              <a>{{
+              <span class="fake-link">{{
                 getRelationshipName(
                   businessAsRelationship[i + relationshipStartIndex]
                 )
-              }}</a>
+              }}</span>
             </h3>
           </template>
         </CredentialItem>
@@ -129,6 +130,7 @@
     </EntityCard>
 
     <EntityCard
+    :expanded="credentialsExpanded"
       title="Relationships"
       :ref="'relationships' ? businessAsRelationship.length <= 0 : ''"
       v-if="ownedByRelationship !== undefined"
@@ -143,7 +145,7 @@
         >
           <template #header>
             <h3>
-              <a>{{ getRelationshipName(ownedByRelationship) }}</a>
+              <span class="fake-link">{{ getRelationshipName(ownedByRelationship) }}</span>
             </h3>
           </template>
         </CredentialItem>
@@ -151,7 +153,7 @@
     </EntityCard>
 
     <!-- enitity card credential holder -->
-    <EntityCard title="Credentials" ref="credentials">
+    <EntityCard :expanded="credentialsExpanded" title="Credentials" ref="credentials">
       <template>
         <v-container>
           <!-- header content for the credential card -->
@@ -164,7 +166,7 @@
 
             <v-col class="pl-0 pr-0">
               <div class="text-body-2 float-right">
-                <a @click="switchCredentialTimeOrder">Sort by date</a>
+                <span class="fake-link" @click="switchCredentialTimeOrder">Sort by date</span>
                 <v-icon v-if="credentialTimeOrder === 1">{{
                   mdiArrowUp
                 }}</v-icon>
@@ -196,7 +198,7 @@
               >
                 <v-container>
                   {{ cred.date_effective | formatDate }}
-                  <EntityCard class="pl-0">
+                  <EntityCard :expanded="credentialsExpanded" class="pl-0">
                     <template #expansionPanels>
                       <CredentialItem
                         :authority="cred.authority"
@@ -279,6 +281,7 @@ interface Data {
   };
   itemsDisplayed: number;
   relationshipStartIndex: number;
+  credentialsExpanded: boolean;
 }
 
 @Component({
@@ -313,7 +316,6 @@ interface Data {
       "setCredentialType",
       "setRegistrationType",
       "setIssuers",
-      "toggleCredentialsExpanded",
       "fetchRelationships",
     ]),
   },
@@ -321,7 +323,6 @@ interface Data {
 export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
-  toggleCredentialsExpanded!: () => void;
   setIssuers!: (creds: ICredentialDisplayType[]) => void;
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
@@ -343,6 +344,7 @@ export default class EntityResult extends Vue {
   relationshipStartIndex!: number;
   itemsDisplayed!: number;
   loading!: boolean;
+  credentialsExpanded!: boolean;
 
   entityTest!: State;
 
@@ -356,6 +358,7 @@ export default class EntityResult extends Vue {
       },
       itemsDisplayed: 100,
       relationshipStartIndex: 0,
+      credentialsExpanded:false,
     };
   }
 
@@ -368,6 +371,10 @@ export default class EntityResult extends Vue {
       this.setRegistrationType(this.entityCredentials);
       this.setIssuers(this.entityCredentials);
     }
+  }
+
+  toggleCredentialsExpanded():void{
+    this.credentialsExpanded = !this.credentialsExpanded
   }
   // Credential Filters
 
@@ -669,14 +676,14 @@ export default class EntityResult extends Vue {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .standing {
-  background-color: rgb(46, 133, 64);
-  border: 10px solid rgb(46, 133, 64);
-  color: white;
+  background-color: $active;
+  border: 10px solid $active;
+  color: $white;
 }
 .notStanding {
-  background-color: rgb(252, 186, 25);
-  border: 10px solid rgb(252, 186, 25);
+  background-color: $historical;
+  border: 10px solid $historical;
 }
 </style>

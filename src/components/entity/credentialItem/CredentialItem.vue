@@ -21,7 +21,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import "@/utils/dateFilter";
-import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import { mapGetters } from "vuex";
 @Component({
   computed: {
@@ -32,14 +31,13 @@ export default class CredentialItem extends Vue {
   @Prop({ default: "" }) authority!: string;
   @Prop({ default: "" }) authorityLink!: string;
   @Prop({ default: "" }) effectiveDate!: string;
-  @Prop({ default: false }) expanded!: boolean;
   @Prop({ default: false }) expired!: boolean;
   @Prop({ default: false }) dropdownDivider!: boolean;
   @Prop({ default: "" }) reason!: string;
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .dropdown {
   background-color: lightgray;
 }

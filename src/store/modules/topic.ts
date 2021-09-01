@@ -4,7 +4,6 @@ import { ITopic } from "@/interfaces/api/v2/topic.interface";
 import Topic from "@/services/api/v2/topic.service";
 import V4Topic from "@/services/api/v4/topic.service";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
-import { ICredential } from "@/interfaces/api/v4/credential.interface";
 
 const topicService = new Topic();
 const v4topicService = new V4Topic();

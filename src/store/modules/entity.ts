@@ -12,7 +12,6 @@ export type Filter = { [key: string]: string | Array<string> | boolean };
 const relationshipService = new Relationship();
 
 export interface State {
-  credentialsExpanded: boolean;
   relationships: Relationship[];
   selected: {
     topic: ITopic | null;
@@ -28,7 +27,6 @@ export interface State {
 }
 
 const state: State = {
-  credentialsExpanded: false,
   relationships: [],
   selected: {
     topic: null,
@@ -44,7 +42,6 @@ const state: State = {
 
 const getters = {
   entityTest:(state:State):State=>state,
-  getCredentialsExpanded: (state: State): boolean => state.credentialsExpanded,
   getRelationships: (state: State): Relationship[] => state.relationships,
   getAuthorities: (state: State): Array<IEntityFacetField> => state.filterValues.authorities,
   getCredentialTypes: (state: State): Array<IEntityFacetField> =>
@@ -68,9 +65,6 @@ const getters = {
 };
 
 const actions = {
-  toggleCredentialsExpanded({ commit }: ActionContext<State, RootState>): void {
-    commit("toggleCredentialsExpanded");
-  },
 
   async fetchRelationships(
     { commit }: ActionContext<State, RootState>,
@@ -189,9 +183,6 @@ const actions = {
 };
 
 const mutations = {
-  toggleCredentialsExpanded: (state: State): void => {
-    state.credentialsExpanded = !state.credentialsExpanded;
-  },
   setRelationships: (state: State, relationships: Relationship[]): void => {
     state.relationships = relationships;
   },

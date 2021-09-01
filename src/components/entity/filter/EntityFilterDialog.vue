@@ -6,10 +6,11 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on, attrs }">
-      <a
+      <span
         @click="dialog = true"
         :class="{ disabled: loading }"
         :aria-disabled="loading"
+        class="fake-link"
       >
         <v-icon
           dense
@@ -19,7 +20,7 @@
           >{{ mdiFilterOutline }}</v-icon
         >
         Filters
-      </a>
+      </span>
     </template>
     <v-card>
       <v-toolbar flat color="white">
@@ -62,10 +63,10 @@ export default class EntityFilterDialog extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .disabled {
   pointer-events: none;
-  color: gray;
+  color: $gray;
 }
 .filter-dialog {
   padding-bottom: 3rem;
@@ -74,6 +75,6 @@ export default class EntityFilterDialog extends Vue {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: white;
+  background: $white;
 }
 </style>
