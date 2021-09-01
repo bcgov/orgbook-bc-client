@@ -191,7 +191,7 @@
             <v-timeline dense class="on-bottom">
               <!-- creates a timeline item for each credential in the entity -->
               <v-timeline-item
-                color="#38598A"
+                class="timelineItem"
                 small
                 v-for="(cred, i) in filteredEntityCredentials"
                 :key="i"
@@ -259,8 +259,8 @@ import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
-import { selectFirstAttrItem } from "@/utils/attributeFilter";
-import "@/utils/dateFilter";
+import { selectFirstAttrItem } from "@/utils/attribute-filter";
+import "@/utils/date-filter";
 import moment from "moment";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
@@ -685,5 +685,8 @@ export default class EntityResult extends Vue {
 .notStanding {
   background-color: $historical;
   border: 10px solid $historical;
+}
+.timelineItem{
+  color: $secondary-color;
 }
 </style>

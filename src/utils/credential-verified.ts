@@ -3,28 +3,11 @@ import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
-import { Filter } from "@/store/modules/entity";
 import { selectFirstAttrItem } from "./attribute-filter";
+import { getRelationshipName, isCredential } from "./entity";
 
-export function isCredential(item: ICredential | IRelationship): boolean {
-  return (item as any)?.credential_type !== undefined;
-}
 
-export function getRelationshipName(relationship: IRelationship): string {
-  let ret = "";
-  const relNameLength = relationship?.related_topic?.names?.length;
-  if (relNameLength === undefined || relNameLength <= 0) {
-    ret = relationship?.related_topic?.source_id;
-  } else {
-    ret = selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      relationship?.related_topic.names
-    )?.text as string;
-  }
-  return ret;
-}
-
-export function credOrRelationshipToDisplay(
+export function credOrRelationshipToCredView(
   item: ICredential | IRelationship
 ): ICredentialDisplayType {
   const display: ICredentialDisplayType = {
@@ -68,26 +51,3 @@ export function credOrRelationshipToDisplay(
   return display;
 }
 
-
-export function isEntityFilterActive(
-  filterField: string,
-  getEntityFilters: Filter,
-  filterString?: string
-): boolean {
-  //filter string only applies if we're filtering array
-  const filterList = getEntityFilters[filterField];
-  let retval = false;
-  if (typeof filterList === "boolean") {
-    retval = filterList;
-  } else if (typeof filterList === "string") {
-    retval = filterList !== "";
-  } else if (filterString) {
-    retval = filterList.includes(filterString);
-  }
-
-  return retval;
-}
-
-export function isRegType(cred: ICredentialDisplayType): boolean {
-  return cred.credential_type === "registration.registries.ca";
-}

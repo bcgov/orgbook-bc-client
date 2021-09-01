@@ -5,7 +5,7 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content :class="dropdownDivider ? 'dropdown' : ''">
       Authority: <a :href="authorityLink">{{ authority }}</a> <br />
-      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> Credential verified <br />
+      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> <router-link to="/credential">Credential verified</router-link> <br />
       <span v-if="effectiveDate"
         >Effective: {{ effectiveDate | formatDate }} <br
       /></span>
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import "@/utils/dateFilter";
+import "@/utils/date-filter";
 import { mapGetters } from "vuex";
 @Component({
   computed: {

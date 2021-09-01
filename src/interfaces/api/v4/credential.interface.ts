@@ -43,3 +43,17 @@ export interface ICredentialDisplayType {
   value: string | number;
   relationship_types?: string[];
 }
+
+export interface ICredentialDetailView {
+  effective_date:Date;
+  entity_name:string;
+  assumed_entity_name?:string;
+  assumed_entity_name_effective?:Date;
+  entity_name_effective?:Date;
+  entity_name_trans?:string;
+  entity_status:string;
+  entity_status_effective:string;
+  entity_type:string;
+  expiry_date?:string;
+  extra_jur_registration?:string;
+}

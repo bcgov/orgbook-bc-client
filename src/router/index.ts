@@ -10,11 +10,18 @@ const routes: Array<RouteConfig> = [
     name: "Search",
     component: Search,
   },
+
   {
     path: "/entity/:sourceId",
     name: "Entity",
     component: () =>
       import(/* webpackChunkName: "entity" */ "@/views/Entity.vue"),
+  },
+  {
+    path: "/credential",
+    name: "Credential Detail",
+    component: () =>
+      import(/* webpackChunkName: "credential" */ "@/views/CredentialView.vue"),
   },
   {
     path: "/about",
