@@ -6,19 +6,29 @@
       :businessNumber="entityBusinessNumber"
       :jurisdiction="entityJurisdiction"
       :state="entityState"
+      class="mb-2"
     />
-    <v-tabs v-model="currentTab">
+    <v-tabs v-model="currentTab" slider-size="5px">
       <v-tab
         v-for="(item, i) in tabItems"
         :key="i"
+        :ripple="false"
+        active-class="tab-active"
         @click="tabClick(item.refname)"
+        class="text-capitalize"
         >{{ item.text }}</v-tab
       >
     </v-tabs>
     <v-divider></v-divider>
     <v-row>
-      <v-col :class="{ 'text-right': $vuetify.breakpoint.smAndUp }"
-        ><span class="fake-link" @click="toggleCredentialsExpanded"
+      <v-col
+        :class="{
+          'pa-0 pt-2 pb-2': true,
+          'text-right': $vuetify.breakpoint.smAndUp,
+        }"
+        ><span
+          class="text-body-2 show-all-statuses"
+          @click="toggleCredentialsExpanded"
           >Show all Credential statuses</span
         ></v-col
       >
@@ -677,3 +687,14 @@ export default class EntityResult extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.show-all-statuses {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $input-color;
+}
+.tab-active {
+  border-bottom: 5px solid $secondary-color;
+}
+</style>
