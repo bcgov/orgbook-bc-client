@@ -38,6 +38,14 @@ export default class Topic extends ApiResource {
     );
   }
 
+  async getTopicFullCredentialSet(
+    id: number
+  ): Promise<HttpResponse<ICredentialSet>> {
+    return await Http.get<ICredentialSet>(
+      this.formatEndpointUrl(`${id}/credential`)
+    );
+  }
+
   async getFormattedIdentifiedTopic(
     sourceId: string,
     type: string

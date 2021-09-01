@@ -1,10 +1,7 @@
 <template>
-  <div>
-    <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
-      <h1>Entity goes here!</h1>
-      <EntityResult />
-    </v-container>
-  </div>
+  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+    <EntityResult />
+  </v-container>
 </template>
 
 <script lang="ts">

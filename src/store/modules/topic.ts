@@ -2,9 +2,11 @@ import { ActionContext } from "vuex";
 import { State as RootState } from "@/store";
 import { ITopic } from "@/interfaces/api/v2/topic.interface";
 import Topic from "@/services/api/v2/topic.service";
+import V4Topic from "@/services/api/v4/topic.service";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 
 const topicService = new Topic();
+const v4topicService = new V4Topic();
 
 export interface State {
   selected: {
@@ -23,6 +25,8 @@ const state: State = {
 const getters = {
   selectedTopic: (state: State): ITopic | null => state?.selected?.topic,
   selectedTopicCredentialSet: (state: State): ICredentialSet | null =>
+    state?.selected?.credentialSet,
+  selectedTopicFullCredentialSet: (state: State): ICredentialSet | null =>
     state?.selected?.credentialSet,
 };
 
@@ -48,6 +52,19 @@ const actions = {
   ): Promise<void> {
     try {
       const res = await topicService.getTopicCredentialSet(id);
+      commit("setSelectedCredentialSet", res.data);
+    } catch (e) {
+      console.error(e);
+      commit("setSelectedCredentialSet", null);
+    }
+  },
+
+  async fetchTopicFullCredentialSet(
+    { commit }: ActionContext<State, RootState>,
+    id: number
+  ): Promise<void> {
+    try {
+      const res = await v4topicService.getTopicCredentialSet(id);
       commit("setSelectedCredentialSet", res.data);
     } catch (e) {
       console.error(e);
