@@ -13,7 +13,6 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/i18n/**/*.json\""
   },
   "dependencies": {
-    "@bcgov/bc-sans": "^1.0.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "lodash-es": "^4.17.21",

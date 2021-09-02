@@ -73,6 +73,7 @@ interface Data {
   },
 })
 export default class SearchBar extends Vue {
+  loading!: boolean;
   index!: number;
   items!: Array<string>;
   search!: string;
@@ -119,7 +120,7 @@ export default class SearchBar extends Vue {
   }
 
   autocompleteSearch(val: string): void {
-    if (!val) {
+    if (!val || this.loading) {
       return;
     }
     this.resetAutocomplete();
