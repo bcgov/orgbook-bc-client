@@ -126,7 +126,7 @@
                       class="checkbox"
                     ></v-simple-checkbox>
                   </v-list-item-action>
-                  <v-list-item-content class="pt-0 pb-1">
+                  <v-list-item-content class="pt-1 pb-1">
                     <div>Show Expired</div>
                   </v-list-item-content>
                 </template>

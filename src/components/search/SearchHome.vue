@@ -32,7 +32,7 @@
         md="5"
         class="pl-0 pr-0"
       >
-        <img src="@/assets/img/graphic.png" alt="" srcset="" />
+        <img src="@/assets/img/graphic.png" alt="" srcset="" height="300px" />
       </v-col>
     </v-row>
     <ShowcaseLinks v-if="showcaseLinks.length" class="ml-n2 mr-n2" />
@@ -82,6 +82,7 @@ ul.description {
 #searchHomeGrapic {
   img {
     width: 100%;
+    object-fit: contain;
   }
 }
 </style>
