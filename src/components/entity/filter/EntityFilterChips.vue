@@ -15,16 +15,16 @@
           })
         "
       >
-      <span v-t="field.filterString"></span>
+        <span v-t="field.filterString"></span>
       </v-chip>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
-import { Filter } from "@/store/modules/entity";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
 export interface EntityChips {
   filterString: string | boolean;
@@ -40,7 +40,7 @@ export interface EntityChips {
   },
 })
 export default class EntityFilterChips extends Vue {
-  getEntityFilters!: Filter;
+  getEntityFilters!: IEntityFilter;
 
   get activeEntityFilters(): EntityChips[] {
     var chips: EntityChips[] = [];

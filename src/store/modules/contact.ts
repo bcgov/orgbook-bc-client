@@ -1,6 +1,10 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Contact from "@/services/api/v2/contact.service";
+import {
+  IContactRequest,
+  IIncorrectInfoContactRequest,
+} from "@/interfaces/api/v2/contact.interface";
 
 const contactService = new Contact();
 
@@ -11,19 +15,6 @@ export const contactReason: { [key: string]: string } = {
   API_INFO: "I want more information about APIs",
   OTHER: "Other",
 };
-
-export interface ContactRequest {
-  reason: string;
-  from_name: string;
-  from_email: string;
-  comments: string;
-}
-
-export interface IncorrectInfoContactRequest extends ContactRequest {
-  reason: string;
-  error: string;
-  identifier: string;
-}
 
 export interface State {
   requestTypes: Array<string>;
@@ -40,7 +31,7 @@ const getters = {
 const actions = {
   async sendFeedback(
     _: ActionContext<State, RootState>,
-    feedback: ContactRequest | IncorrectInfoContactRequest
+    feedback: IContactRequest | IIncorrectInfoContactRequest
   ): Promise<void> {
     await contactService.postFeedback(feedback);
   },

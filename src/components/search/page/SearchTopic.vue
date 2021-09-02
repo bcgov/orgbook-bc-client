@@ -73,8 +73,7 @@ export default class SearchTopic extends Vue {
 
 <style lang="scss" scoped>
 .card {
-  border: 1px solid $border-color !important;
-  box-shadow: 3px 3px 6px -3px $border-color !important;
+  @include card-raised;
 
   &:hover {
     padding: 0px;

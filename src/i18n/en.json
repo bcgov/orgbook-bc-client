@@ -53,6 +53,5 @@
   "entity_status": {
     "ACT": "Active",
     "HIS": "Historical"
-  },
-  "Show_expired":"Show expired"
+  }
 }

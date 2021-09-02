@@ -13,13 +13,14 @@
         class="fake-link"
       >
         <v-icon
+          class="icon-dense"
           dense
           v-bind="attrs"
           v-on="on"
           :color="loading ? 'gray' : 'black'"
           >{{ mdiFilterOutline }}</v-icon
         >
-        Filters
+        <span :class="{ 'fake-link text-body-2': true }">Filters</span>
       </span>
     </template>
     <v-card>

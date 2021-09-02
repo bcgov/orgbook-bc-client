@@ -3,3 +3,5 @@ export interface IEntityFacetField {
   count?: number;
   text: string;
 }
+
+export type IEntityFilter = Record<string, string | Array<string> | boolean>;

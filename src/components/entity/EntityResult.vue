@@ -1,34 +1,40 @@
 <template>
   <div>
-    <v-icon>{{ mdiArrowLeft }}</v-icon
-    ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
-    <h3>{{ entityName }}</h3>
-      <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''"> Business number: {{ entitybusinessNumber }} </p>
-      <p><span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span></p>
-    <p>
-      <span
-        v-if="!loading"
-        :class="entityState === 'entity_status.ACT' ? 'standing' : 'notStanding'"
-        ><span v-if="entityState !== 'entity_status.ACT'">NOT</span> IN GOOD STANDING</span
-      >
-    </p>
-
-    <v-tabs v-model="currentTab">
+    <BackToSearch />
+    <EntityHeader
+      :name="entityName"
+      :businessNumber="entityBusinessNumber"
+      :jurisdiction="entityJurisdiction"
+      :state="entityState"
+      class="mb-2"
+    />
+    <v-tabs v-model="currentTab" slider-size="5px">
       <v-tab
         v-for="(item, i) in tabItems"
         :key="i"
+        :ripple="false"
+        active-class="tab-active"
         @click="tabClick(item.refname)"
+        class="text-capitalize"
         >{{ item.text }}</v-tab
       >
     </v-tabs>
     <v-divider></v-divider>
     <v-row>
-      <v-col :class="{'text-right':$vuetify.breakpoint.smAndUp}"
-        ><span class="fake-link" @click="toggleCredentialsExpanded"
+      <v-col
+        :class="{
+          'pa-0 pt-2 pb-4': true,
+          'text-right': $vuetify.breakpoint.smAndUp,
+        }"
+        ><span
+          class="text-body-2 show-all-statuses vertical-align-middle"
+          @click="toggleCredentialsExpanded"
           >Show all Credential statuses</span
         ></v-col
       >
     </v-row>
+
+    <!-- Topic -->
     <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
         <CredentialItem
@@ -37,32 +43,39 @@
           :effectiveDate="entityEffectiveDate"
         >
           <template #header>
-            <h3>Registration</h3>
-          </template>
-          <template #content>
-            <p>
-              {{ entityName }} is a <span class="fake-link" v-t="entityJurisdiction"></span>
-            </p>
-
-            <p>
-              Incorporation number: {{ entityIncorporationNumber }} <br />
-              Registered on: {{ entityRegistrationDate | formatDate }} <br />
-              Business name effective: {{ entityEffectiveDate | formatDate }}
-            </p>
+            <div class="text-h6 font-weight-bold">Registration</div>
           </template>
         </CredentialItem>
       </template>
+      <template #content>
+        <div class="pa-5">
+          <div class="mb-6 text-body-2">
+            <span>{{ entityName }}</span>
+            <span>&nbsp;is a&nbsp;</span>
+            <span class="fake-link" v-t="entityJurisdiction"></span>
+          </div>
+          <div class="text-body-2">
+            <div>Incorporation number: {{ entityIncorporationNumber }}</div>
+            <div>Registered on: {{ entityRegistrationDate | formatDate }}</div>
+            <div>
+              Business name effective: {{ entityEffectiveDate | formatDate }}
+            </div>
+          </div>
+        </div>
+      </template>
     </EntityCard>
+
+    <!-- Relationships related to -->
     <EntityCard
       title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
-      v-if="businessAsRelationship.length > 0"
+      v-if="businessAsRelationship && businessAsRelationship.length > 0"
     >
       <template #subtitle>
-        <v-container>
-          <p>{{ entityName }} is doing business as:</p>
-        </v-container>
+        <div class="pl-5 pr-5 mb-5 text-body-2">
+          {{ entityName }} is doing business as:
+        </div>
       </template>
       <template #expansionPanels>
         <CredentialItem
@@ -78,127 +91,125 @@
           "
         >
           <template #header>
-            <h3>
-              <span class="fake-link">{{
+            <div class="fake-link font-weight-bold">
+              {{
                 getRelationshipName(
                   businessAsRelationship[i + relationshipStartIndex]
                 )
-              }}</span>
-            </h3>
+              }}
+            </div>
           </template>
         </CredentialItem>
       </template>
       <template #footer>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <p>Items displayed</p>
-            </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="itemsDisplayed"
-                :items="[5, 10, 100]"
-                @change="relationshipStartIndex = 0"
-              ></v-select>
-            </v-col>
-            <v-col cols="2">
-              <p>
-                {{ relationshipStartIndex + 1 }} -
-                {{
-                  Math.min(
-                    Math.min(itemsDisplayed, businessAsRelationship.length) +
-                      relationshipStartIndex,
-                    businessAsRelationship.length
-                  )
-                }}
-                of {{ businessAsRelationship.length }}
-              </p>
-            </v-col>
-            <v-col cols="1"
-              ><v-icon @click="incRelationshipStartIndex(-1)">{{
-                mdiChevronLeft
-              }}</v-icon></v-col
-            >
-            <v-col cols="1"
-              ><v-icon @click="incRelationshipStartIndex(1)">{{
-                mdiChevronRight
-              }}</v-icon></v-col
-            >
-          </v-row>
-        </v-container>
+        <div class="pa-5 d-flex align-center justify-end">
+          <span class="text-body-2"
+            >Items displayed {{ relationshipStartIndex + 1 }} -
+            {{
+              Math.min(
+                Math.min(itemsDisplayed, businessAsRelationship.length) +
+                  relationshipStartIndex,
+                businessAsRelationship.length
+              )
+            }}
+            of {{ businessAsRelationship.length }}
+          </span>
+          <v-btn icon @click="incRelationshipStartIndex(-1)">
+            <v-icon>{{ mdiChevronLeft }}</v-icon>
+          </v-btn>
+          <v-btn icon @click="incRelationshipStartIndex(1)">
+            <v-icon>{{ mdiChevronRight }}</v-icon>
+          </v-btn>
+        </div>
       </template>
     </EntityCard>
 
+    <!-- Relationships related from -->
     <EntityCard
-    :expanded="credentialsExpanded"
       title="Relationships"
-      :ref="'relationships' ? businessAsRelationship.length <= 0 : ''"
-      v-if="ownedByRelationship !== undefined"
+      ref="relationships"
+      :expanded="credentialsExpanded"
+      v-if="ownedByRelationship"
     >
       <template #subtitle>
-        <v-container>{{ entityName }} is owned by:</v-container></template
-      >
+        <div class="pl-5 pr-5 mb-5 text-body-2">
+          {{ entityName }} is owned by:
+        </div>
+      </template>
       <template #expansionPanels>
         <CredentialItem
           authority="CRA"
           :effectiveDate="ownedByRelationship.credential.effective_date"
         >
           <template #header>
-            <h3>
-              <span class="fake-link">{{ getRelationshipName(ownedByRelationship) }}</span>
-            </h3>
+            <div class="fake-link font-weight-bold">
+              {{ getRelationshipName(ownedByRelationship) }}
+            </div>
           </template>
         </CredentialItem>
       </template>
     </EntityCard>
 
     <!-- enitity card credential holder -->
-    <EntityCard :expanded="credentialsExpanded" title="Credentials" ref="credentials">
+    <EntityCard
+      :expanded="credentialsExpanded"
+      title="Credentials"
+      ref="credentials"
+    >
       <template>
-        <v-container>
-          <!-- header content for the credential card -->
-          <v-row>
-            <v-col v-if="$vuetify.breakpoint.smAndDown" class="pl-0 pr-0">
-              <div class="flex-row flex-align-items-center">
-                <EntityFilterDialog />
-              </div>
-            </v-col>
-
-            <v-col class="pl-0 pr-0">
-              <div class="text-body-2 float-right">
-                <span class="fake-link" @click="switchCredentialTimeOrder">Sort by date</span>
-                <v-icon v-if="credentialTimeOrder === 1">{{
-                  mdiArrowUp
-                }}</v-icon>
-                <v-icon v-else>{{ mdiArrowDown }}</v-icon>
-              </div>
-            </v-col>
-          </v-row>
-          <EntityFilterChips />
-        </v-container>
-        <!-- body of the credential card -->
+        <!-- header content for the credential card -->
+        <v-row>
+          <v-col
+            class="d-flex justify-start align-end pl-5 pt-0"
+            v-if="$vuetify.breakpoint.smAndDown"
+          >
+            <EntityFilterDialog />
+          </v-col>
+          <v-col class="d-flex justify-end align-end pr-5 pt-0">
+            <div class="text-body-2">
+              <span class="fake-link" @click="switchCredentialTimeOrder"
+                >Sort by date</span
+              >
+              <v-icon
+                class="icon-dense"
+                dense
+                v-if="credentialTimeOrder === 1"
+                >{{ mdiArrowUp }}</v-icon
+              >
+              <v-icon class="icon-dense" dense v-else>{{
+                mdiArrowDown
+              }}</v-icon>
+            </div>
+          </v-col>
+        </v-row>
+        <!-- body content of the credential card -->
         <v-row>
           <v-col
             v-if="$vuetify.breakpoint.mdAndUp"
             cols="12"
-            md="5"
-            class="pa-0 elevation-2"
+            md="4"
+            class="pa-0"
           >
             <EntityFilterFacetPanels />
           </v-col>
-
-          <v-col cols="12" md="7">
-            <v-timeline dense class="on-bottom">
-              <!-- creates a timeline item for each credential in the entity -->
+          <v-col cols="12" md="8" class="pa-5 pl-3 pt-0">
+            <EntityFilterChips class="pb-2" />
+            <v-timeline dense align-top class="pa-0">
               <v-timeline-item
-                color="#38598A"
-                small
                 v-for="(cred, i) in filteredEntityCredentials"
                 :key="i"
+                color="#38598A"
+                small
               >
-                <v-container>
-                  {{ cred.date_effective | formatDate }}
-                  <EntityCard :expanded="credentialsExpanded" class="pl-0">
+                <div class="pl-3 mt-n3">
+                  <div class="text-body-2 font-weight-bold mb-2">
+                    {{ cred.date_effective | formatDate }}
+                  </div>
+                  <EntityCard
+                    :expanded="credentialsExpanded"
+                    :timeline="true"
+                    class="pl-0 timeline-cred"
+                  >
                     <template #expansionPanels>
                       <CredentialItem
                         :authority="cred.authority"
@@ -208,35 +219,25 @@
                             ? cred.registration_reason
                             : ''
                         "
-                        :dropdownDivider="true"
+                        :timeline="true"
                       >
                         <template #header>
-                          <v-row>
-                            <v-col v-if="cred.revoked">
-                              <span style="color: red">
-                                Expired {{ cred.revoked_date | formatDate }}
-                              </span>
-                            </v-col>
-                            <v-responsive width="100%"> </v-responsive>
-
-                            <v-col>
-                              <h3>
-                                {{ entityTypeToName[cred.type] }}
-                              </h3>
-                            </v-col>
-                            <v-responsive width="100%"> </v-responsive>
-
-                            <v-col>
-                              <p>
-                                {{ cred.value }}
-                              </p>
-                            </v-col>
-                          </v-row>
+                          <div class="text-body-2 timeline-cred-header">
+                            <div v-if="cred.revoked" class="expired-credential">
+                              Expired: {{ cred.revoked_date | formatDate }}
+                            </div>
+                            <div v-if="cred.type" class="font-weight-bold">
+                              {{ entityTypeToName[cred.type] }}
+                            </div>
+                            <div v-if="cred.value">
+                              {{ cred.value }}
+                            </div>
+                          </div>
                         </template>
                       </CredentialItem>
                     </template>
                   </EntityCard>
-                </v-container>
+                </div>
               </v-timeline-item>
             </v-timeline>
           </v-col>
@@ -247,30 +248,30 @@
 </template>
 
 <script lang="ts">
-import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
-import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
-import EntityCard from "@/components/entity/entityCard/EntityCard.vue";
-import CredentialItem from "@/components/entity/credentialItem/CredentialItem.vue";
-import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
-import { selectFirstAttrItem } from "@/utils/attributeFilter";
-import "@/utils/dateFilter";
-import moment from "moment";
-import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
-import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
-import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import { Filter } from "@/store/modules/entity";
+import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
+import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
+import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
+import { selectFirstAttrItem } from "@/utils/attribute";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
 } from "@/utils/entity";
-import { State } from "@/store/modules/app";
+import BackToSearch from "@/components/shared/BackToSearch.vue";
+import CredentialItem from "@/components/entity/CredentialItem.vue";
+import EntityCard from "@/components/entity/EntityCard.vue";
+import EntityHeader from "@/components/entity/EntityHeader.vue";
+import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
+import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
+import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
+import moment from "moment";
+import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
 interface Data {
   currentTab: string;
@@ -286,8 +287,10 @@ interface Data {
 
 @Component({
   components: {
-    EntityCard,
+    BackToSearch,
     CredentialItem,
+    EntityCard,
+    EntityHeader,
     EntityFilterChips,
     EntityFilterFacetPanels,
     EntityFilterDialog,
@@ -335,18 +338,26 @@ export default class EntityResult extends Vue {
     type: string;
   }) => Promise<void>;
   fetchTopicFullCredentialSet!: (id: number) => Promise<void>;
-  getRelationshipName = getRelationshipName;
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
-  getEntityFilters!: Filter;
+  getEntityFilters!: IEntityFilter;
   getRelationships!: IRelationship[];
   relationshipStartIndex!: number;
   itemsDisplayed!: number;
   loading!: boolean;
   credentialsExpanded!: boolean;
 
-  entityTest!: State;
+  credentialFilters: {
+    (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
+  }[] = [
+    this.applyDateFilter,
+    this.applyExpiredFilter,
+    this.applyCredentialTypeFilter,
+    this.applyIssuerFilter,
+    this.applyRegistrationTypeFilter,
+  ];
+  getRelationshipName = getRelationshipName;
 
   data(): Data {
     return {
@@ -358,7 +369,7 @@ export default class EntityResult extends Vue {
       },
       itemsDisplayed: 100,
       relationshipStartIndex: 0,
-      credentialsExpanded:false,
+      credentialsExpanded: false,
     };
   }
 
@@ -373,28 +384,17 @@ export default class EntityResult extends Vue {
     }
   }
 
-  toggleCredentialsExpanded():void{
-    this.credentialsExpanded = !this.credentialsExpanded
+  toggleCredentialsExpanded(): void {
+    this.credentialsExpanded = !this.credentialsExpanded;
   }
-  // Credential Filters
-
-  credentialFilters: {
-    (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
-  }[] = [
-    this.applyDateFilter,
-    this.applyExpiredFilter,
-    this.applyCredentialTypeFilter,
-    this.applyIssuerFilter,
-    this.applyRegistrationTypeFilter,
-  ];
 
   private applyIssuerFilter(creds: Array<ICredentialDisplayType>) {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Authorities as string[]).length <= 0) {
+    if ((this.getEntityFilters.authorities as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.Authorities as string[]).includes(cred.authority)
+      (this.getEntityFilters.authorities as string[]).includes(cred.authority)
     );
   }
 
@@ -402,11 +402,11 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Credential_type as string[]).length <= 0) {
+    if ((this.getEntityFilters.credential_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.Credential_type as string[]).includes(
+      (this.getEntityFilters.credential_type as string[]).includes(
         cred.credential_type
       )
     );
@@ -416,13 +416,13 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Registration_type as string[]).length <= 0) {
+    if ((this.getEntityFilters.registration_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter(
       (cred) =>
         cred.registration_reason !== undefined &&
-        (this.getEntityFilters.Registration_type as string[]).includes(
+        (this.getEntityFilters.registration_type as string[]).includes(
           cred.registration_reason
         )
     );
@@ -433,18 +433,18 @@ export default class EntityResult extends Vue {
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
 
-    if (this.getEntityFilters.Date_min !== "") {
+    if (this.getEntityFilters.date_min !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
         //take the negative condition so we don't have to do another check with isSame
-        return !moment(this.getEntityFilters.Date_min as string).isAfter(
+        return !moment(this.getEntityFilters.date_min as string).isAfter(
           cred.date_effective
         );
       });
     }
 
-    if (this.getEntityFilters.Date_max !== "") {
+    if (this.getEntityFilters.date_max !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
-        return !moment(this.getEntityFilters.Date_max as string).isBefore(
+        return !moment(this.getEntityFilters.date_max as string).isBefore(
           cred.date_effective
         );
       });
@@ -456,13 +456,11 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if (!this.getEntityFilters.Show_expired) {
+    if (!this.getEntityFilters.show_expired) {
       filteredCreds = creds.filter((cred) => !cred.revoked);
     }
     return filteredCreds;
   }
-
-  
 
   tabClick(refname: string): void {
     this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {
@@ -542,7 +540,7 @@ export default class EntityResult extends Vue {
     )?.text;
   }
 
-  get entitybusinessNumber(): string | undefined {
+  get entityBusinessNumber(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "business_number" },
       this.entityCredentials?.map((cred) => {
@@ -676,14 +674,17 @@ export default class EntityResult extends Vue {
   }
 }
 </script>
+
 <style lang="scss" scoped>
-.standing {
-  background-color: $active;
-  border: 10px solid $active;
-  color: $white;
+.show-all-statuses {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $input-color;
 }
-.notStanding {
-  background-color: $historical;
-  border: 10px solid $historical;
+.tab-active {
+  border-bottom: 5px solid $secondary-color;
+}
+.expired-credential {
+  color: $error-color;
 }
 </style>
