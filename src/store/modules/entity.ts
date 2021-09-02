@@ -51,12 +51,12 @@ const getters = {
   getEntityFilters: (state: State): IEntityFilter => {
     if (!state.entityFilter) {
       return {
-        Authorities: [],
-        Credential_type: [],
-        Registration_type: [],
-        Date_min: "",
-        Date_max: "",
-        Show_expired: true,
+        authorities: [],
+        credential_type: [],
+        registration_type: [],
+        date_min: "",
+        date_max: "",
+        show_expired: true,
       };
     } else {
       return state.entityFilter;

@@ -17,7 +17,7 @@
       flat
       accordion
       multiple
-      :value="panelList"
+      :value="panels"
     >
       <slot name="expansionPanels"></slot>
     </v-expansion-panels>
@@ -36,7 +36,7 @@ export default class EntityCard extends Vue {
   @Prop({ default: false }) expanded!: boolean;
   @Prop({ default: false }) timeline!: boolean;
 
-  get panelList(): number[] {
+  get panels(): number[] {
     return this.expanded
       ? [...Array(this.$slots.expansionPanels?.length).keys()]
       : [];
@@ -50,9 +50,5 @@ export default class EntityCard extends Vue {
 }
 .timeline-card {
   @include card;
-
-  &:hover {
-    border: none !important;
-  }
 }
 </style>

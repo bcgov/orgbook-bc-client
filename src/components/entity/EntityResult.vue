@@ -188,7 +188,7 @@
             v-if="$vuetify.breakpoint.mdAndUp"
             cols="12"
             md="4"
-            class="pa-0 elevation-2"
+            class="pa-0"
           >
             <EntityFilterFacetPanels />
           </v-col>
@@ -338,7 +338,6 @@ export default class EntityResult extends Vue {
     type: string;
   }) => Promise<void>;
   fetchTopicFullCredentialSet!: (id: number) => Promise<void>;
-  getRelationshipName = getRelationshipName;
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   selectedTopic!: IFormattedTopic;
   credentialTimeOrder!: number;
@@ -348,6 +347,17 @@ export default class EntityResult extends Vue {
   itemsDisplayed!: number;
   loading!: boolean;
   credentialsExpanded!: boolean;
+
+  credentialFilters: {
+    (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
+  }[] = [
+    this.applyDateFilter,
+    this.applyExpiredFilter,
+    this.applyCredentialTypeFilter,
+    this.applyIssuerFilter,
+    this.applyRegistrationTypeFilter,
+  ];
+  getRelationshipName = getRelationshipName;
 
   data(): Data {
     return {
@@ -377,25 +387,14 @@ export default class EntityResult extends Vue {
   toggleCredentialsExpanded(): void {
     this.credentialsExpanded = !this.credentialsExpanded;
   }
-  // Credential Filters
-
-  credentialFilters: {
-    (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
-  }[] = [
-    this.applyDateFilter,
-    this.applyExpiredFilter,
-    this.applyCredentialTypeFilter,
-    this.applyIssuerFilter,
-    this.applyRegistrationTypeFilter,
-  ];
 
   private applyIssuerFilter(creds: Array<ICredentialDisplayType>) {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Authorities as string[]).length <= 0) {
+    if ((this.getEntityFilters.authorities as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.Authorities as string[]).includes(cred.authority)
+      (this.getEntityFilters.authorities as string[]).includes(cred.authority)
     );
   }
 
@@ -403,11 +402,11 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Credential_type as string[]).length <= 0) {
+    if ((this.getEntityFilters.credential_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.Credential_type as string[]).includes(
+      (this.getEntityFilters.credential_type as string[]).includes(
         cred.credential_type
       )
     );
@@ -417,13 +416,13 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if ((this.getEntityFilters.Registration_type as string[]).length <= 0) {
+    if ((this.getEntityFilters.registration_type as string[]).length <= 0) {
       return filteredCreds;
     }
     return filteredCreds.filter(
       (cred) =>
         cred.registration_reason !== undefined &&
-        (this.getEntityFilters.Registration_type as string[]).includes(
+        (this.getEntityFilters.registration_type as string[]).includes(
           cred.registration_reason
         )
     );
@@ -434,18 +433,18 @@ export default class EntityResult extends Vue {
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
 
-    if (this.getEntityFilters.Date_min !== "") {
+    if (this.getEntityFilters.date_min !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
         //take the negative condition so we don't have to do another check with isSame
-        return !moment(this.getEntityFilters.Date_min as string).isAfter(
+        return !moment(this.getEntityFilters.date_min as string).isAfter(
           cred.date_effective
         );
       });
     }
 
-    if (this.getEntityFilters.Date_max !== "") {
+    if (this.getEntityFilters.date_max !== "") {
       filteredCreds = filteredCreds.filter((cred) => {
-        return !moment(this.getEntityFilters.Date_max as string).isBefore(
+        return !moment(this.getEntityFilters.date_max as string).isBefore(
           cred.date_effective
         );
       });
@@ -457,7 +456,7 @@ export default class EntityResult extends Vue {
     creds: Array<ICredentialDisplayType>
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
-    if (!this.getEntityFilters.Show_expired) {
+    if (!this.getEntityFilters.show_expired) {
       filteredCreds = creds.filter((cred) => !cred.revoked);
     }
     return filteredCreds;

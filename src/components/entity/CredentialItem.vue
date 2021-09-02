@@ -66,7 +66,7 @@ export default class CredentialItem extends Vue {
 .timeline-header {
   &:hover {
     padding: 0px;
-    border: 1px solid $link-color !important;
+    outline: 1px solid $link-color !important;
     cursor: pointer;
   }
 }
