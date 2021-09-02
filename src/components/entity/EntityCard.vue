@@ -1,6 +1,14 @@
 <template>
-  <v-card elevation="0" rounded="sm" class="card mb-5">
-    <div v-if="title" class="pl-6 pr-6 pt-4 pb-4 text-h6 font-weight-bold">
+  <v-card
+    elevation="0"
+    rounded="sm"
+    :class="{
+      'mb-5': true,
+      card: !timeline,
+      'timeline-card': timeline,
+    }"
+  >
+    <div v-if="title" class="pl-5 pr-5 pt-4 pb-4 text-h6 font-weight-bold">
       {{ title }}
     </div>
     <slot name="subtitle"></slot>
@@ -26,6 +34,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class EntityCard extends Vue {
   @Prop({ default: "" }) title!: string;
   @Prop({ default: false }) expanded!: boolean;
+  @Prop({ default: false }) timeline!: boolean;
 
   get panelList(): number[] {
     return this.expanded
@@ -38,5 +47,12 @@ export default class EntityCard extends Vue {
 <style lang="scss" scoped>
 .card {
   @include card-raised;
+}
+.timeline-card {
+  @include card;
+
+  &:hover {
+    border: none !important;
+  }
 }
 </style>

@@ -29,11 +29,16 @@ import { mapGetters } from "vuex";
 export default class App extends Vue {}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #app {
   font-family: "BCSans", "Noto Sans", Verdana, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: $text-color;
+}
+
+.row {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 </style>

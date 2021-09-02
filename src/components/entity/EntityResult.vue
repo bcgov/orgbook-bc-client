@@ -27,7 +27,7 @@
           'text-right': $vuetify.breakpoint.smAndUp,
         }"
         ><span
-          class="text-body-2 show-all-statuses"
+          class="text-body-2 show-all-statuses vertical-align-middle"
           @click="toggleCredentialsExpanded"
           >Show all Credential statuses</span
         ></v-col
@@ -48,7 +48,7 @@
         </CredentialItem>
       </template>
       <template #content>
-        <div class="pa-6">
+        <div class="pa-5">
           <div class="mb-6 text-body-2">
             <span>{{ entityName }}</span>
             <span>&nbsp;is a&nbsp;</span>
@@ -73,7 +73,7 @@
       v-if="businessAsRelationship && businessAsRelationship.length > 0"
     >
       <template #subtitle>
-        <div class="pl-6 pr-6 mb-5 text-body-2">
+        <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is doing business as:
         </div>
       </template>
@@ -102,7 +102,7 @@
         </CredentialItem>
       </template>
       <template #footer>
-        <div class="pa-4 d-flex align-center justify-end">
+        <div class="pa-5 d-flex align-center justify-end">
           <span class="text-body-2"
             >Items displayed {{ relationshipStartIndex + 1 }} -
             {{
@@ -132,7 +132,7 @@
       v-if="ownedByRelationship"
     >
       <template #subtitle>
-        <div class="pl-6 pr-6 mb-5 text-body-2">
+        <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is owned by:
         </div>
       </template>
@@ -157,52 +157,59 @@
       ref="credentials"
     >
       <template>
-        <v-container>
-          <!-- header content for the credential card -->
-          <v-row>
-            <v-col v-if="$vuetify.breakpoint.smAndDown" class="pl-0 pr-0">
-              <div class="flex-row flex-align-items-center">
-                <EntityFilterDialog />
-              </div>
-            </v-col>
-
-            <v-col class="pl-0 pr-0">
-              <div class="text-body-2 float-right">
-                <span class="fake-link" @click="switchCredentialTimeOrder"
-                  >Sort by date</span
-                >
-                <v-icon v-if="credentialTimeOrder === 1">{{
-                  mdiArrowUp
-                }}</v-icon>
-                <v-icon v-else>{{ mdiArrowDown }}</v-icon>
-              </div>
-            </v-col>
-          </v-row>
-          <EntityFilterChips />
-        </v-container>
-        <!-- body of the credential card -->
+        <!-- header content for the credential card -->
+        <v-row>
+          <v-col
+            class="d-flex justify-start align-end pl-5 pt-0"
+            v-if="$vuetify.breakpoint.smAndDown"
+          >
+            <EntityFilterDialog />
+          </v-col>
+          <v-col class="d-flex justify-end align-end pr-5 pt-0">
+            <div class="text-body-2">
+              <span class="fake-link" @click="switchCredentialTimeOrder"
+                >Sort by date</span
+              >
+              <v-icon
+                class="icon-dense"
+                dense
+                v-if="credentialTimeOrder === 1"
+                >{{ mdiArrowUp }}</v-icon
+              >
+              <v-icon class="icon-dense" dense v-else>{{
+                mdiArrowDown
+              }}</v-icon>
+            </div>
+          </v-col>
+        </v-row>
+        <!-- body content of the credential card -->
         <v-row>
           <v-col
             v-if="$vuetify.breakpoint.mdAndUp"
             cols="12"
-            md="5"
+            md="4"
             class="pa-0 elevation-2"
           >
             <EntityFilterFacetPanels />
           </v-col>
-
-          <v-col cols="12" md="7">
-            <v-timeline dense class="on-bottom">
-              <!-- creates a timeline item for each credential in the entity -->
+          <v-col cols="12" md="8" class="pa-5 pl-3 pt-0">
+            <EntityFilterChips class="pb-2" />
+            <v-timeline dense align-top class="pa-0">
               <v-timeline-item
-                color="#38598A"
-                small
                 v-for="(cred, i) in filteredEntityCredentials"
                 :key="i"
+                color="#38598A"
+                small
               >
-                <v-container>
-                  {{ cred.date_effective | formatDate }}
-                  <EntityCard :expanded="credentialsExpanded" class="pl-0">
+                <div class="pl-3 mt-n3">
+                  <div class="text-body-2 font-weight-bold mb-2">
+                    {{ cred.date_effective | formatDate }}
+                  </div>
+                  <EntityCard
+                    :expanded="credentialsExpanded"
+                    :timeline="true"
+                    class="pl-0 timeline-cred"
+                  >
                     <template #expansionPanels>
                       <CredentialItem
                         :authority="cred.authority"
@@ -212,35 +219,25 @@
                             ? cred.registration_reason
                             : ''
                         "
-                        :dropdownDivider="true"
+                        :timeline="true"
                       >
                         <template #header>
-                          <v-row>
-                            <v-col v-if="cred.revoked">
-                              <span style="color: red">
-                                Expired {{ cred.revoked_date | formatDate }}
-                              </span>
-                            </v-col>
-                            <v-responsive width="100%"> </v-responsive>
-
-                            <v-col>
-                              <h3>
-                                {{ entityTypeToName[cred.type] }}
-                              </h3>
-                            </v-col>
-                            <v-responsive width="100%"> </v-responsive>
-
-                            <v-col>
-                              <p>
-                                {{ cred.value }}
-                              </p>
-                            </v-col>
-                          </v-row>
+                          <div class="text-body-2 timeline-cred-header">
+                            <div v-if="cred.revoked" class="expired-credential">
+                              Expired: {{ cred.revoked_date | formatDate }}
+                            </div>
+                            <div v-if="cred.type" class="font-weight-bold">
+                              {{ entityTypeToName[cred.type] }}
+                            </div>
+                            <div v-if="cred.value">
+                              {{ cred.value }}
+                            </div>
+                          </div>
                         </template>
                       </CredentialItem>
                     </template>
                   </EntityCard>
-                </v-container>
+                </div>
               </v-timeline-item>
             </v-timeline>
           </v-col>
@@ -687,5 +684,8 @@ export default class EntityResult extends Vue {
 }
 .tab-active {
   border-bottom: 5px solid $secondary-color;
+}
+.expired-credential {
+  color: $error-color;
 }
 </style>
