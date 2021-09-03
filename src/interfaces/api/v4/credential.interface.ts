@@ -32,6 +32,7 @@ export interface ICredential extends IApiResource {
 }
 
 export interface ICredentialDisplayType {
+  id:number;
   credential_type: string;
   type: string;
   authority: string;

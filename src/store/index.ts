@@ -11,6 +11,7 @@ import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
 import topic, { State as TopicState } from "./modules/topic";
 import entity, { State as EntityState } from "./modules/entity";
+import credentialDetail, {State as CredentialDetailState} from "./modules/credential-detail"
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export interface State {
   search: SearchState;
   topic: TopicState;
   entity: EntityState;
+  credentialDetail: CredentialDetailState;
 }
 
 export default new Vuex.Store({
@@ -37,5 +39,6 @@ export default new Vuex.Store({
     search,
     topic,
     entity,
+    credentialDetail,
   },
 });

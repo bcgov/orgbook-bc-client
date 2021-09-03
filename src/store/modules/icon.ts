@@ -12,6 +12,7 @@ import {
   mdiArrowDown,
   mdiMapMarker,
   mdiCalendar,
+  mdiCheck,
 } from "@mdi/js";
 
 export interface State {
@@ -33,6 +34,7 @@ const state: State = {
     mdiArrowDown: mdiArrowDown,
     mdiMapMarker: mdiMapMarker,
     mdiCalendar: mdiCalendar,
+    mdiCheck: mdiCheck,
   },
 };
 

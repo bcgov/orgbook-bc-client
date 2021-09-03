@@ -11,6 +11,7 @@ export function credOrRelationshipToCredView(
   item: ICredential | IRelationship
 ): ICredentialDisplayType {
   const display: ICredentialDisplayType = {
+    id:0,
     credential_type: "",
     type: "",
     authority: "",
@@ -21,6 +22,7 @@ export function credOrRelationshipToCredView(
   };
   if (isCredential(item)) {
     const credItem = item as ICredential;
+    display.id = credItem.id;
     display.authority = credItem.credential_type.issuer.name;
     display.authorityLink = credItem.credential_type.issuer.url;
     display.type = credItem.names[0]?.type;
@@ -35,6 +37,7 @@ export function credOrRelationshipToCredView(
     display.value = credItem.names[0]?.text;
   } else {
     const relItem = item as IRelationship;
+    display.id = relItem.credential.id
     // display.authority = relItem.credential.credential_type.issuer.name
     display.authority = "BC Corporate Registry";
     //display.authorityLink = relItem.credential.credential_type.issuer.url

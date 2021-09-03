@@ -5,7 +5,7 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content :class="dropdownDivider ? 'dropdown' : ''">
       Authority: <a :href="authorityLink">{{ authority }}</a> <br />
-      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> <router-link to="/credential">Credential verified</router-link> <br />
+      <v-icon>{{ mdiShieldCheckOutline }}</v-icon> <router-link :to="`/credential/${credID}`">Credential verified</router-link> <br />
       <span v-if="effectiveDate"
         >Effective: {{ effectiveDate | formatDate }} <br
       /></span>
@@ -34,7 +34,9 @@ export default class CredentialItem extends Vue {
   @Prop({ default: false }) expired!: boolean;
   @Prop({ default: false }) dropdownDivider!: boolean;
   @Prop({ default: "" }) reason!: string;
+  @Prop({ default: ""}) credID!:string;
 }
+
 </script>
 
 <style lang="scss" scoped>

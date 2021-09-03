@@ -18,7 +18,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "entity" */ "@/views/Entity.vue"),
   },
   {
-    path: "/credential",
+    path: "/credential/:credentialID",
     name: "Credential Detail",
     component: () =>
       import(/* webpackChunkName: "credential" */ "@/views/CredentialView.vue"),

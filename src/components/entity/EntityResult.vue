@@ -4,7 +4,7 @@
     ><a href="/" :append-icon="mdiMapMarker">Back to search</a>
     <h3>{{ entityName }}</h3>
       <p v-if="entitybusinessNumber !== undefined && entitybusinessNumber !== ''"> Business number: {{ entitybusinessNumber }} </p>
-      <p><span v-t="entityState"></span> • <span v-t="entityJurisdiction"></span></p>
+      <p><span v-if="entityState!==undefined" v-t="entityState"></span> • <span v-if="entityJurisdiction !== undefined" v-t="entityJurisdiction"></span></p>
     <p>
       <span
         v-if="!loading"
@@ -29,19 +29,21 @@
         ></v-col
       >
     </v-row>
+    <v-btn @click="test">TEST</v-btn>
     <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
         <CredentialItem
           :authority="entityRegistrationIssuer"
           :authorityLink="entityRegistrationIssuerUrl"
           :effectiveDate="entityEffectiveDate"
+          :credID="entityNameCredID"
         >
           <template #header>
             <h3>Registration</h3>
           </template>
           <template #content>
             <p>
-              {{ entityName }} is a <span class="fake-link" v-t="entityJurisdiction"></span>
+              {{ entityName }} is a <span class="fake-link" v-if="entityJurisdiction !== undefined" v-t="entityJurisdiction"></span>
             </p>
 
             <p>
@@ -203,6 +205,7 @@
                       <CredentialItem
                         :authority="cred.authority"
                         :expired="cred.revoked"
+                        :credID="cred.id"
                         :reason="
                           cred.type === 'entity_name'
                             ? cred.registration_reason
@@ -360,6 +363,10 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded:false,
     };
+  }
+
+  test(){
+    console.log(JSON.stringify(this.selectedTopicFullCredentialSet))
   }
 
   loadingCallBack(): void {
@@ -542,6 +549,13 @@ export default class EntityResult extends Vue {
     )?.text;
   }
 
+  get entityNameCredID():number|undefined{
+    return selectFirstAttrItem(
+      { key: "type", value: "entity_name" },
+      this.selectedTopic?.names
+    )?.credential_id;
+  }
+
   get entitybusinessNumber(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "business_number" },
@@ -615,7 +629,12 @@ export default class EntityResult extends Vue {
       { key: "type", value: "entity_status" },
       this.selectedTopic?.attributes
     );
-    return state?.type + "." + state?.value;
+
+    const ret = state?.type + "." + state?.value;
+    if(ret.includes("undefined")){
+      return undefined
+    }
+    return ret
   }
 
   get entityRegistrationDate(): string | undefined {
@@ -637,7 +656,11 @@ export default class EntityResult extends Vue {
       { key: "type", value: "home_jurisdiction" },
       this.selectedTopic?.attributes
     );
-    return "entity_type." + state?.value;
+    const ret = "entity_type." + state?.value;
+    if(ret.includes("undefined")){
+      return undefined
+    }
+    return ret
   }
 
   get entityRegistrationIssuer(): string | undefined {
