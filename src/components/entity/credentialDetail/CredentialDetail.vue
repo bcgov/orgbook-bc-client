@@ -14,7 +14,7 @@
             {{ `Cryptographically verified ${currDate}` }}
           </p>
           <p>
-            Issued: {{ currCredEffDate | formatDate }} • Effective:
+            Issued: {{ currCredIssuedDate | formatDate }} • Effective:
             {{ currCredEffDate | formatDate }}
           </p>
           <p>The following verifications were successfully completed:</p>
@@ -61,6 +61,30 @@
         <v-expansion-panels>
           <v-expansion-panel>
             <v-expansion-panel-header> Claims proven </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-data-table
+              :headers="headers"
+              :items="proofValues"
+              hide-default-header
+              hide-default-footer
+              disable-pagination
+              ></v-data-table>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-card>
+    </v-container>
+
+    <v-container>
+      <v-card>
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-header> Proof Details </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-virtual-scroll item-height="100">
+                {{proofRaw}}
+              </v-virtual-scroll>
+              </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-card>
@@ -76,13 +100,16 @@ import { selectFirstAttrItem } from "@/utils/attribute-filter";
 import moment from "moment";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import {
-  ICredential,
-  ICredentialDisplayType,
+  ICredential, ICredentialFormatted,
 } from "@/interfaces/api/v4/credential.interface";
-import {
-  getRelationshipName,
-  credOrRelationshipToDisplay,
-} from "@/utils/entity";
+
+import router from "@/router";
+import { ICredentialPresExchange, ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
+
+interface Data{
+    headers: Record<string, string>[]
+}
+
 @Component({
   computed: {
     ...mapGetters([
@@ -91,31 +118,48 @@ import {
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getSelectedCredential",
+      "getPresentationID",
+      "getPresentationEX",
+      "loading",
     ]),
   },
   methods: {
-    ...mapActions(["setSelectedCredential"]),
+    ...mapActions(["fetchSelectedCredential", "setLoading", "fetchPresID", "fetchPresEx"]),
   },
 })
 export default class CredentialDetail extends Vue {
   selectedTopic!: IFormattedTopic;
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
-  getSelectedCredential!: ICredential | undefined;
-  setSelectedCredential!: (cred: ICredential) => void;
+  getSelectedCredential!: ICredentialFormatted | undefined;
+  loading!:boolean;
+  getPresentationID!: string;
+  getPresentationEX!: ICredentialProof;
+  fetchSelectedCredential!: (id: string) => Promise<void>;
+  fetchPresID!:(id:string) => Promise<void>;
+  fetchPresEx!:(params:{id:string, presID:string})=>Promise<void>;
+  setLoading!: (loading: boolean) => void;
+
+  
+
+  data():Data{
+    return {
+      headers:[
+        {text:"attr_name", align:"start", value:"attr_name"},
+        {text:"attr_val", align:"start", value:"attr_val"},
+      ]
+    }
+  }
 
   get currDate(): string {
     return moment(new Date()).format("MMM, DD YYYY [at] hh:mm a");
   }
 
   get entityName(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      this.selectedTopic?.names
-    )?.text;
+    return this.getSelectedCredential?.local_name?.text
   }
 
   get entitySourceID(): string | undefined {
-    return this.selectedTopic?.source_id;
+    return this.getSelectedCredential?.topic.source_id;
   }
 
   isRelationshipCred(cred: ICredential): boolean {
@@ -123,7 +167,8 @@ export default class CredentialDetail extends Vue {
   }
 
   test() {
-    console.log(this.currCredEffDate);
+   
+    console.log( JSON.stringify(this.getPresentationEX?.result?.presentation?.requested_proof?.revealed_attr_groups?.["self-verify-proof"]?.values));
   }
 
   get currCredEffDate(): Date | undefined {
@@ -131,31 +176,47 @@ export default class CredentialDetail extends Vue {
   }
 
   get currCredIssuedDate(): Date | undefined {
-    return this.getSelectedCredential?.created_timestamp;
+    return this.getSelectedCredential?.create_timestamp;
   }
 
   get currCredIssuer(): string | undefined {
     return this.getSelectedCredential?.credential_type?.issuer?.name;
   }
 
-  getCurrCred(id: string) {
-    let currCred: ICredential | undefined = undefined;
-    this.selectedTopicFullCredentialSet.forEach((credSet) => {
-      if (currCred === undefined) {
-        currCred = credSet.credentials.find(
-          (cred) => (cred.id as unknown as string) == id
-        );
-      } //can't break from inside foreach
-    });
-    return currCred;
+  get proofValues():Record<string,string>[] | undefined{
+    const rawVals = this.getPresentationEX?.result?.presentation?.requested_proof?.revealed_attr_groups?.["self-verify-proof"]?.values
+    if(rawVals === undefined){
+      return rawVals
+    }
+    return Object.keys(rawVals).map(key=>{return {attr_name:key, attr_val:rawVals[key].raw}})
   }
 
+  get proofRaw():string|undefined{
+    const rawVals = this.getPresentationEX
+    if(rawVals === undefined){
+      return rawVals
+    }
+    return JSON.stringify(rawVals,null,2);
+  }
+
+  
+
   async created(): Promise<void> {
+    this.setLoading(true);
+  
     const { credentialID } = this.$route.params;
     if (credentialID) {
-      const currCred = this.getCurrCred(credentialID);
-      if (currCred !== undefined) this.setSelectedCredential(currCred);
+      await Promise.all([
+        this.fetchSelectedCredential(credentialID),
+        this.fetchPresID(credentialID)
+      ])
+      await new Promise(r=>setTimeout(r, 2000))
+      await this.fetchPresEx({id:credentialID, presID:this.getPresentationID});
+      
+    }else{
+      router.push("/")
     }
+    this.setLoading(false);
   }
 }
 </script>

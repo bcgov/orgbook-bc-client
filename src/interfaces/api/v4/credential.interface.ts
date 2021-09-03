@@ -1,5 +1,7 @@
 import { IApiResource } from "../resource.interface";
+import { ICredentialSet } from "../v2/credential-set.interface";
 import { ICredentialType } from "../v2/credential-type.interface";
+import { ITopic } from "../v2/topic.interface";
 
 interface ICredentialName {
   id: number;
@@ -43,6 +45,25 @@ export interface ICredentialDisplayType {
   revoked_date?: Date;
   value: string | number;
   relationship_types?: string[];
+}
+
+export interface ICredentialFormatted {
+  create_timestamp:Date
+  effective_date:Date;
+  inactive:boolean;
+  latest:boolean;
+  revoked:boolean;
+  revoked_date?:Date;
+  credential_id:string;
+  credential_type:ICredentialType;
+  addresses:ICredential[];
+  names:ICredentialName;
+  attributes:ICredentialAttribute[];
+  local_name:ICredentialName;
+  remote_name?:ICredentialName;
+  topic: ITopic;
+  related_topics:ITopic[];
+  credential_set:ICredentialSet;
 }
 
 export interface ICredentialDetailView {

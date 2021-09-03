@@ -1,49 +1,84 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
-import Relationship from "@/services/api/v2/relationship.service";
-import { ITopic } from "@/interfaces/api/v2/topic.interface";
-import { IEntityFacetField } from "@/interfaces/api/v2/entityFilter.interface";
-import { ICredential, ICredentialDetailView, ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
-import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
-import { credOrRelationshipToCredView } from "@/utils/credential-verified";
+import Credential from "@/services/api/v2/credential.service";
+import CredentialVerifier from "@/services/api/v3/credential-verify.service";
+import { ICredentialFormatted } from "@/interfaces/api/v4/credential.interface";
+import { ICredentialPresExchange, ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
+
 
 export type Filter = { [key: string]: string | Array<string> | boolean };
 
-const relationshipService = new Relationship();
+const credentialService = new Credential();
+const credVerificationService = new CredentialVerifier();
 
 export interface State {
-  selectedCredential: ICredential | undefined
+  selectedCredential: ICredentialFormatted | undefined
+  presentationID: string
+  presentationEX: ICredentialProof | undefined
 }
 
 const state: State = {
-  selectedCredential: undefined
+  selectedCredential: undefined,
+  presentationID: "",
+  presentationEX: undefined
 };
 
 const getters = {
-  getSelectedCredential:(state:State):ICredential|undefined=>state.selectedCredential,
+  getSelectedCredential: (state: State): ICredentialFormatted | undefined => state.selectedCredential,
+  getPresentationID: (state: State): string => state.presentationID,
+  getPresentationEX: (state: State): ICredentialProof | undefined => state.presentationEX,
 };
 
+
 const actions = {
-
-  setSelectedCredential(
+  async fetchSelectedCredential(
     { commit }: ActionContext<State, RootState>,
-    cred: ICredential
-  ): void {
-    
-    const credFormatted = cred;
-    commit("setSelectedCredential", credFormatted);
-    
-  },
+    id: string
+  ): Promise<void> {
 
-  
+    try {
+      const res = await credentialService.getFormattedCredential(id)
+      commit("setSelectedCredential", res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  async fetchPresID({ commit }: ActionContext<State, RootState>,
+    id: string
+  ): Promise<void> {
+    try {
+      const res = await credVerificationService.credentialVerify(id);
+      commit("setPresID", res.data.presentation_exchange_id)
+    } catch (e) {
+      console.log(e)
+    }
+  },
+  async fetchPresEx({ commit }: ActionContext<State, RootState>, params:{id: string, presID: string}) {
+    try {
+      console.log(params.id)
+      console.log(params.presID)
+      const res = await credVerificationService.credentialVerifyPresEx(params.id, params.presID);
+      commit("setPresEX", res.data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 };
 
 const mutations = {
-  setSelectedCredential: (state: State, cred:ICredential ): void => {
+  setSelectedCredential: (state: State, cred: ICredentialFormatted): void => {
     state.selectedCredential = cred;
   },
+  setPresID: (state: State, presID: string): void => {
+    state.presentationID = presID;
+  },
 
- 
+  setPresEX: (state:State, presEX: ICredentialProof): void=>{
+    console.log(JSON.stringify(presEX?.result?.presentation?.requested_proof))
+    state.presentationEX = presEX;
+  }
+
+
 };
 
 export default {
