@@ -4,6 +4,7 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
   <div v-else>
+    <v-btn @click="test">TEST</v-btn>
     <BackToSearch />
     <EntityHeader
       :name="entityName"
@@ -45,6 +46,7 @@
           :authority="entityRegistrationIssuer"
           :authorityLink="entityRegistrationIssuerUrl"
           :effectiveDate="entityEffectiveDate"
+          :credID="entityNameCredID"
         >
           <template #header>
             <div class="text-h6 font-weight-bold">Registration</div>
@@ -69,60 +71,82 @@
       </template>
     </EntityCard>
 
-    <!-- Relationships related to -->
     <EntityCard
-      title="Relationships"
-      ref="relationships"
-      :expanded="credentialsExpanded"
-      v-if="businessAsRelationship && businessAsRelationship.length > 0"
-    >
-      <template #subtitle>
-        <div class="pl-5 pr-5 mb-5 text-body-2">
-          {{ entityName }} is doing business as:
-        </div>
-      </template>
-      <template #expansionPanels>
-        <CredentialItem
-          v-for="(_, i) in Math.min(
-            businessAsRelationship.length - relationshipStartIndex,
-            itemsDisplayed
-          )"
-          :key="i"
-          @click="tabClick(item.refname)"
-          >{{ item.text }}
-          <template #header>
-            <div class="fake-link font-weight-bold">
-              {{
-                getRelationshipName(
-                  businessAsRelationship[i + relationshipStartIndex]
-                )
-              }}
-            </div>
-          </template>
-        </CredentialItem>
-      </template>
-      <template #footer>
-        <div class="pa-5 d-flex align-center justify-end">
-          <span class="text-body-2"
-            >Items displayed {{ relationshipStartIndex + 1 }} -
-            {{
-              Math.min(
-                Math.min(itemsDisplayed, businessAsRelationship.length) +
-                  relationshipStartIndex,
-                businessAsRelationship.length
-              )
-            }}
-            of {{ businessAsRelationship.length }}
-          </span>
-          <v-btn icon @click="incRelationshipStartIndex(-1)">
-            <v-icon>{{ mdiChevronLeft }}</v-icon>
-          </v-btn>
-          <v-btn icon @click="incRelationshipStartIndex(1)">
-            <v-icon>{{ mdiChevronRight }}</v-icon>
-          </v-btn>
-        </div>
-      </template>
-    </EntityCard>
+        title="Relationships"
+        ref="relationships"
+        :expanded="credentialsExpanded"
+        v-if="businessAsRelationship.length > 0"
+      >
+        <template #subtitle>
+          <v-container>
+            <p>{{ entityName }} is doing business as:</p>
+          </v-container>
+        </template>
+        <template #expansionPanels>
+          <CredentialItem
+            v-for="(_, i) in Math.min(
+              businessAsRelationship.length - relationshipStartIndex,
+              itemsDisplayed
+            )"
+            :key="i"
+            authority="CRA"
+            :effectiveDate="
+              businessAsRelationship[i + relationshipStartIndex].credential
+                .effective_date
+            "
+            :credID="businessAsRelationship[i + relationshipStartIndex].credential.id"
+          >
+            <template #header>
+              <h3>
+                <span class="fake-link">{{
+                  getRelationshipName(
+                    businessAsRelationship[i + relationshipStartIndex]
+                  )
+                }}</span>
+              </h3>
+            </template>
+          </CredentialItem>
+        </template>
+        <template #footer>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <p>Items displayed</p>
+              </v-col>
+              <v-col cols="2">
+                <v-select
+                  v-model="itemsDisplayed"
+                  :items="[5, 10, 100]"
+                  @change="relationshipStartIndex = 0"
+                ></v-select>
+              </v-col>
+              <v-col cols="2">
+                <p>
+                  {{ relationshipStartIndex + 1 }} -
+                  {{
+                    Math.min(
+                      Math.min(itemsDisplayed, businessAsRelationship.length) +
+                        relationshipStartIndex,
+                      businessAsRelationship.length
+                    )
+                  }}
+                  of {{ businessAsRelationship.length }}
+                </p>
+              </v-col>
+              <v-col cols="1"
+                ><v-icon @click="incRelationshipStartIndex(-1)">{{
+                  mdiChevronLeft
+                }}</v-icon></v-col
+              >
+              <v-col cols="1"
+                ><v-icon @click="incRelationshipStartIndex(1)">{{
+                  mdiChevronRight
+                }}</v-icon></v-col
+              >
+            </v-row>
+          </v-container>
+        </template>
+      </EntityCard>
 
     <!-- Relationships related from -->
     <EntityCard
@@ -214,6 +238,7 @@
                       <CredentialItem
                         :authority="cred.authority"
                         :expired="cred.revoked"
+                        :credID="cred.id"
                         :reason="
                           cred.type === 'entity_name'
                             ? cred.registration_reason
@@ -376,7 +401,7 @@ export default class EntityResult extends Vue {
   }
 
   test() {
-    console.log(JSON.stringify(this.selectedTopicFullCredentialSet));
+    console.log(this.businessAsRelationship && this.businessAsRelationship.length > 0);
   }
 
   loadingCallBack(): void {

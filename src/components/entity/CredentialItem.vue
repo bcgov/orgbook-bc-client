@@ -32,9 +32,7 @@
         </div>
         <div>
           <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
-          <span class="fake-link vertical-align-middle"
-            >Credential verified</span
-          >
+          <router-link :to="`/credential/${credID}`">Credential verified</router-link>
         </div>
       </div>
       <slot name="content"></slot>
@@ -59,6 +57,7 @@ export default class CredentialItem extends Vue {
   @Prop({ default: false }) expired!: boolean;
   @Prop({ default: false }) timeline!: boolean;
   @Prop({ default: "" }) reason!: string;
+  @Prop({ default: ""}) credID!:string;
 }
 </script>
 
