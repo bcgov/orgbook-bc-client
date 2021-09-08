@@ -28,9 +28,11 @@
               <v-list-item>
                 <v-list-item-content>
                   <p>
-                    <v-icon class="validated" v-if="currCredIssuer !== undefined">{{
-                      mdiShieldCheckOutline
-                    }}</v-icon>
+                    <v-icon
+                      class="validated"
+                      v-if="currCredIssuer !== undefined"
+                      >{{ mdiShieldCheckOutline }}</v-icon
+                    >
                     Credential issuer is {{ currCredIssuer }}
                   </p>
                 </v-list-item-content>
@@ -38,9 +40,11 @@
               <v-list-item>
                 <v-list-item-content>
                   <p>
-                    <v-icon class="validated" v-if="currCredIssuer !== undefined">{{
-                      mdiShieldCheckOutline
-                    }}</v-icon>
+                    <v-icon
+                      class="validated"
+                      v-if="currCredIssuer !== undefined"
+                      >{{ mdiShieldCheckOutline }}</v-icon
+                    >
                     Credential is held by {{ entityName }}
                   </p>
                 </v-list-item-content>
@@ -48,9 +52,11 @@
               <v-list-item>
                 <v-list-item-content>
                   <p>
-                    <v-icon class="validated" v-if="currCredIssuer !== undefined">{{
-                      mdiShieldCheckOutline
-                    }}</v-icon>
+                    <v-icon
+                      class="validated"
+                      v-if="currCredIssuer !== undefined"
+                      >{{ mdiShieldCheckOutline }}</v-icon
+                    >
                     Credential is valid
                   </p>
                 </v-list-item-content>
@@ -58,9 +64,11 @@
               <v-list-item>
                 <v-list-item-content>
                   <p>
-                    <v-icon class="validated" v-if="currCredIssuer !== undefined">{{
-                      mdiShieldCheckOutline
-                    }}</v-icon>
+                    <v-icon
+                      class="validated"
+                      v-if="currCredIssuer !== undefined"
+                      >{{ mdiShieldCheckOutline }}</v-icon
+                    >
                     Credential is tamper-free
                   </p>
                 </v-list-item-content>
@@ -85,9 +93,16 @@
                   hide-default-footer
                   disable-pagination
                 >
-                <template v-slot:[`item.attr_name`]="{item}">
-                  <p><v-icon class="validated">{{mdiShieldCheckOutline}}</v-icon> {{item.attr_name}}</p>
-              </template>
+                  <template v-slot:[`item.attr_name`]="{ item }">
+                    <p>
+                      <v-icon
+                        :class="{ invisible: !item.attr_val }"
+                        class="validated"
+                        >{{ mdiShieldCheckOutline }}</v-icon
+                      >
+                      {{ item.attr_name }}
+                    </p>
+                  </template>
                 </v-data-table>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -189,7 +204,7 @@ export default class CredentialDetail extends Vue {
   }
 
   get entityName(): string | undefined {
-    return this.getSelectedCredential?.local_name?.text;
+    return this.getSelectedCredential?.topic?.local_name?.text
   }
 
   get entitySourceID(): string | undefined {
@@ -203,8 +218,7 @@ export default class CredentialDetail extends Vue {
   test() {
     console.log(
       JSON.stringify(
-        this.getPresentationEX?.result?.presentation?.requested_proof
-          ?.revealed_attr_groups?.["self-verify-proof"]?.values
+        this.getSelectedCredential
       )
     );
   }
@@ -273,7 +287,10 @@ export default class CredentialDetail extends Vue {
 .one-line {
   word-break: normal;
 }
-.validated{
+.validated {
   color: $success-color !important;
+}
+.invisible {
+  visibility: hidden;
 }
 </style>

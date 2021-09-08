@@ -1,7 +1,7 @@
 import { IApiResource } from "../resource.interface";
 import { ICredentialSet } from "../v2/credential-set.interface";
 import { ICredentialType } from "../v2/credential-type.interface";
-import { ITopic } from "../v2/topic.interface";
+import { IFormattedTopic, ITopic } from "../v2/topic.interface";
 
 interface ICredentialName {
   id: number;
@@ -61,7 +61,7 @@ export interface ICredentialFormatted {
   attributes:ICredentialAttribute[];
   local_name:ICredentialName;
   remote_name?:ICredentialName;
-  topic: ITopic;
+  topic: IFormattedTopic;
   related_topics:ITopic[];
   credential_set:ICredentialSet;
 }

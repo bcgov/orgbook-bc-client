@@ -55,8 +55,6 @@ const actions = {
   },
   async fetchPresEx({ commit }: ActionContext<State, RootState>, params:{id: string, presID: string}) {
     try {
-      console.log(params.id)
-      console.log(params.presID)
       const res = await credVerificationService.credentialVerifyPresEx(params.id, params.presID);
       commit("setPresEX", res.data)
     } catch (e) {
@@ -74,7 +72,6 @@ const mutations = {
   },
 
   setPresEX: (state:State, presEX: ICredentialProof): void=>{
-    console.log(JSON.stringify(presEX?.result?.presentation?.requested_proof))
     state.presentationEX = presEX;
   }
 
