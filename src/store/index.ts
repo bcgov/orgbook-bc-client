@@ -6,10 +6,11 @@ import credentialType, {
   State as CredentialTypeState,
 } from "./modules/credential-type";
 import doc, { State as DocState } from "./modules/doc";
+import entity, { State as EntityState } from "./modules/entity";
 import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
+import stats, { State as StatsState } from "./modules/statistics";
 import topic, { State as TopicState } from "./modules/topic";
-import entity, { State as EntityState } from "./modules/entity";
 
 Vue.use(Vuex);
 
@@ -18,10 +19,11 @@ export interface State {
   contact: ContactState;
   credentialType: CredentialTypeState;
   doc: DocState;
+  entity: EntityState;
   icon: IconState;
   search: SearchState;
+  stats: StatsState;
   topic: TopicState;
-  entity: EntityState;
 }
 
 export default new Vuex.Store({
@@ -30,9 +32,10 @@ export default new Vuex.Store({
     contact,
     credentialType,
     doc,
+    entity,
     icon,
     search,
+    stats,
     topic,
-    entity,
   },
 });

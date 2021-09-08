@@ -1,9 +1,10 @@
 <template>
-  <div id="searchBar" :class="{ 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }">
+  <div :class="{ 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }">
     <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
     <v-combobox
+      id="searchBar"
       outlined
       dense
       hide-no-data
@@ -22,9 +23,7 @@
       @keydown="enterSearch"
       @update:search-input="autocompleteSearch"
       @update:list-index="(i) => (index = i)"
-      class="combobox"
       aria-label="search-input"
-      ref="autocomplete"
     >
       <template v-slot:append-outer>
         <v-progress-circular
