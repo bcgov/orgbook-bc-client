@@ -39,7 +39,7 @@ export default class ShowcaseLinks extends Vue {}
 
 <style lang="scss" scoped>
 .card {
-  border: 1px solid $border-color !important;
+  @include card;
   height: 100%;
 }
 </style>

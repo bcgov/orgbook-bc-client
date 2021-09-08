@@ -4,7 +4,7 @@ import {
   ICredentialType,
   ICredentialTypeByIssuer,
 } from "@/interfaces/api/v2/credential-type.interface";
-import CredentialType from "@/services/api/v2/credential-type.service";
+import CredentialType from "@/services/api/v4/credential-type.service";
 
 const credentialTypeSerivice = new CredentialType();
 

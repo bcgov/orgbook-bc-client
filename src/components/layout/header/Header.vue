@@ -10,23 +10,25 @@
               'd-flex align-center': true,
             }"
           >
-            <v-toolbar-title class="app-bar-title">
-              <img
-                class="logo"
-                v-if="$vuetify.breakpoint.smAndDown"
-                src="@/assets/img/logo.svg"
-                alt="British Columbia"
-                width="48px"
-                height="42px"
-              />
-              <img
-                class="logo"
-                v-if="$vuetify.breakpoint.mdAndUp"
-                src="@/assets/img/logo-banner.svg"
-                alt="British Columbia"
-                width="172px"
-                height="48px"
-              />
+            <v-toolbar-title router-link to="/search" class="app-bar-title">
+              <router-link to="/search">
+                <img
+                  class="logo"
+                  v-if="$vuetify.breakpoint.smAndDown"
+                  src="@/assets/img/logo.svg"
+                  alt="British Columbia"
+                  width="48px"
+                  height="42px"
+                />
+                <img
+                  class="logo"
+                  v-if="$vuetify.breakpoint.mdAndUp"
+                  src="@/assets/img/logo-banner.svg"
+                  alt="British Columbia"
+                  width="172px"
+                  height="48px"
+                />
+              </router-link>
               <span
                 :class="{
                   'font-weight-black d-inline-flex align-middle': true,

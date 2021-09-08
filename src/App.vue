@@ -36,38 +36,9 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   color: $text-color;
 }
-a {
-  color: $link-color;
-}
+
 .row {
   margin: 0 !important;
   padding: 0 !important;
-}
-.on-top {
-  z-index: 1;
-}
-.on-bottom {
-  z-index: 0;
-}
-.checkbox {
-  color: $input-color;
-  height: 24px;
-}
-.icon-dense {
-  width: 20px;
-  height: 20px;
-}
-.vertical-align-middle {
-  vertical-align: middle;
-}
-.fake-link {
-  color: $link-color;
-  text-decoration: underline;
-  cursor: pointer;
-
-  &.disabled {
-    color: gray;
-    text-decoration: none;
-  }
 }
 </style>
