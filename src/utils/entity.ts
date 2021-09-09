@@ -1,3 +1,4 @@
+import { IIssuer } from "@/interfaces/api/v2/issuer.interface";
 import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import {
   ICredential,
@@ -24,8 +25,14 @@ export function getRelationshipName(relationship: IRelationship): string {
   return ret;
 }
 
+export function getRelationshipIssuer(relationship: IRelationship, credSet: ICredential[]): IIssuer|undefined{
+  return selectFirstAttrItem(
+    {key:"id", value:relationship.credential.id}, credSet
+  )?.credential_type?.issuer
+}
+
 export function credOrRelationshipToDisplay(
-  item: ICredential | IRelationship
+  item: ICredential | IRelationship, credSet?:ICredential[]
 ): ICredentialDisplayType {
   const display: ICredentialDisplayType = {
     id:0,
@@ -54,11 +61,19 @@ export function credOrRelationshipToDisplay(
     display.value = credItem.names[0]?.text;
   } else {
     const relItem = item as IRelationship;
+
+
     display.id = relItem.credential.id
-    // display.authority = relItem.credential.credential_type.issuer.name
-    display.authority = "BC Corporate Registry";
-    //display.authorityLink = relItem.credential.credential_type.issuer.url
-    display.authorityLink = "#";
+    display.authority = ""
+    display.authorityLink = ""
+    if(credSet !== undefined){
+      const issuer = getRelationshipIssuer(relItem, credSet);
+      if(issuer !== undefined){
+        display.authority = issuer.name
+        display.authorityLink = issuer.url;
+      }
+    }
+    
     display.credential_type = relItem.credential.credential_type.description;
     //display.type = relItem.related_topic.names[0]?.type
     display.type = "entity_name";

@@ -7,129 +7,142 @@
       <v-icon>{{ mdiArrowLeft }}</v-icon
       ><a :href="`/entity/${entitySourceID}`">{{ entityName }}</a>
       <!-- <v-btn @click="test">TEST</v-btn> -->
-      <v-container>
-        <v-card>
-          <v-card-title class="one-line"
-            ><p>
-              <v-icon class="validated">{{ mdiShieldCheckOutline }}</v-icon>
-              {{ `Registration credential verified` }}
-            </p></v-card-title
-          >
-          <v-container>
-            <p class="verificationTime">
-              {{ `Cryptographically verified ${currDate}` }}
-            </p>
-            <p>
-              Issued: {{ currCredIssuedDate | formatDate }} • Effective:
-              {{ currCredEffDate | formatDate }}
-            </p>
-            <p>The following verifications were successfully completed:</p>
-            <v-list flat>
-              <v-list-item>
-                <v-list-item-content>
-                  <p>
-                    <v-icon
-                      class="validated"
-                      v-if="currCredIssuer !== undefined"
-                      >{{ mdiShieldCheckOutline }}</v-icon
-                    >
-                    Credential issuer is {{ currCredIssuer }}
-                  </p>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <p>
-                    <v-icon
-                      class="validated"
-                      v-if="currCredIssuer !== undefined"
-                      >{{ mdiShieldCheckOutline }}</v-icon
-                    >
-                    Credential is held by {{ entityName }}
-                  </p>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <p>
-                    <v-icon
-                      class="validated"
-                      v-if="currCredIssuer !== undefined"
-                      >{{ mdiShieldCheckOutline }}</v-icon
-                    >
-                    Credential is valid
-                  </p>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <p>
-                    <v-icon
-                      class="validated"
-                      v-if="currCredIssuer !== undefined"
-                      >{{ mdiShieldCheckOutline }}</v-icon
-                    >
-                    Credential is tamper-free
-                  </p>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-container>
-        </v-card>
-      </v-container>
-
-      <v-container>
-        <v-card>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                Claims proven
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-data-table
-                  :headers="headers"
-                  :items="proofValues"
-                  hide-default-header
-                  hide-default-footer
-                  disable-pagination
-                >
-                  <template v-slot:[`item.attr_name`]="{ item }">
+      <div v-if="credRevoked">
+        <v-container>
+          <v-alert prominent type="error" class="red">
+            <v-row align="center">
+              <v-col class="grow">
+                Credential has expired and can no longer be verified
+              </v-col>
+            </v-row>
+          </v-alert>
+        </v-container>
+      </div>
+      <div v-else>
+        <v-container>
+          <v-card>
+            <v-card-title class="one-line"
+              ><p>
+                <v-icon class="validated">{{ mdiShieldCheckOutline }}</v-icon>
+                {{ `${currCredTypeDesc} credential verified` }}
+              </p></v-card-title
+            >
+            <v-container>
+              <p class="verificationTime">
+                {{ `Cryptographically verified ${currDate}` }}
+              </p>
+              <p>
+                Issued: {{ currCredIssuedDate | formatDate }} • Effective:
+                {{ currCredEffDate | formatDate }}
+              </p>
+              <p>The following verifications were successfully completed:</p>
+              <v-list flat>
+                <v-list-item>
+                  <v-list-item-content>
                     <p>
                       <v-icon
-                        :class="{ invisible: !item.attr_val }"
                         class="validated"
-                        >{{ mdiShieldCheckOutline }}</v-icon
+                        v-if="currCredIssuer !== undefined"
+                        >{{ mdiCheckBold }}</v-icon
                       >
-                      {{ item.attr_name }}
+                      Credential issuer is {{ currCredIssuer }}
                     </p>
-                  </template>
-                </v-data-table>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
-      </v-container>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <p>
+                      <v-icon
+                        class="validated"
+                        v-if="currCredIssuer !== undefined"
+                        >{{ mdiCheckBold }}</v-icon
+                      >
+                      Credential is held by {{ entityName }}
+                    </p>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <p>
+                      <v-icon
+                        class="validated"
+                        v-if="currCredIssuer !== undefined"
+                        >{{ mdiCheckBold }}</v-icon
+                      >
+                      Credential is valid
+                    </p>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <p>
+                      <v-icon
+                        class="validated"
+                        v-if="currCredIssuer !== undefined"
+                        >{{ mdiCheckBold }}</v-icon
+                      >
+                      Credential is tamper-free
+                    </p>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-container>
+          </v-card>
+        </v-container>
 
-      <v-container>
-        <v-card>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                Proof Details
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-textarea
-                  readonly
-                  :value="proofRaw"
-                  auto-grow
-                  rows="8"
-                  cols="40"
-                ></v-textarea>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
-      </v-container>
+        <v-container>
+          <v-card>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  Claims proven
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-data-table
+                    :headers="headers"
+                    :items="proofValues"
+                    hide-default-header
+                    hide-default-footer
+                    disable-pagination
+                  >
+                    <template v-slot:[`item.attr_name`]="{ item }">
+                      <p>
+                        <v-icon
+                          :class="{ invisible: !item.attr_val }"
+                          class="validated"
+                          >{{ mdiCheckBold }}</v-icon
+                        >
+                        {{ item.attr_name }}
+                      </p>
+                    </template>
+                  </v-data-table>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card>
+        </v-container>
+
+        <v-container>
+          <v-card>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  Proof Details
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-textarea
+                    readonly
+                    :value="proofRaw"
+                    auto-grow
+                    rows="8"
+                    cols="40"
+                  ></v-textarea>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card>
+        </v-container>
+      </div>
     </div>
   </div>
 </template>
@@ -151,6 +164,7 @@ import {
   ICredentialPresExchange,
   ICredentialProof,
 } from "@/interfaces/api/v3/credential-verified.interface";
+import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 
 interface Data {
   headers: Record<string, string>[];
@@ -161,6 +175,7 @@ interface Data {
     ...mapGetters([
       "mdiArrowLeft",
       "mdiShieldCheckOutline",
+      "mdiCheckBold",
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getSelectedCredential",
@@ -204,7 +219,7 @@ export default class CredentialDetail extends Vue {
   }
 
   get entityName(): string | undefined {
-    return this.getSelectedCredential?.topic?.local_name?.text
+    return this.getSelectedCredential?.topic?.local_name?.text;
   }
 
   get entitySourceID(): string | undefined {
@@ -216,11 +231,7 @@ export default class CredentialDetail extends Vue {
   }
 
   test() {
-    console.log(
-      JSON.stringify(
-        this.getSelectedCredential
-      )
-    );
+    console.log(JSON.stringify(""));
   }
 
   get currCredEffDate(): Date | undefined {
@@ -233,6 +244,14 @@ export default class CredentialDetail extends Vue {
 
   get currCredIssuer(): string | undefined {
     return this.getSelectedCredential?.credential_type?.issuer?.name;
+  }
+
+  get currCredTypeDesc(): string | undefined {
+    return this.getSelectedCredential?.credential_type?.description;
+  }
+
+  get credRevoked(): boolean | undefined {
+    return this.getSelectedCredential?.revoked;
   }
 
   get proofValues(): Record<string, string>[] | undefined {
@@ -264,7 +283,8 @@ export default class CredentialDetail extends Vue {
         this.fetchSelectedCredential(credentialID),
         this.fetchPresID(credentialID),
       ]);
-      await new Promise((r) => setTimeout(r, 1000));
+      //need a small timeout because the credential isn't always verified after fetchPresID returns
+      await new Promise((r) => setTimeout(r, 500));
       await this.fetchPresEx({
         id: credentialID,
         presID: this.getPresentationID,

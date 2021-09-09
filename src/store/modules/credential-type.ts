@@ -19,6 +19,7 @@ const state: State = {
 };
 
 const getters = {
+  credentialType: (state: State): ICredentialType|null => state.selected,
   credentialTypes: (state: State): ICredentialType[] => state.types,
   credentialTypesByIssuer: (state: State): ICredentialTypeByIssuer[] =>
     Object.values(
@@ -55,12 +56,26 @@ const actions = {
       commit("setTypes", []);
     }
   },
+  async fetchCredentialTypeByID(
+    { commit }: ActionContext<State, RootState>,
+    id:number
+  ): Promise<void> {
+    try {
+      const res = await credentialTypeSerivice.getCredentialType(id);
+      commit("setType", res.data);
+    } catch (e) {
+      console.error(e);
+    }
+  },
 };
 
 const mutations = {
   setTypes(state: State, types: ICredentialType[]): void {
     state.types = [...types];
   },
+  setType(state:State, type:ICredentialType): void{
+    state.selected = type;
+  }
 };
 
 export default {
