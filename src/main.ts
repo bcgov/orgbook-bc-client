@@ -5,8 +5,7 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
-import { dateFilter } from "@/utils/date-filter";
-
+import { dateFilter } from "@/filters/date.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 

@@ -302,7 +302,7 @@
                                 Expired: {{ cred.revoked_date | formatDate }}
                               </div>
                               <div v-if="cred.type" class="font-weight-bold">
-                                {{ entityTypeToName[cred.type] }}
+                                <span v-t="cred.type"></span>
                               </div>
                               <div v-if="cred.value">
                                 {{ cred.value }}
@@ -353,10 +353,6 @@ import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 interface Data {
   currentTab: string;
   credentialTimeOrder: number;
-  entityTypeToName: {
-    business_number: string;
-    entity_name: string;
-  };
   itemsDisplayed: number;
   relationshipStartIndex: number;
   credentialsExpanded: boolean;
@@ -441,10 +437,6 @@ export default class EntityResult extends Vue {
     return {
       currentTab: "",
       credentialTimeOrder: 1,
-      entityTypeToName: {
-        business_number: "Business number issued",
-        entity_name: "DBA name registered",
-      },
       itemsDisplayed: 100,
       relationshipStartIndex: 0,
       credentialsExpanded: false,

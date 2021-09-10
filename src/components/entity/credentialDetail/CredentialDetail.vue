@@ -182,7 +182,7 @@ interface Data {
     ...mapActions([
       "fetchSelectedCredential",
       "setLoading",
-      "fetchPresID",
+      "fetchPresId",
       "fetchPresEx",
     ]),
   },
@@ -195,7 +195,7 @@ export default class CredentialDetail extends Vue {
   getPresentationID!: string;
   getPresentationEX!: ICredentialProof;
   fetchSelectedCredential!: (id: string) => Promise<void>;
-  fetchPresID!: (id: string) => Promise<void>;
+  fetchPresId!: (id: string) => Promise<void>;
   fetchPresEx!: (params: { id: string; presID: string }) => Promise<void>;
   setLoading!: (loading: boolean) => void;
 
@@ -271,9 +271,9 @@ export default class CredentialDetail extends Vue {
     if (credentialID) {
       await Promise.all([
         this.fetchSelectedCredential(credentialID),
-        this.fetchPresID(credentialID),
+        this.fetchPresId(credentialID),
       ]);
-      //need a small timeout because the credential isn't always verified after fetchPresID returns
+      //need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 500));
       await this.fetchPresEx({
         id: credentialID,

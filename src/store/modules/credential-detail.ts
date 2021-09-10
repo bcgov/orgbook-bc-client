@@ -42,7 +42,7 @@ const actions = {
       console.error(e);
     }
   },
-  async fetchPresID(
+  async fetchPresId(
     { commit }: ActionContext<State, RootState>,
     id: string
   ): Promise<void> {
