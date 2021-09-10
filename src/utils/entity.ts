@@ -25,17 +25,22 @@ export function getRelationshipName(relationship: IRelationship): string {
   return ret;
 }
 
-export function getRelationshipIssuer(relationship: IRelationship, credSet: ICredential[]): IIssuer|undefined{
+export function getRelationshipIssuer(
+  relationship: IRelationship,
+  credSet: ICredential[]
+): IIssuer | undefined {
   return selectFirstAttrItem(
-    {key:"id", value:relationship.credential.id}, credSet
-  )?.credential_type?.issuer
+    { key: "id", value: relationship.credential.id },
+    credSet
+  )?.credential_type?.issuer;
 }
 
 export function credOrRelationshipToDisplay(
-  item: ICredential | IRelationship, credSet?:ICredential[]
+  item: ICredential | IRelationship,
+  credSet?: ICredential[]
 ): ICredentialDisplayType {
   const display: ICredentialDisplayType = {
-    id:0,
+    id: 0,
     credential_type: "",
     type: "",
     authority: "",
@@ -46,7 +51,7 @@ export function credOrRelationshipToDisplay(
   };
   if (isCredential(item)) {
     const credItem = item as ICredential;
-    display.id = credItem.id
+    display.id = credItem.id;
     display.authority = credItem.credential_type.issuer.name;
     display.authorityLink = credItem.credential_type.issuer.url;
     display.type = credItem.names[0]?.type;
@@ -62,18 +67,17 @@ export function credOrRelationshipToDisplay(
   } else {
     const relItem = item as IRelationship;
 
-
-    display.id = relItem.credential.id
-    display.authority = ""
-    display.authorityLink = ""
-    if(credSet !== undefined){
+    display.id = relItem.credential.id;
+    display.authority = "";
+    display.authorityLink = "";
+    if (credSet !== undefined) {
       const issuer = getRelationshipIssuer(relItem, credSet);
-      if(issuer !== undefined){
-        display.authority = issuer.name
+      if (issuer !== undefined) {
+        display.authority = issuer.name;
         display.authorityLink = issuer.url;
       }
     }
-    
+
     display.credential_type = relItem.credential.credential_type.description;
     //display.type = relItem.related_topic.names[0]?.type
     display.type = "entity_name";

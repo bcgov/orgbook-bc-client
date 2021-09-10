@@ -6,7 +6,11 @@ export default class Credential extends ApiResource {
   baseVersion = "v2";
   basePath = "credential";
 
-  async getFormattedCredential(id: string): Promise<HttpResponse<ICredentialFormatted>> {
-    return await Http.get<ICredentialFormatted>(this.formatEndpointUrl(`${id}/formatted`));
+  async getFormattedCredential(
+    id: string
+  ): Promise<HttpResponse<ICredentialFormatted>> {
+    return await Http.get<ICredentialFormatted>(
+      this.formatEndpointUrl(`${id}/formatted`)
+    );
   }
 }

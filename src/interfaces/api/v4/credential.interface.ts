@@ -34,7 +34,7 @@ export interface ICredential extends IApiResource {
 }
 
 export interface ICredentialDisplayType {
-  id:number;
+  id: number;
   credential_type: string;
   type: string;
   authority: string;
@@ -48,34 +48,34 @@ export interface ICredentialDisplayType {
 }
 
 export interface ICredentialFormatted {
-  create_timestamp:Date
-  effective_date:Date;
-  inactive:boolean;
-  latest:boolean;
-  revoked:boolean;
-  revoked_date?:Date;
-  credential_id:string;
-  credential_type:ICredentialType;
-  addresses:ICredential[];
-  names:ICredentialName;
-  attributes:ICredentialAttribute[];
-  local_name:ICredentialName;
-  remote_name?:ICredentialName;
+  create_timestamp: Date;
+  effective_date: Date;
+  inactive: boolean;
+  latest: boolean;
+  revoked: boolean;
+  revoked_date?: Date;
+  credential_id: string;
+  credential_type: ICredentialType;
+  addresses: ICredential[];
+  names: ICredentialName;
+  attributes: ICredentialAttribute[];
+  local_name: ICredentialName;
+  remote_name?: ICredentialName;
   topic: IFormattedTopic;
-  related_topics:ITopic[];
-  credential_set:ICredentialSet;
+  related_topics: ITopic[];
+  credential_set: ICredentialSet;
 }
 
 export interface ICredentialDetailView {
-  effective_date:Date;
-  entity_name:string;
-  assumed_entity_name?:string;
-  assumed_entity_name_effective?:Date;
-  entity_name_effective?:Date;
-  entity_name_trans?:string;
-  entity_status:string;
-  entity_status_effective:string;
-  entity_type:string;
-  expiry_date?:string;
-  extra_jur_registration?:string;
+  effective_date: Date;
+  entity_name: string;
+  assumed_entity_name?: string;
+  assumed_entity_name_effective?: Date;
+  entity_name_effective?: Date;
+  entity_name_trans?: string;
+  entity_status: string;
+  entity_status_effective: string;
+  entity_type: string;
+  expiry_date?: string;
+  extra_jur_registration?: string;
 }

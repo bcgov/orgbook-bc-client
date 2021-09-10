@@ -31,12 +31,12 @@ export interface ITopic extends IApiResource {
   related_from: number[];
 }
 
-export interface ITopicLocalName{
-  id:number;
-  text:string;
-  language?:string;
-  credential_id:number;
-  type:string;
+export interface ITopicLocalName {
+  id: number;
+  text: string;
+  language?: string;
+  credential_id: number;
+  type: string;
 }
 
 export interface IFormattedTopic extends ITopic {

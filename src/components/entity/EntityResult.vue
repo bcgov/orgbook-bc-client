@@ -4,7 +4,6 @@
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
     <div v-else>
-      <!-- <v-btn @click="test">TEST</v-btn> -->
       <BackToSearch />
       <EntityHeader
         :name="entityName"
@@ -123,8 +122,18 @@
           >
             <template #header>
               <div class="text-body-2 timeline-cred-header">
-                <div v-if="businessAsRelationship[i + relationshipStartIndex].credential.revoked" class="expired-credential">
-                  Expired: {{ businessAsRelationship[i + relationshipStartIndex].credential.revoked_date | formatDate }}
+                <div
+                  v-if="
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .credential.revoked
+                  "
+                  class="expired-credential"
+                >
+                  Expired:
+                  {{
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .credential.revoked_date | formatDate
+                  }}
                 </div>
                 <h3>
                   <span class="fake-link">{{
@@ -193,16 +202,12 @@
         <template #expansionPanels>
           <CredentialItem
             :authority="
-              credOrRelationshipToDisplay(
-                ownedByRelationship,
-                credSet
-              ).authority
+              credOrRelationshipToDisplay(ownedByRelationship, credSet)
+                .authority
             "
             :authorityLink="
-              credOrRelationshipToDisplay(
-                ownedByRelationship,
-                credSet
-              ).authorityLink
+              credOrRelationshipToDisplay(ownedByRelationship, credSet)
+                .authorityLink
             "
             :effectiveDate="ownedByRelationship.credential.effective_date"
           >
@@ -444,10 +449,6 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded: false,
     };
-  }
-
-  test() {
-    console.log(this.selectedTopic);
   }
 
   loadingCallBack(): void {

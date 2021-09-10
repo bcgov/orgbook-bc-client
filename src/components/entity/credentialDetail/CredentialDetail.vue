@@ -6,7 +6,6 @@
     <div v-else>
       <v-icon>{{ mdiArrowLeft }}</v-icon
       ><a :href="`/entity/${entitySourceID}`">{{ entityName }}</a>
-      <!-- <v-btn @click="test">TEST</v-btn> -->
       <div v-if="credRevoked">
         <v-container>
           <v-alert prominent type="error" class="red">
@@ -151,7 +150,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
-import { selectFirstAttrItem } from "@/utils/attribute-filter";
 import moment from "moment";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import {
@@ -160,11 +158,7 @@ import {
 } from "@/interfaces/api/v4/credential.interface";
 
 import router from "@/router";
-import {
-  ICredentialPresExchange,
-  ICredentialProof,
-} from "@/interfaces/api/v3/credential-verified.interface";
-import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import { ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
 
 interface Data {
   headers: Record<string, string>[];
@@ -228,10 +222,6 @@ export default class CredentialDetail extends Vue {
 
   isRelationshipCred(cred: ICredential): boolean {
     return cred.credential_type.description === "relationship.registries.ca";
-  }
-
-  test() {
-    console.log(JSON.stringify(""));
   }
 
   get currCredEffDate(): Date | undefined {
