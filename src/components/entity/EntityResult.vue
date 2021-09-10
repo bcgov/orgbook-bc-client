@@ -192,7 +192,18 @@
         </template>
         <template #expansionPanels>
           <CredentialItem
-            authority="CRA"
+            :authority="
+              credOrRelationshipToDisplay(
+                ownedByRelationship,
+                credSet
+              ).authority
+            "
+            :authorityLink="
+              credOrRelationshipToDisplay(
+                ownedByRelationship,
+                credSet
+              ).authorityLink
+            "
             :effectiveDate="ownedByRelationship.credential.effective_date"
           >
             <template #header>
