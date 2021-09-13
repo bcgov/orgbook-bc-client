@@ -194,6 +194,7 @@ export default class CredentialDetail extends Vue {
   loading!: boolean;
   getPresentationId!: string;
   getPresentationEX!: ICredentialProof;
+  sourceId!: string;
   fetchSelectedCredential!: (id: string) => Promise<void>;
   fetchPresId!: (id: string) => Promise<void>;
   fetchPresEx!: (params: { id: string; presId: string }) => Promise<void>;
@@ -213,11 +214,11 @@ export default class CredentialDetail extends Vue {
   }
 
   get entityName(): string | undefined {
-    return this.getSelectedCredential?.topic?.local_name?.text;
+    return this.getSelectedCredential?.topic?.names[0]?.text;
   }
 
   get entitySourceID(): string | undefined {
-    return this.getSelectedCredential?.topic.source_id;
+    return this.sourceId;
   }
 
   isRelationshipCred(cred: ICredential): boolean {
@@ -265,11 +266,10 @@ export default class CredentialDetail extends Vue {
   }
 
   async created(): Promise<void> {
-    console.log("Got here");
     this.setLoading(true);
 
     const { sourceId, credentialId } = this.$route.params;
-    console.log(this.$route.params);
+    this.sourceId = sourceId
     if (sourceId && credentialId) {
       await Promise.all([
         this.fetchSelectedCredential(credentialId),

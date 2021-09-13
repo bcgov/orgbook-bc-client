@@ -41,6 +41,5 @@ export interface ITopicLocalName {
 
 export interface IFormattedTopic extends ITopic {
   names: ITopicName[];
-  local_name: ITopicLocalName;
   attributes: ITopicAttribute[];
 }
