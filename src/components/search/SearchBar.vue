@@ -100,9 +100,6 @@ export default class SearchBar extends Vue {
   }
 
   async autocomplete(q: string): Promise<void> {
-    if (q.length < 2) {
-      return;
-    }
     try {
       this.items = [] as string[];
       this.pending = true;
