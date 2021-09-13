@@ -45,7 +45,7 @@
             :authority="entityRegistrationIssuer"
             :authorityLink="entityRegistrationIssuerUrl"
             :effectiveDate="entityEffectiveDate"
-            :credID="entityNameCredID"
+            :credId="entityNameCredId"
           >
             <template #header>
               <div class="text-h6 font-weight-bold">Registration</div>
@@ -116,7 +116,7 @@
               businessAsRelationship[i + relationshipStartIndex].credential
                 .effective_date
             "
-            :credID="
+            :credId="
               businessAsRelationship[i + relationshipStartIndex].credential.id
             "
           >
@@ -285,7 +285,7 @@
                           :authority="cred.authority"
                           :authorityLink="cred.authorityLink"
                           :expired="cred.revoked"
-                          :credID="cred.id"
+                          :credId="cred.id"
                           :reason="
                             cred.type === 'entity_name'
                               ? cred.registration_reason
@@ -629,11 +629,13 @@ export default class EntityResult extends Vue {
     )?.text;
   }
 
-  get entityNameCredID(): number | undefined {
-    return selectFirstAttrItem(
+  get entityNameCredId(): number | undefined {
+    const ret=  selectFirstAttrItem(
       { key: "type", value: "entity_name" },
       this.selectedTopic?.names as ITopicName[]
     )?.credential_id;
+    console.log(ret)
+    return ret
   }
 
   get entityBusinessNumber(): string | undefined {

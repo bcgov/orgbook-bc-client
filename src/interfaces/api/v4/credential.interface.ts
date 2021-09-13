@@ -59,8 +59,6 @@ export interface ICredentialFormatted {
   addresses: ICredential[];
   names: ICredentialName;
   attributes: ICredentialAttribute[];
-  local_name: ICredentialName;
-  remote_name?: ICredentialName;
   topic: IFormattedTopic;
   related_topics: ITopic[];
   credential_set: ICredentialSet;

@@ -12,20 +12,20 @@ const credVerificationService = new CredentialVerifier();
 
 export interface State {
   selectedCredential: ICredentialFormatted | undefined;
-  presentationID: string;
+  presentationId: string;
   presentationEX: ICredentialProof | undefined;
 }
 
 const state: State = {
   selectedCredential: undefined,
-  presentationID: "",
+  presentationId: "",
   presentationEX: undefined,
 };
 
 const getters = {
   getSelectedCredential: (state: State): ICredentialFormatted | undefined =>
     state.selectedCredential,
-  getPresentationID: (state: State): string => state.presentationID,
+  getPresentationId: (state: State): string => state.presentationId,
   getPresentationEX: (state: State): ICredentialProof | undefined =>
     state.presentationEX,
 };
@@ -48,19 +48,19 @@ const actions = {
   ): Promise<void> {
     try {
       const res = await credVerificationService.credentialVerify(id);
-      commit("setPresID", res.data.presentation_exchange_id);
+      commit("setPresId", res.data.presentation_exchange_id);
     } catch (e) {
       console.log(e);
     }
   },
   async fetchPresEx(
     { commit }: ActionContext<State, RootState>,
-    params: { id: string; presID: string }
+    params: { id: string; presId: string }
   ): Promise<void> {
     try {
       const res = await credVerificationService.credentialVerifyPresEx(
         params.id,
-        params.presID
+        params.presId
       );
       commit("setPresEX", res.data);
     } catch (e) {
@@ -73,8 +73,8 @@ const mutations = {
   setSelectedCredential: (state: State, cred: ICredentialFormatted): void => {
     state.selectedCredential = cred;
   },
-  setPresID: (state: State, presID: string): void => {
-    state.presentationID = presID;
+  setPresId: (state: State, presId: string): void => {
+    state.presentationId = presId;
   },
 
   setPresEX: (state: State, presEX: ICredentialProof): void => {

@@ -19,10 +19,10 @@ export default class CredentialVerifier extends ApiResource {
 
   async credentialVerifyPresEx(
     id: string,
-    exID: string
+    exId: string
   ): Promise<HttpResponse<ICredentialProof>> {
     return await Http.get<ICredentialProof>(
-      this.formatEndpointUrl(`${id}/verify/${exID}`)
+      this.formatEndpointUrl(`${id}/verify/${exId}`)
     );
   }
 }

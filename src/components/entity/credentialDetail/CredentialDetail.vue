@@ -173,7 +173,7 @@ interface Data {
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getSelectedCredential",
-      "getPresentationID",
+      "getPresentationId",
       "getPresentationEX",
       "loading",
     ]),
@@ -192,11 +192,11 @@ export default class CredentialDetail extends Vue {
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   getSelectedCredential!: ICredentialFormatted | undefined;
   loading!: boolean;
-  getPresentationID!: string;
+  getPresentationId!: string;
   getPresentationEX!: ICredentialProof;
   fetchSelectedCredential!: (id: string) => Promise<void>;
   fetchPresId!: (id: string) => Promise<void>;
-  fetchPresEx!: (params: { id: string; presID: string }) => Promise<void>;
+  fetchPresEx!: (params: { id: string; presId: string }) => Promise<void>;
   setLoading!: (loading: boolean) => void;
 
   data(): Data {
@@ -265,22 +265,25 @@ export default class CredentialDetail extends Vue {
   }
 
   async created(): Promise<void> {
+    console.log("Got here");
     this.setLoading(true);
 
-    const { credentialID } = this.$route.params;
-    if (credentialID) {
+    const { sourceId, credentialId } = this.$route.params;
+    console.log(this.$route.params);
+    if (sourceId && credentialId) {
       await Promise.all([
-        this.fetchSelectedCredential(credentialID),
-        this.fetchPresId(credentialID),
+        this.fetchSelectedCredential(credentialId),
+        this.fetchPresId(credentialId),
       ]);
+      console.log(this.getPresentationId);
       //need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 500));
       await this.fetchPresEx({
-        id: credentialID,
-        presID: this.getPresentationID,
+        id: credentialId,
+        presId: this.getPresentationId,
       });
     } else {
-      router.push("/");
+      router.push("/search");
     }
     this.setLoading(false);
   }
