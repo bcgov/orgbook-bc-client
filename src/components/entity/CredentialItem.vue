@@ -28,7 +28,7 @@
         </div>
         <div v-if="!expired">
           <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
-          <router-link :to="`${baseRoute}/credential/${credId}`"
+          <router-link :to="{ name: 'Credential', params: { sourceId, credentialId:credId } }"
             >Credential verified</router-link
           >
         </div>
@@ -61,8 +61,9 @@ export default class CredentialItem extends Vue {
   @Prop({ default: "" }) reason!: string;
   @Prop({ default: "" }) credId!: string;
 
-  get baseRoute(): string {
-    return this.$router.currentRoute.path;
+  get sourceId(): string {
+    const { sourceId } = this.$route.params;
+    return sourceId;
   }
 }
 </script>

@@ -269,13 +269,12 @@ export default class CredentialDetail extends Vue {
     this.setLoading(true);
 
     const { sourceId, credentialId } = this.$route.params;
-    this.sourceId = sourceId
+    this.sourceId = sourceId;
     if (sourceId && credentialId) {
       await Promise.all([
         this.fetchSelectedCredential(credentialId),
         this.fetchPresId(credentialId),
       ]);
-      console.log(this.getPresentationId);
       //need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 500));
       await this.fetchPresEx({

@@ -630,12 +630,11 @@ export default class EntityResult extends Vue {
   }
 
   get entityNameCredId(): number | undefined {
-    const ret=  selectFirstAttrItem(
+    const ret = selectFirstAttrItem(
       { key: "type", value: "entity_name" },
       this.selectedTopic?.names as ITopicName[]
     )?.credential_id;
-    console.log(ret)
-    return ret
+    return ret;
   }
 
   get entityBusinessNumber(): string | undefined {
@@ -768,7 +767,6 @@ export default class EntityResult extends Vue {
       { key: "type", value: "entity_name" },
       this.selectedTopic?.names
     )?.issuer?.url;
-    console.log(ret);
     return ret;
   }
 
