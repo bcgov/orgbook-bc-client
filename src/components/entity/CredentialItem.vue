@@ -22,19 +22,19 @@
             <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
           </a>
         </div>
-        <div v-if="effectiveDate">
-          <span>Effective:&nbsp;</span>
-          <span>{{ effectiveDate | formatDate }}</span>
-        </div>
         <div v-if="reason">
           <span>Reason:&nbsp;</span>
           <span>{{ reason }}</span>
         </div>
-        <div>
+        <div v-if="!expired">
           <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
-          <span class="fake-link vertical-align-middle"
-            >Credential verified</span
+          <router-link :to="{ name: 'Credential', params: { sourceId, credentialId:credId } }"
+            >Credential verified</router-link
           >
+        </div>
+        <div v-if="effectiveDate">
+          <span>Effective:&nbsp;</span>
+          <span>{{ effectiveDate | formatDate }}</span>
         </div>
       </div>
       <slot name="content"></slot>
@@ -59,6 +59,12 @@ export default class CredentialItem extends Vue {
   @Prop({ default: false }) expired!: boolean;
   @Prop({ default: false }) timeline!: boolean;
   @Prop({ default: "" }) reason!: string;
+  @Prop({ default: "" }) credId!: string;
+
+  get sourceId(): string {
+    const { sourceId } = this.$route.params;
+    return sourceId;
+  }
 }
 </script>
 

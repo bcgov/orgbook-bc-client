@@ -5,11 +5,12 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
-
+import { dateFilter } from "@/filters/date.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 
 Vue.config.productionTip = false;
+Vue.filter("formatDate", dateFilter);
 
 const docRoutes = [defaultDoc, ...docs].map(processDocRoute);
 docRoutes.forEach((docRoute) => {

@@ -19,6 +19,7 @@ const state: State = {
 };
 
 const getters = {
+  credentialType: (state: State): ICredentialType | null => state.selected,
   credentialTypes: (state: State): ICredentialType[] => state.types,
   credentialTypesByIssuer: (state: State): ICredentialTypeByIssuer[] =>
     Object.values(

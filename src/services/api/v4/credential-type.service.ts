@@ -15,8 +15,4 @@ export default class CredentialType extends ApiResource {
       { params: { paging } }
     );
   }
-
-  async getCredentialType(id: number): Promise<HttpResponse<ICredentialType>> {
-    return await Http.get<ICredentialType>(this.formatEndpointUrl(`${id}`));
-  }
 }
