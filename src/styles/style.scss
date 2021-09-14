@@ -1,0 +1,47 @@
+@import "./variables.scss";
+
+a {
+     color: $link-color;
+}
+
+.on-top {
+     z-index: 1;
+}
+
+.on-bottom {
+     z-index: 0;
+}
+
+.checkbox {
+     color: $input-color;
+     height: 24px;
+}
+
+.icon-dense {
+     width: 20px;
+     height: 20px;
+}
+
+.vertical-align-middle {
+     vertical-align: middle;
+}
+
+.fake-link {
+     color: $link-color;
+     text-decoration: underline;
+     cursor: pointer;
+
+     &.disabled {
+          color: gray;
+          text-decoration: none;
+     }
+}
+
+@mixin card {
+     border: 1px solid $border-color !important;
+}
+
+@mixin card-raised {
+     @include card;
+     box-shadow: 3px 3px 6px -3px $border-color !important;
+}

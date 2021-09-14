@@ -2,12 +2,12 @@
   <div>
     <v-form ref="form" :disabled="loading">
       <div>
-        <p class="font-weight-bold">Reason for contact</p>
         <v-select
           outlined
+          dense
           v-model="formData.reason"
           :items="requestTypes"
-          label="Select a Reason"
+          label="Reason for contact"
         ></v-select>
       </div>
 
@@ -34,6 +34,7 @@
 
         <v-text-field
           outlined
+          dense
           v-model="formData.from_name"
           required
           label="Name"
@@ -41,6 +42,7 @@
 
         <v-text-field
           outlined
+          dense
           v-model="formData.from_email"
           label="Email address"
         ></v-text-field>
@@ -48,13 +50,15 @@
         <div :hidden="incorrectHidden">
           <v-select
             outlined
+            dense
             v-model="formData.error"
-            :items="credentialTypes"
+            :items="formattedCredentialTypes"
             label="What Information is incorrect?"
           ></v-select>
 
           <v-text-field
             outlined
+            dense
             v-model="formData.identifier"
             label="Identifier (such as the incorporation number, registration number, or licence / permit number)"
           ></v-text-field>
@@ -62,17 +66,19 @@
 
         <v-textarea
           outlined
+          dense
           v-model="formData.comments"
           :label="labelMessage"
         ></v-textarea>
       </div>
 
       <v-btn
+        id="contactSubmitButton"
         v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'"
         @click="submit"
         depressed
-        color="primary"
         :disabled="loading"
+        aria-label="submit-button"
         >Submit</v-btn
       >
     </v-form>
@@ -82,14 +88,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import {
-  ContactRequest,
-  IncorrectInfoContactRequest,
-  contactReason,
-} from "@/store/modules/contact";
 import router from "@/router";
-import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import {
+  IContactRequest,
+  IIncorrectInfoContactRequest,
+} from "@/interfaces/api/v2/contact.interface";
+import { contactReason } from "@/store/modules/contact";
 
 interface Data {
   formData: {
@@ -99,20 +104,19 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["pagedCredentialTypes", "loading"]),
+    ...mapGetters(["loading", "credentialTypes"]),
   },
   methods: {
-    ...mapActions(["fetchCredentialTypes", "sendFeedback", "setLoading"]),
+    ...mapActions(["setLoading", "sendFeedback"]),
   },
 })
 export default class ContactForm extends Vue {
-  formData!: ContactRequest | IncorrectInfoContactRequest;
-  pagedCredentialTypes!: IApiPagedResult<ICredentialType>;
+  formData!: IContactRequest | IIncorrectInfoContactRequest;
+  credentialTypes!: ICredentialType[];
 
   setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: () => Promise<void>;
   sendFeedback!: (
-    feedback: ContactRequest | IncorrectInfoContactRequest
+    feedback: IContactRequest | IIncorrectInfoContactRequest
   ) => Promise<void>;
 
   data(): Data {
@@ -128,8 +132,8 @@ export default class ContactForm extends Vue {
     }));
   }
 
-  get credentialTypes(): Array<{ text: string; value: number }> {
-    return this.pagedCredentialTypes.results.map((type) => ({
+  get formattedCredentialTypes(): Array<{ text: string; value: number }> {
+    return this.credentialTypes.map((type) => ({
       text: type.description,
       value: type.id,
     }));
@@ -145,12 +149,6 @@ export default class ContactForm extends Vue {
       : "Message";
   }
 
-  async created(): Promise<void> {
-    this.setLoading(true);
-    await this.fetchCredentialTypes();
-    this.setLoading(false);
-  }
-
   async submit(e: Event): Promise<void> {
     e.preventDefault();
     const isFormValid = (
@@ -160,8 +158,15 @@ export default class ContactForm extends Vue {
       this.setLoading(true);
       await this.sendFeedback(this.formData);
       this.setLoading(false);
-      router.push("/");
+      router.push({ name: "Search" });
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#contactSubmitButton {
+  background: $primary-color !important;
+  color: $white !important;
+}
+</style>

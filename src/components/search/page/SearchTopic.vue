@@ -1,24 +1,28 @@
 <template>
-  <v-card elevation="2" rounded="sm" class="mb-5">
-    <div
-      class="historical d-inline-flex rounded-sm"
-      v-if="entityStatus === 'HIS'"
-    >
-      <v-icon small class="pa-1" color="white">mdi-alert-outline</v-icon>
-      <span
-        class="text-uppercase text-caption font-weight-medium pr-1 pt-1 pb-1"
+  <v-card
+    elevation="0"
+    rounded="sm"
+    class="card mb-5"
+    :ripple="false"
+    @click="$router.push({ path: `/entity/${sourceId}` })"
+  >
+    <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
+      <v-icon class="ma-1" small color="white">{{ mdiAlertOutline }}</v-icon>
+      <span class="text-uppercase text-caption font-weight-bold pr-1 pt-1 pb-1"
         >Historical</span
       >
     </div>
     <v-card-text :class="{ 'pt-2': entityStatus === 'HIS' }">
-      <router-link :to="'/entity/' + sourceId">{{ legalName }}</router-link>
-      <div>{{ entityType }}</div>
-      <div v-if="craBusinessNumber">
+      <router-link class="font-weight-bold" :to="'/entity/' + sourceId">{{
+        legalName
+      }}</router-link>
+      <div>{{ $t(`entity_type.${entityType}`) }}</div>
+      <div v-if="craBusinessNumber" class="text--primary">
         <span>Business number</span>
         <span>:&nbsp;</span>
         <span>{{ craBusinessNumber }}</span>
       </div>
-      <div>
+      <div class="text--primary">
         <span>Incorporation number</span>
         <span>:&nbsp;</span>
         <span>{{ sourceId }}</span>
@@ -31,8 +35,13 @@
 import { ISearchTopic } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { pluck } from "@/utils/resource";
+import { mapGetters } from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters(["mdiAlertOutline"]),
+  },
+})
 export default class SearchTopic extends Vue {
   @Prop({ default: null }) topic!: ISearchTopic;
 
@@ -62,10 +71,20 @@ export default class SearchTopic extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.card {
+  @include card-raised;
+
+  &:hover {
+    padding: 0px;
+    border: 1px solid $link-color !important;
+    cursor: pointer;
+  }
+}
 .historical {
+  border-radius: 1px 0px 0px 0px !important;
   align-items: center;
-  background: orange;
-  color: white;
+  background: $accent-color;
+  color: $white;
 }
 </style>

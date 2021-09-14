@@ -1,23 +1,46 @@
 <template>
   <div>
-    <v-app-bar app color="primary" dark flat>
+    <v-app-bar app flat class="app-bar">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-        <v-row class="flex-col-align-center">
+        <v-row class="d-flex align-center">
           <v-col
             :class="{
               'pl-1': $vuetify.breakpoint.smAndDown,
               'pl-5': $vuetify.breakpoint.mdAndUp,
-              'flex-row flex-align-items-center': true,
+              'd-flex align-center': true,
             }"
           >
-            <v-app-bar-title>Logo here!</v-app-bar-title>
+            <v-toolbar-title router-link to="/search" class="app-bar-title">
+              <router-link to="/search">
+                <img
+                  class="logo"
+                  v-if="$vuetify.breakpoint.smAndDown"
+                  src="@/assets/img/logo.svg"
+                  alt="British Columbia"
+                  width="48px"
+                  height="42px"
+                />
+                <img
+                  class="logo"
+                  v-if="$vuetify.breakpoint.mdAndUp"
+                  src="@/assets/img/logo-banner.svg"
+                  alt="British Columbia"
+                  width="172px"
+                  height="48px"
+                />
+              </router-link>
+              <span
+                :class="{
+                  'font-weight-black d-inline-flex align-middle': true,
+                  'pl-4': $vuetify.breakpoint.smAndDown,
+                  'pl-8': $vuetify.breakpoint.mdAndUp,
+                }"
+              >
+                <span>OrgBook BC</span>
+              </span>
+            </v-toolbar-title>
           </v-col>
-          <v-col
-            class="
-              pa-0
-              flex-row flex-justify-content-flex-end flex-align-items-center
-            "
-          >
+          <v-col class="pa-0 d-flex justify-end align-center">
             <div v-if="$vuetify.breakpoint.mdAndUp">
               <v-btn
                 v-for="link in links"
@@ -25,7 +48,7 @@
                 plain
                 text
                 color="white"
-                :to="link.path"
+                :to="{ name: link.name }"
                 :ripple="false"
                 class="text-capitalize"
                 >{{ link.label }}</v-btn
@@ -33,8 +56,10 @@
             </div>
             <v-app-bar-nav-icon
               v-if="$vuetify.breakpoint.smAndDown"
-              class="mr-n2"
+              class="mr-n2 app-bar-nav-icon"
               @click="drawer = true"
+              color="white"
+              aria-label="nav-menu-button"
             ></v-app-bar-nav-icon>
           </v-col>
         </v-row>
@@ -70,3 +95,16 @@ export default class Header extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.app-bar {
+  background: $primary-color !important;
+  color: $white !important;
+  border-bottom: 2px solid $accent-color !important;
+}
+.app-bar-title {
+  .logo {
+    vertical-align: middle;
+  }
+}
+</style>

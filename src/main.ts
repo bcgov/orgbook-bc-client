@@ -1,20 +1,31 @@
 import Vue from "vue";
 import App from "./App.vue";
+import i18n from "./i18n";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
-import { AppConfig, getAppConfig } from "./services/config/config.service";
+import { dateFilter } from "@/filters/date.filter";
+import docs from "@/assets/docs.json";
+import { defaultDoc, processDocRoute } from "./utils/doc";
 
 Vue.config.productionTip = false;
+Vue.filter("formatDate", dateFilter);
+
+const docRoutes = [defaultDoc, ...docs].map(processDocRoute);
+docRoutes.forEach((docRoute) => {
+  router.addRoute("About", docRoute);
+});
 
 async function init() {
-  const config: AppConfig = await getAppConfig();
   new Vue({
+    i18n,
     router,
     store,
     vuetify,
-    created: () => store.dispatch("setApiUrl", new URL(config.apiUrl)),
+    created: () => {
+      store.dispatch("setDocRoutes", docRoutes);
+    },
     render: (h) => h(App),
   }).$mount("#app");
 }

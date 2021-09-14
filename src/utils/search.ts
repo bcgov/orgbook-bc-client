@@ -3,12 +3,14 @@ import {
   ISearchFilterOptions,
   ISearchQuery,
 } from "@/interfaces/api/v4/search-topic.interface";
+import { objHasProp } from "./general";
 
 export const defaultQuery: ISearchQuery = {
   q: null,
-  entity_status: "",
-  entity_type: "",
+  "category:entity_type": "",
   credential_type_id: "",
+  inactive: "",
+  page: "1",
 };
 
 export function fieldKeyFormatter(value = ""): string {
@@ -56,8 +58,12 @@ export function processField(
   filter: ISearchFilter
 ): ISearchFilter {
   return {
+    ...options,
     ...filter,
-    label: `${options.label}.${options.valueSelector(filter)}`,
+    label: options?.labelFormatter
+      ? options.labelFormatter(filter)
+      : `${options.label}.${options.valueSelector(filter)}`,
+    translated: !!(options?.labelFormatter && options.labelFormatter(filter)),
     key: options.key,
     value: options.valueSelector(filter),
   };
@@ -69,10 +75,54 @@ export function processFieldWithFallback(
   fallback: unknown
 ): ISearchFilter {
   return {
+    ...options,
     ...filter,
-    label: `${options.label}.${options.valueSelector(filter) || fallback}`,
+    label: options?.labelFormatter
+      ? options.labelFormatter(filter)
+      : `${options.label}.${options.valueSelector(filter) || fallback}`,
+    translated: !!(options?.labelFormatter && options.labelFormatter(filter)),
     key: options.key,
     value: options.valueSelector(filter) || fallback,
     count: filter.count || 0,
   };
+}
+
+export function getFilterValue(filter: ISearchFilter): unknown {
+  let returnValue = undefined;
+  const localValue = filter.value as string;
+  if (filter?.valueMapper) {
+    if (Object.values(filter.valueMapper).includes(localValue)) {
+      returnValue = localValue;
+    } else if (filter.valueMapper[localValue]) {
+      returnValue = filter.valueMapper[localValue];
+    }
+  } else {
+    returnValue = filter.value;
+  }
+  return returnValue;
+}
+
+export function isFilterActive(
+  filters: ISearchFilter[],
+  field: ISearchFilter
+): boolean {
+  return !!filters.find(
+    (filter) =>
+      filter.key === field.key &&
+      getFilterValue(filter) === getFilterValue(field)
+  );
+}
+
+export function getQueryValueFromFilter(
+  query: ISearchQuery,
+  filter: ISearchFilter
+): unknown {
+  let value = undefined;
+  if (objHasProp(query, filter.queryParameter)) {
+    value = getFilterValue(filter);
+  }
+  if (value === undefined && objHasProp(filter, "defaultValue")) {
+    value = filter.defaultValue;
+  }
+  return value;
 }

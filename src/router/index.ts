@@ -1,15 +1,16 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "@/views/Home.vue";
+import Search from "@/views/Search.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: "/search",
+    name: "Search",
+    component: Search,
   },
+
   {
     path: "/entity/:sourceId",
     name: "Entity",
@@ -17,28 +18,16 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "entity" */ "@/views/Entity.vue"),
   },
   {
+    path: "/entity/:sourceId/credential/:credentialId",
+    name: "Credential",
+    component: () =>
+      import(/* webpackChunkName: "credential" */ "@/views/CredentialView.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     component: () =>
       import(/* webpackChunkName: "about" */ "@/views/About.vue"),
-    children: [
-      {
-        path: "orgbook-data",
-        name: "OrgBook Data",
-      },
-      {
-        path: "digital-trust",
-        name: "Digital Trust",
-      },
-      {
-        path: "orgbook-api",
-        name: "OrgBook API",
-      },
-      {
-        path: "becoming-an-issuer",
-        name: "Becoming an Issuer",
-      },
-    ],
   },
   {
     path: "/contact",
@@ -50,7 +39,7 @@ const routes: Array<RouteConfig> = [
     path: "*",
     name: "Not Found",
     beforeEnter: (to, from, next) => {
-      next("/");
+      next({ name: "Search" });
     },
   },
 ];

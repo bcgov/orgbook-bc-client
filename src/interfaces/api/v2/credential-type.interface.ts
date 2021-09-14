@@ -12,3 +12,8 @@ export interface ICredentialType extends IApiResource {
   schema: ISchema;
   issuer: IIssuer;
 }
+
+export interface ICredentialTypeByIssuer {
+  issuer: IIssuer;
+  credentialTypes: ICredentialType[];
+}

@@ -1,40 +1,29 @@
 <template>
-  <v-expansion-panels multiple flat accordion v-model="panel" class="on-bottom">
-    <SearchFilterFacetPanel :fields="topEntityTypes" :more="moreEntityTypes">
-      <template v-slot:title> Organization Type </template>
-    </SearchFilterFacetPanel>
-    <SearchFilterFacetPanel :fields="entityStatuses">
-      <template v-slot:title> Organization Status </template>
-    </SearchFilterFacetPanel>
-    <SearchFilterFacetPanel :fields="credentialTypes">
-      <template v-slot:title> Credential </template>
-    </SearchFilterFacetPanel>
-  </v-expansion-panels>
+  <div class="search-facet-panels">
+    <v-expansion-panels multiple flat accordion v-model="panels">
+      <SearchFilterFacetPanel
+        :fields="topEntityTypeFilters"
+        :more="moreEntityTypeFilters"
+      >
+        <template v-slot:title> Organization Type </template>
+      </SearchFilterFacetPanel>
+      <SearchFilterFacetPanel :fields="entityStatusFilters">
+        <template v-slot:title> Organization Status </template>
+      </SearchFilterFacetPanel>
+      <SearchFilterFacetPanel :fields="credentialTypeFilters">
+        <template v-slot:title> Credential </template>
+      </SearchFilterFacetPanel>
+    </v-expansion-panels>
+  </div>
 </template>
 
 <script lang="ts">
-import {
-  ISearchFilter,
-  ISearchFilterFieldRecord,
-} from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterFacetPanel from "@/components/search/filter/SearchFilterFacetPanel.vue";
-import {
-  fieldKeyFormatter,
-  fieldValueFormatter,
-  moreFieldSelector,
-  processField,
-  topFieldSelector,
-} from "@/utils/search";
-import {
-  entityTypeSpec,
-  entityStatusSpec,
-  credentialTypeSpec,
-} from "@/data/search";
 
 interface Data {
-  panel: number[];
+  panels: number[];
 }
 
 @Component({
@@ -42,70 +31,28 @@ interface Data {
     SearchFilterFacetPanel,
   },
   computed: {
-    ...mapGetters(["searchFilterFields"]),
+    ...mapGetters([
+      "topEntityTypeFilters",
+      "moreEntityTypeFilters",
+      "entityStatusFilters",
+      "credentialTypeFilters",
+    ]),
   },
 })
 export default class SearchFilterFacetPanels extends Vue {
-  private searchFilterFields!: ISearchFilterFieldRecord;
-  private topTypes: string[] = ["BC", "CP", "GP", "S", "SP"];
-  private topStatuses: string[] = ["ACT", "HIS"];
-
   data(): Data {
     return {
-      panel: [0, 1, 2],
+      panels: [0, 1, 2],
     };
-  }
-
-  get topEntityTypes(): ISearchFilter[] {
-    return topFieldSelector(
-      {
-        ...entityTypeSpec,
-        inclusions: this.topTypes,
-        keySelector: (filter?: ISearchFilter) =>
-          fieldKeyFormatter((filter?.value || "::") as string),
-        valueSelector: (filter?: ISearchFilter) =>
-          fieldValueFormatter((filter?.value || "::") as string),
-      },
-      this.searchFilterFields.category as unknown as ISearchFilter[]
-    );
-  }
-
-  get moreEntityTypes(): ISearchFilter[] {
-    return moreFieldSelector(
-      {
-        ...entityTypeSpec,
-        exclusions: this.topTypes,
-        keySelector: (filter?: ISearchFilter) =>
-          fieldKeyFormatter((filter?.value || "::") as string),
-        valueSelector: (filter?: ISearchFilter) =>
-          fieldValueFormatter((filter?.value || "::") as string),
-      },
-      this.searchFilterFields.category as unknown as ISearchFilter[]
-    );
-  }
-
-  get entityStatuses(): ISearchFilter[] {
-    const options = {
-      ...entityStatusSpec,
-      keySelector: (filter?: ISearchFilter) =>
-        fieldKeyFormatter((filter?.value || "::") as string),
-      valueSelector: (filter?: ISearchFilter) =>
-        fieldValueFormatter((filter?.value || "::") as string),
-    };
-    return (this.searchFilterFields.category as unknown as ISearchFilter[])
-      .filter((filter) => options.keySelector(filter) === options.key)
-      .map((filter) => processField(options, filter));
-  }
-
-  get credentialTypes(): ISearchFilter[] {
-    const options = {
-      ...credentialTypeSpec,
-      keySelector: (filter?: ISearchFilter) => filter?.text || "",
-      valueSelector: (filter?: ISearchFilter) => filter?.value || "",
-    };
-    return (
-      this.searchFilterFields.credential_type_id as unknown as ISearchFilter[]
-    ).map((filter) => processField(options, filter));
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.search-facet-panels {
+  height: 100%;
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+  box-shadow: 3px 3px 6px -3px $border-color;
+}
+</style>

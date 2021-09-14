@@ -4,18 +4,15 @@ import Http, { HttpResponse } from "@/services/http.service";
 import ApiResource from "@/services/api/resource.service";
 
 export default class CredentialType extends ApiResource {
-  baseVersion = "v2";
-  basePath = "credentialtype";
+  baseVersion = "v4";
+  basePath = "credential-type";
 
-  async getCredentialTypes(): Promise<
-    HttpResponse<IApiPagedResult<ICredentialType>>
-  > {
+  async getCredentialTypes(
+    paging = true
+  ): Promise<HttpResponse<IApiPagedResult<ICredentialType>>> {
     return await Http.get<IApiPagedResult<ICredentialType>>(
-      this.formatEndpointUrl("")
+      this.formatEndpointUrl(""),
+      { params: { paging } }
     );
-  }
-
-  async getCredentialType(id: number): Promise<HttpResponse<ICredentialType>> {
-    return await Http.get<ICredentialType>(this.formatEndpointUrl(`${id}`));
   }
 }

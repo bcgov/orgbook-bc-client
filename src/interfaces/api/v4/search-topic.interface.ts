@@ -5,22 +5,26 @@ import { ITopicAttribute, ITopicName } from "../v2/topic.interface";
 
 export interface ISearchQuery {
   q: unknown;
-  entity_type?: unknown;
-  entity_status?: unknown;
+  "category:entity_type"?: unknown;
   credential_type_id?: unknown;
+  inactive?: unknown;
+  page?: unknown;
   [index: string]: ISearchQuery[keyof ISearchQuery];
 }
 
 interface ISearchFilterBase {
+  display: boolean;
   type: string;
   key: string;
   queryParameter: string;
   label?: string;
+  translated?: boolean;
 }
 
 export interface ISearchFilterOptions extends ISearchFilterBase {
   keySelector: (filter?: ISearchFilter) => unknown;
   valueSelector: (filter?: ISearchFilter) => unknown;
+  labelFormatter?: (filter?: ISearchFilter) => string;
   inclusions?: string[];
   exclusions?: string[];
 }
@@ -29,6 +33,8 @@ export interface ISearchFilter extends ISearchFilterBase {
   count?: number;
   text?: string;
   value?: unknown;
+  valueMapper?: Record<string, unknown>;
+  defaultValue?: unknown;
 }
 
 export type ISearchFilterFieldRecord = Record<string, ISearchFilter>;
