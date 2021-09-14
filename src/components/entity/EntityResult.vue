@@ -1,10 +1,11 @@
 <template>
   <div>
+    <!-- TODO replace with progress bar -->
     <div v-if="loading" class="progress d-flex align-center justify-center">
       <v-progress-circular indeterminate></v-progress-circular>
     </div>
     <div v-else>
-      <BackToSearch />
+      <BackTo />
       <EntityHeader
         :name="entityName"
         :businessNumber="entityBusinessNumber"
@@ -38,7 +39,7 @@
         >
       </v-row>
 
-      <!-- Topic -->
+      <!-- topic -->
       <EntityCard ref="registration" :expanded="credentialsExpanded">
         <template #expansionPanels>
           <CredentialItem
@@ -78,6 +79,7 @@
         </template>
       </EntityCard>
 
+      <!-- relationships related to -->
       <EntityCard
         title="Relationships"
         ref="relationships"
@@ -85,9 +87,9 @@
         v-if="businessAsRelationship.length > 0"
       >
         <template #subtitle>
-          <v-container>
+          <div class="pl-5 pr-5 mb-5 text-body-2">
             <p>{{ entityName }} is doing business as:</p>
-          </v-container>
+          </div>
         </template>
         <template #expansionPanels>
           <CredentialItem
@@ -147,47 +149,30 @@
           </CredentialItem>
         </template>
         <template #footer>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <p>Items displayed</p>
-              </v-col>
-              <v-col cols="2">
-                <v-select
-                  v-model="itemsDisplayed"
-                  :items="[5, 10, 100]"
-                  @change="relationshipStartIndex = 0"
-                ></v-select>
-              </v-col>
-              <v-col cols="2">
-                <p>
-                  {{ relationshipStartIndex + 1 }} -
-                  {{
-                    Math.min(
-                      Math.min(itemsDisplayed, businessAsRelationship.length) +
-                        relationshipStartIndex,
-                      businessAsRelationship.length
-                    )
-                  }}
-                  of {{ businessAsRelationship.length }}
-                </p>
-              </v-col>
-              <v-col cols="1"
-                ><v-icon @click="incRelationshipStartIndex(-1)">{{
-                  mdiChevronLeft
-                }}</v-icon></v-col
-              >
-              <v-col cols="1"
-                ><v-icon @click="incRelationshipStartIndex(1)">{{
-                  mdiChevronRight
-                }}</v-icon></v-col
-              >
-            </v-row>
-          </v-container>
+          <div class="pa-5 d-flex align-center justify-end">
+            <span class="text-body-2"
+              >Items displayed {{ relationshipStartIndex + 1 }} -
+              {{ relationshipStartIndex + 1 }} -
+              {{
+                Math.min(
+                  Math.min(itemsDisplayed, businessAsRelationship.length) +
+                    relationshipStartIndex,
+                  businessAsRelationship.length
+                )
+              }}
+              of {{ businessAsRelationship.length }}
+            </span>
+            <v-btn icon @click="incRelationshipStartIndex(-1)">
+              <v-icon>{{ mdiChevronLeft }}</v-icon>
+            </v-btn>
+            <v-btn icon @click="incRelationshipStartIndex(1)">
+              <v-icon>{{ mdiChevronRight }}</v-icon>
+            </v-btn>
+          </div>
         </template>
       </EntityCard>
 
-      <!-- Relationships related from -->
+      <!-- relationships related from -->
       <EntityCard
         title="Relationships"
         ref="relationships"
@@ -220,7 +205,7 @@
         </template>
       </EntityCard>
 
-      <!-- enitity card credential holder -->
+      <!-- credential timeline -->
       <EntityCard
         :expanded="credentialsExpanded"
         title="Credentials"
@@ -286,11 +271,7 @@
                           :authorityLink="cred.authorityLink"
                           :expired="cred.revoked"
                           :credId="cred.id"
-                          :reason="
-                            cred.type === 'entity_name'
-                              ? cred.registration_reason
-                              : ''
-                          "
+                          :reason="cred.registration_reason"
                           :timeline="true"
                         >
                           <template #header>
@@ -301,8 +282,20 @@
                               >
                                 Expired: {{ cred.revoked_date | formatDate }}
                               </div>
-                              <div v-if="cred.type" class="font-weight-bold">
-                                <span v-t="cred.type"></span>
+                              <div
+                                v-if="cred.registration_reason"
+                                class="font-weight-bold"
+                                v-t="cred.registration_reason"
+                              ></div>
+                              <div
+                                v-else-if="
+                                  cred.relationship_types &&
+                                  cred.relationship_types.length
+                                "
+                              >
+                                <div class="font-weight-bold">
+                                  DBA name registered
+                                </div>
                               </div>
                               <div v-if="cred.value">
                                 {{ cred.value }}
@@ -339,7 +332,7 @@ import {
   getRelationshipName,
   credOrRelationshipToDisplay,
 } from "@/utils/entity";
-import BackToSearch from "@/components/shared/BackToSearch.vue";
+import BackTo from "@/components/shared/BackTo.vue";
 import CredentialItem from "@/components/entity/CredentialItem.vue";
 import EntityCard from "@/components/entity/EntityCard.vue";
 import EntityHeader from "@/components/entity/EntityHeader.vue";
@@ -360,7 +353,7 @@ interface Data {
 
 @Component({
   components: {
-    BackToSearch,
+    BackTo,
     CredentialItem,
     EntityCard,
     EntityHeader,
@@ -804,9 +797,6 @@ export default class EntityResult extends Vue {
 }
 .expired-credential {
   color: $error-color;
-}
-.timelineItem {
-  color: $secondary-color !important;
 }
 .progress {
   color: $secondary-color;
