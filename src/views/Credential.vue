@@ -1,5 +1,5 @@
 <template>
-  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-8">
+  <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
     <CredentialDetail />
   </v-container>
 </template>
@@ -13,5 +13,5 @@ import CredentialDetail from "@/components/entity/credentialDetail/CredentialDet
     CredentialDetail,
   },
 })
-export default class CredentialView extends Vue {}
+export default class Credential extends Vue {}
 </script>

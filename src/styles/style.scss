@@ -37,6 +37,10 @@ a {
      }
 }
 
+.unstyled-list {
+     list-style: none;
+}
+
 @mixin card {
      border: 1px solid $border-color !important;
 }
