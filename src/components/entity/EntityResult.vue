@@ -5,6 +5,7 @@
     </div>
     <div v-else>
       <BackToSearch />
+      <v-btn @click="test">TEST</v-btn>
       <EntityHeader
         :name="entityName"
         :businessNumber="entityBusinessNumber"
@@ -55,9 +56,24 @@
         <template #content>
           <div class="pa-5">
             <div class="mb-6 text-body-2">
-              <span>{{ entityName }}</span>
-              <span>&nbsp;is a&nbsp;</span>
-              <span class="fake-link" v-t="entityJurisdiction"></span>
+              <p>
+                {{ entityName }} is a<Dialog>
+                  <template #activator>
+                    <span class="fake-link" v-t="entityJurisdiction"></span
+                    ><v-icon class="fake-link">{{
+                      mdiInformationOutline
+                    }}</v-icon>
+                  </template>
+                  <template #content>
+                    <h3>BC Company</h3>
+                    <p>
+                      In B.C., incorporation creates a legal entity known as a
+                      corporation, commonly referred to as a company. Three
+                      types of companies may be created through incorporation:
+                    </p>
+                  </template>
+                </Dialog>
+              </p>
             </div>
             <div class="text-body-2">
               <div>
@@ -79,11 +95,31 @@
       </EntityCard>
 
       <EntityCard
-        title="Relationships"
         ref="relationships"
         :expanded="credentialsExpanded"
         v-if="businessAsRelationship.length > 0"
       >
+        <template #title>
+          <Dialog>
+            <template #activator>
+              Relationships<v-icon class="fake-link">{{
+                mdiInformationOutline
+              }}</v-icon>
+            </template>
+            <template #content>
+              <h3>Relationships</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+            </template>
+          </Dialog>
+        </template>
         <template #subtitle>
           <v-container>
             <p>{{ entityName }} is doing business as:</p>
@@ -189,11 +225,31 @@
 
       <!-- Relationships related from -->
       <EntityCard
-        title="Relationships"
         ref="relationships"
         :expanded="credentialsExpanded"
         v-if="ownedByRelationship"
       >
+        <template #title>
+          <Dialog>
+            <template #activator>
+              Relationships<v-icon class="fake-link">{{
+                mdiInformationOutline
+              }}</v-icon>
+            </template>
+            <template #content>
+              <h3>Relationships</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+            </template>
+          </Dialog>
+        </template>
         <template #subtitle>
           <div class="pl-5 pr-5 mb-5 text-body-2">
             {{ entityName }} is owned by:
@@ -208,6 +264,12 @@
             :authorityLink="
               credOrRelationshipToDisplay(ownedByRelationship, credSet)
                 .authorityLink
+            "
+            :credId="
+              credOrRelationshipToDisplay(ownedByRelationship, credSet).id
+            "
+            :expired="
+              credOrRelationshipToDisplay(ownedByRelationship, credSet).revoked
             "
             :effectiveDate="ownedByRelationship.credential.effective_date"
           >
@@ -268,7 +330,6 @@
                 <v-timeline-item
                   v-for="(cred, i) in filteredEntityCredentials"
                   :key="i"
-                  color="#38598A"
                   small
                 >
                   <div class="pl-3 mt-n3">
@@ -301,8 +362,8 @@
                               >
                                 Expired: {{ cred.revoked_date | formatDate }}
                               </div>
-                              <div v-if="cred.type" class="font-weight-bold">
-                                <span v-t="cred.type"></span>
+                              <div v-if="cred.credential_type" class="font-weight-bold">
+                                <span v-t="cred.credential_type"></span>
                               </div>
                               <div v-if="cred.value">
                                 {{ cred.value }}
@@ -347,6 +408,7 @@ import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue"
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import moment from "moment";
+import Dialog from "@/components/shared/Dialog.vue";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 
@@ -361,6 +423,7 @@ interface Data {
 @Component({
   components: {
     BackToSearch,
+    Dialog,
     CredentialItem,
     EntityCard,
     EntityHeader,
@@ -370,6 +433,7 @@ interface Data {
   },
   computed: {
     ...mapGetters([
+      "credentialTypes",
       "entityTest",
       "selectedTopic",
       "selectedTopicFullCredentialSet",
@@ -381,12 +445,14 @@ interface Data {
       "mdiMapMarker",
       "mdiChevronLeft",
       "mdiChevronRight",
+      "mdiInformationOutline",
       "loading",
     ]),
   },
   methods: {
     ...mapActions([
       "setLoading",
+      "fetchCredentialTypes",
       "fetchFormattedIdentifiedTopic",
       "fetchTopicFullCredentialSet",
       "setCredentialType",
@@ -403,6 +469,8 @@ export default class EntityResult extends Vue {
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
   fetchRelationships!: (id: number) => Promise<void>;
+  fetchCredentialTypes!:(paging: boolean) => Promise<void>;
+  
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -441,6 +509,10 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded: false,
     };
+  }
+
+  test():void{
+    console.log(JSON.stringify(this.selectedTopicFullCredentialSet))
   }
 
   loadingCallBack(): void {
@@ -784,6 +856,7 @@ export default class EntityResult extends Vue {
         await Promise.all([
           this.fetchRelationships(topic.id),
           this.fetchTopicFullCredentialSet(topic.id),
+          this.fetchCredentialTypes(false),
         ]);
       }
     }

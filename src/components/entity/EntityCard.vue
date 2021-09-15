@@ -8,8 +8,8 @@
       'timeline-card': timeline,
     }"
   >
-    <div v-if="title" class="pl-5 pr-5 pt-4 pb-4 text-h6 font-weight-bold">
-      {{ title }}
+    <div v-if="$slots.title" class="pl-5 pr-5 pt-4 pb-4 text-h6 font-weight-bold">
+      <slot name="title"></slot>
     </div>
     <slot name="subtitle"></slot>
     <v-expansion-panels
@@ -32,7 +32,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class EntityCard extends Vue {
-  @Prop({ default: "" }) title!: string;
   @Prop({ default: false }) expanded!: boolean;
   @Prop({ default: false }) timeline!: boolean;
 
