@@ -19,7 +19,7 @@
       </div>
       <div v-else>
         <v-container>
-          <v-card>
+          <v-card outlined>
             <v-card-title class="one-line"
               ><p>
                 <v-icon class="validated">{{ mdiShieldCheckOutline }}</v-icon>
@@ -90,8 +90,8 @@
         </v-container>
 
         <v-container>
-          <v-card>
-            <v-expansion-panels>
+          <v-card outlined>
+            <v-expansion-panels flat>
               <v-expansion-panel>
                 <v-expansion-panel-header>
                   Claims proven
@@ -111,7 +111,7 @@
                           class="validated"
                           >{{ mdiCheckBold }}</v-icon
                         >
-                        {{ item.attr_name }}
+                        {{ item.attr_name | formatClaim}}
                       </p>
                     </template>
                   </v-data-table>
@@ -122,8 +122,8 @@
         </v-container>
 
         <v-container>
-          <v-card>
-            <v-expansion-panels>
+          <v-card outlined>
+            <v-expansion-panels flat>
               <v-expansion-panel>
                 <v-expansion-panel-header>
                   Proof Details

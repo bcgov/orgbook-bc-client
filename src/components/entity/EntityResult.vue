@@ -47,6 +47,7 @@
             :authorityLink="entityRegistrationIssuerUrl"
             :effectiveDate="entityEffectiveDate"
             :credId="entityNameCredId"
+            :additionalAttributes="[{key:'hello:', value:'world'}]"
           >
             <template #header>
               <div class="text-h6 font-weight-bold">Registration</div>
