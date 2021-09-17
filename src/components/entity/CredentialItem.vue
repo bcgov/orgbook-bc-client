@@ -31,15 +31,15 @@
           <p>{{attr.key}}: {{attr.value}}</p>
         </div>
 
-        <div v-if="!expired">
-          <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
+        <div>
+          <v-icon small v-if="!expired">{{ mdiShieldCheckOutline }}</v-icon>
           <router-link
             :to="{
               name: 'Credential',
               params: { sourceId, credentialId: credId },
             }"
             class="vertical-align-middle"
-            >Credential verified</router-link
+            >Credential<span v-if="!expired"> verified</span><span v-else> claims</span></router-link
           >
         </div>
         <div v-if="effectiveDate">

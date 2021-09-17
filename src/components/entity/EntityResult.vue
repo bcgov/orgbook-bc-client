@@ -74,11 +74,11 @@
 
     <!-- relationships related to -->
     <EntityCard
-      title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
+      <template #title>Relationships</template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
