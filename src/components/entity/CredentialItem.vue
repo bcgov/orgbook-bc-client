@@ -33,7 +33,12 @@
 
         <div v-if="!expired">
           <v-icon small>{{ mdiShieldCheckOutline }}</v-icon>
-          <router-link :to="{ name: 'Credential', params: { sourceId, credentialId:credId } }"
+          <router-link
+            :to="{
+              name: 'Credential',
+              params: { sourceId, credentialId: credId },
+            }"
+            class="vertical-align-middle"
             >Credential verified</router-link
           >
         </div>
