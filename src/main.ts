@@ -6,7 +6,7 @@ import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import { dateFilter } from "@/filters/date.filter";
-import { claimFormat} from "@/filters/claim.filter";
+import { claimFormat } from "@/filters/claim.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 

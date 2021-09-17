@@ -14,8 +14,12 @@
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5">
           <div class="text-h6 font-weight-bold">
-            <v-icon class="validated" v-if="!credRevoked">{{ mdiShieldCheckOutline }}</v-icon>
-            <span>{{ `${currCredTypeDesc} credential` }}</span><span v-if="!credRevoked"> verified</span><span v-else> claims</span>
+            <v-icon class="validated" v-if="!credRevoked">{{
+              mdiShieldCheckOutline
+            }}</v-icon>
+            <span>{{ `${currCredTypeDesc} credential` }}</span
+            ><span v-if="!credRevoked"> verified</span
+            ><span v-else> claims</span>
           </div>
           <div v-if="!credRevoked" class="text-body-1 verification-time">
             {{ `Cryptographically verified ${currDate}` }}
@@ -24,9 +28,12 @@
         <v-card-text class="pa-5 pt-0">
           <p>
             Issued: {{ currCredIssuedDate | formatDate }} • Effective:
-            {{ currCredEffDate | formatDate }}<span> - {{credRevokedDate | formatDate}}</span>
+            {{ currCredEffDate | formatDate
+            }}<span> - {{ credRevokedDate | formatDate }}</span>
           </p>
-          <p v-if="!credRevoked">The following verifications were successfully completed:</p>
+          <p v-if="!credRevoked">
+            The following verifications were successfully completed:
+          </p>
           <p v-else>The following claims were successfully found:</p>
           <ul class="unstyled-list ml-n1">
             <li>
@@ -59,7 +66,10 @@
                   v-if="currCredIssuer !== undefined && !credRevoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
-                <span>Credential is <span v-if="!credRevoked">valid</span><span v-else>expired</span></span>
+                <span
+                  >Credential is <span v-if="!credRevoked">valid</span
+                  ><span v-else>expired</span></span
+                >
               </div>
             </li>
             <li>
@@ -99,7 +109,7 @@
                       class="validated mr-1"
                       >{{ mdiCheckBold }}</v-icon
                     >
-                    <span>{{ item.attr_name | formatClaim}}</span>
+                    <span>{{ item.attr_name | formatClaim }}</span>
                   </div>
                 </template>
               </v-data-table>
@@ -224,8 +234,8 @@ export default class CredentialDetail extends Vue {
     return this.getSelectedCredential?.revoked;
   }
 
-  get credRevokedDate(): Date | undefined{
-    return this.getSelectedCredential?.revoked_date
+  get credRevokedDate(): Date | undefined {
+    return this.getSelectedCredential?.revoked_date;
   }
 
   get proofValues(): Record<string, string>[] | undefined {

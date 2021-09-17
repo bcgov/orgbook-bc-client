@@ -54,6 +54,24 @@
             <span>{{ entityName }}</span>
             <span>&nbsp;is a&nbsp;</span>
             <span class="fake-link" v-t="entityJurisdiction"></span>
+            <Dialog>
+              <template #activator>
+                <v-icon>{{ mdiInformationOutline }}</v-icon>
+              </template>
+              <template #content>
+                <h3>Relationships</h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                  irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                  cupidatat non proident, sunt in culpa qui officia deserunt
+                  mollit anim id est laborum.
+                </p>
+              </template>
+            </Dialog>
           </div>
           <div class="text-body-2">
             <div>
@@ -78,7 +96,26 @@
       :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
-      <template #title>Relationships</template>
+      <template #title
+        >Relationships
+        <Dialog>
+          <template #activator>
+            <v-icon>{{ mdiInformationOutline }}</v-icon>
+          </template>
+          <template #content>
+            <h3>Relationships</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </template>
+        </Dialog>
+      </template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
@@ -167,11 +204,29 @@
 
     <!-- relationships related from -->
     <EntityCard
-      title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
       v-if="ownedByRelationship"
     >
+      <template #title>
+        Relationships<Dialog>
+          <template #activator>
+            <v-icon>{{ mdiInformationOutline }}</v-icon>
+          </template>
+          <template #content>
+            <h3>Relationships</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </template>
+        </Dialog>
+      </template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is owned by:
@@ -343,6 +398,7 @@ interface Data {
 @Component({
   components: {
     BackTo,
+    Dialog,
     CredentialItem,
     EntityCard,
     EntityHeader,
@@ -388,8 +444,8 @@ export default class EntityResult extends Vue {
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
   fetchRelationships!: (id: number) => Promise<void>;
-  fetchCredentialTypes!:(paging: boolean) => Promise<void>;
-  
+  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
+
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -428,10 +484,6 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded: false,
     };
-  }
-
-  test():void{
-    console.log(JSON.stringify(this.selectedTopicFullCredentialSet))
   }
 
   loadingCallBack(): void {

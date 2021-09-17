@@ -55,6 +55,6 @@ export default class Dialog extends Vue {
   background-color: $primary-color !important;
 }
 .content {
-    color: $text-color !important;
+  color: $text-color !important;
 }
 </style>
