@@ -338,12 +338,16 @@
                               "
                             >
                               <div class="font-weight-bold">
-                                DBA name registered
+                                DBA Name Registered
                               </div>
+                            </div>
+                            <div v-else>
+                              <div class="font-weight-bold">{{cred.credential_type}}</div>
                             </div>
                             <div v-if="cred.value">
                               {{ cred.value }}
                             </div>
+                            
                           </div>
                         </template>
                       </CredentialItem>
