@@ -1,5 +1,19 @@
 <template>
   <div>
+    <v-btn
+      v-scroll="onScroll"
+      v-show="fab"
+      fixed
+      bottom
+      fab
+      tile
+      right
+      :retain-focus-on-click="true"
+      class="accent rounded"
+      @click="toTop"
+    >
+      <v-icon>{{mdiArrowUp}}</v-icon>
+    </v-btn>
     <div class="footer-feedback">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
@@ -47,9 +61,11 @@ import { footerLinks } from "@/data/nav";
 import { INavLink } from "@/interfaces/nav-link.interface";
 import About from "@/components/layout/footer/About.vue";
 import Feedback from "@/components/layout/footer/Feedback.vue";
+import { mapGetters } from "vuex";
 
 interface Data {
   links: INavLink[];
+  fab: boolean;
 }
 
 @Component({
@@ -57,12 +73,30 @@ interface Data {
     About,
     Feedback,
   },
+  computed: {
+    ...mapGetters([
+      "mdiArrowUp",
+    ]),
+  }
 })
 export default class Footer extends Vue {
+  fab!: boolean;
+
   data(): Data {
     return {
       links: footerLinks || [],
+      fab: false,
     };
+  }
+
+  onScroll() {
+    if (typeof window === "undefined") return;
+    const top = window.pageYOffset || 0;
+    this.fab = top > 20;
+  }
+
+  toTop(){
+    this.$vuetify.goTo(0)
   }
 }
 </script>
@@ -81,4 +115,12 @@ export default class Footer extends Vue {
   background: $secondary-color;
   color: $white;
 }
+.accent{
+  background-color: $accent-color !important;
+  color: $black !important;
+}
+.accent:focus::before{
+  opacity: 0;
+}
+
 </style>
