@@ -7,7 +7,7 @@
       :key="showcaseLink.name"
     >
       <v-card elevation="0" rounded="sm" class="card">
-        <v-card-title class="font-weight-bold">
+        <v-card-title class="font-weight-bold title">
           <router-link :to="showcaseLink.path">
             {{
               (showcaseLink.data && showcaseLink.data.showcaseTitle) ||
@@ -42,4 +42,8 @@ export default class ShowcaseLinks extends Vue {}
   @include card;
   height: 100%;
 }
+.title{
+  word-break: break-word
+}
+
 </style>
