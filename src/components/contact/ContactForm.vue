@@ -11,18 +11,38 @@
         ></v-select>
       </div>
 
-      <div v-if="formData.reason && formData.reason == 'REGISTER_ORGANIZATION'">
+      <div v-if="formData.reason && formData.reason == 'REGISTER_ORGANIZATION' && !additionalHelp">
         <p class="font-weight-bold">
           How to add your organization to OrgBook BC
         </p>
+        <p>Not finding your organization in OrgBook BC?</p>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-          euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan
-          et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis
-          natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-          mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus
-          mollis orci, sed rhoncus pronin sapien nunc accuan eget.
+          One reason you might not be finding the entity for which you are
+          searching is that the organization has not been registered with BC
+          Registries. If the organization has been registered, search for the BC
+          Registries ID (it has a format like "FM1234567"). You can also try
+          searching by your 9-digit Business Number from CRA, if that number is
+          registered with BC Registries.
         </p>
+        <p>
+          If you need to register the organization, these links may help.
+          <a
+            href="https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies"
+            >Register your business in BC</a
+          >
+          or follow the full
+          <a
+            href="https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/starting-a-business"
+            >step-by-step guide to starting a BC business</a
+          >.
+        </p>
+        <p>
+          If you need additional information, please contact the BC Registries
+          Help Desk via email
+          <a href="mailto:bcregistries@gov.bc.ca">bcregistries@gov.bc.ca</a>, or
+          by calling the BC Registries Help Desk at 1-800-663-6102.
+        </p>
+        <p class="fake-link" @click="additionalHelp=true">I still need help</p>
       </div>
 
       <div v-else-if="formData.reason">
@@ -74,7 +94,7 @@
 
       <v-btn
         id="contactSubmitButton"
-        v-if="formData.reason && formData.reason != 'REGISTER_ORGANIZATION'"
+        v-if="formData.reason && (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)"
         @click="submit"
         depressed
         :disabled="loading"
@@ -100,6 +120,7 @@ interface Data {
   formData: {
     reason: string;
   };
+  additionalHelp: boolean;
 }
 
 @Component({
@@ -113,6 +134,7 @@ interface Data {
 export default class ContactForm extends Vue {
   formData!: IContactRequest | IIncorrectInfoContactRequest;
   credentialTypes!: ICredentialType[];
+  additionalHelp!: boolean;
 
   setLoading!: (loading: boolean) => void;
   sendFeedback!: (
@@ -122,6 +144,7 @@ export default class ContactForm extends Vue {
   data(): Data {
     return {
       formData: { reason: "" },
+      additionalHelp: false,
     };
   }
 
