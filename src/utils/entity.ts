@@ -57,10 +57,13 @@ export function credOrRelationshipToDisplay(
     display.type = credItem.names[0]?.type;
     display.credential_type = credItem.credential_type.description;
     display.date_effective = credItem.effective_date;
-    display.registration_reason = selectFirstAttrItem(
+    const registration_reason = selectFirstAttrItem(
       { key: "type", value: "reason_description" },
       credItem.attributes
-    )?.value as string | undefined;
+    )?.value;
+    if(registration_reason !== undefined){
+      display.registration_reason = `reason.${registration_reason}`
+    }
     display.revoked = credItem.revoked;
     display.revoked_date = credItem.revoked_date;
     display.value = credItem.names[0]?.text;
