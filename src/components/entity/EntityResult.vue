@@ -328,7 +328,6 @@ import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue"
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import moment from "moment";
-import Dialog from "@/components/shared/Dialog.vue";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 
@@ -388,8 +387,8 @@ export default class EntityResult extends Vue {
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
   fetchRelationships!: (id: number) => Promise<void>;
-  fetchCredentialTypes!:(paging: boolean) => Promise<void>;
-  
+  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
+
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -428,10 +427,6 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded: false,
     };
-  }
-
-  test():void{
-    console.log(JSON.stringify(this.selectedTopicFullCredentialSet))
   }
 
   loadingCallBack(): void {

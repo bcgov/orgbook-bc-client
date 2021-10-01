@@ -8,7 +8,10 @@
       'timeline-card': timeline,
     }"
   >
-    <div v-if="$slots.title" class="pl-5 pr-5 pt-4 pb-4 text-h6 font-weight-bold">
+    <div
+      v-if="$slots.title"
+      class="pl-5 pr-5 pt-4 pb-4 text-h6 font-weight-bold"
+    >
       <slot name="title"></slot>
     </div>
     <slot name="subtitle"></slot>
