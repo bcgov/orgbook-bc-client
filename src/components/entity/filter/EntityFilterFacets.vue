@@ -29,8 +29,7 @@
               class="checkbox"
             ></v-simple-checkbox>
           </v-list-item-action>
-          <v-list-item-content class="pt-1 pb-1">
-            <div>{{ field.value }}</div>
+          <v-list-item-content class="pt-1 pb-1" v-t="field.value">
           </v-list-item-content>
           <v-list-item-action class="d-flex justify-end mt-1 mb-1">
             <div>{{ field.count }}</div>
