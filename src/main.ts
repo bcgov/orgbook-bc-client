@@ -6,11 +6,13 @@ import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import { dateFilter } from "@/filters/date.filter";
+import { claimFormat } from "@/filters/claim.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 
 Vue.config.productionTip = false;
 Vue.filter("formatDate", dateFilter);
+Vue.filter("formatClaim", claimFormat);
 
 const docRoutes = [defaultDoc, ...docs].map(processDocRoute);
 docRoutes.forEach((docRoute) => {
