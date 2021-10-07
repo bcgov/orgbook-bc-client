@@ -74,11 +74,11 @@
 
     <!-- relationships related to -->
     <EntityCard
-      title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
+      <template #title>Relationships</template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
@@ -351,6 +351,7 @@ interface Data {
   },
   computed: {
     ...mapGetters([
+      "credentialTypes",
       "entityTest",
       "selectedTopic",
       "selectedTopicFullCredentialSet",
@@ -362,12 +363,14 @@ interface Data {
       "mdiMapMarker",
       "mdiChevronLeft",
       "mdiChevronRight",
+      "mdiInformationOutline",
       "loading",
     ]),
   },
   methods: {
     ...mapActions([
       "setLoading",
+      "fetchCredentialTypes",
       "fetchFormattedIdentifiedTopic",
       "fetchTopicFullCredentialSet",
       "setCredentialType",
@@ -384,6 +387,8 @@ export default class EntityResult extends Vue {
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
   fetchRelationships!: (id: number) => Promise<void>;
+  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
+
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -765,6 +770,7 @@ export default class EntityResult extends Vue {
         await Promise.all([
           this.fetchRelationships(topic.id),
           this.fetchTopicFullCredentialSet(topic.id),
+          this.fetchCredentialTypes(false),
         ]);
       }
     }

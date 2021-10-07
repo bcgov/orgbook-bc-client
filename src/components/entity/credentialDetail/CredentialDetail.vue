@@ -10,30 +10,38 @@
         </v-row>
       </v-alert>
     </div>
-    <div v-else>
+    <div>
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5">
           <div class="text-h6 font-weight-bold">
-            <v-icon class="validated">{{ mdiShieldCheckOutline }}</v-icon>
-            <span>{{ `${currCredTypeDesc} credential verified` }}</span>
+            <v-icon class="validated" v-if="!credRevoked">{{
+              mdiShieldCheckOutline
+            }}</v-icon>
+            <span>{{ `${currCredTypeDesc} credential` }}</span
+            ><span v-if="!credRevoked"> verified</span
+            ><span v-else> claims</span>
           </div>
-          <div class="text-body-1 verification-time">
+          <div v-if="!credRevoked" class="text-body-1 verification-time">
             {{ `Cryptographically verified ${currDate}` }}
           </div>
         </v-card-title>
         <v-card-text class="pa-5 pt-0">
           <p>
             Issued: {{ currCredIssuedDate | formatDate }} • Effective:
-            {{ currCredEffDate | formatDate }}
+            {{ currCredEffDate | formatDate
+            }}<span> - {{ credRevokedDate | formatDate }}</span>
           </p>
-          <p>The following verifications were successfully completed:</p>
+          <p v-if="!credRevoked">
+            The following verifications were successfully completed:
+          </p>
+          <p v-else>The following claims were successfully found:</p>
           <ul class="unstyled-list ml-n1">
             <li>
               <div class="d-flex pb-1">
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined"
+                  v-if="currCredIssuer !== undefined && !credRevoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
                 <span>Credential issuer is {{ currCredIssuer }}</span>
@@ -44,7 +52,7 @@
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined"
+                  v-if="currCredIssuer !== undefined && !credRevoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
                 <span>Credential is held by {{ entityName }}</span>
@@ -55,14 +63,17 @@
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined"
+                  v-if="currCredIssuer !== undefined && !credRevoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
-                <span>Credential is valid</span>
+                <span
+                  >Credential is <span v-if="!credRevoked">valid</span
+                  ><span v-else>expired</span></span
+                >
               </div>
             </li>
             <li>
-              <div class="d-flex pb-1">
+              <div v-if="!credRevoked" class="d-flex pb-1">
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
@@ -80,7 +91,7 @@
         <v-expansion-panels flat>
           <v-expansion-panel>
             <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              Claims proven
+              Claims <span v-if="!credRevoked">proven</span>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-5 pt-0">
               <v-data-table
@@ -94,11 +105,11 @@
                 <template v-slot:[`item.attr_name`]="{ item }">
                   <div class="d-flex">
                     <v-icon
-                      :class="{ invisible: !item.attr_val }"
+                      :class="{ invisible: !item.attr_val || credRevoked }"
                       class="validated mr-1"
                       >{{ mdiCheckBold }}</v-icon
                     >
-                    <span>{{ item.attr_name }}</span>
+                    <span>{{ item.attr_name | formatClaim }}</span>
                   </div>
                 </template>
               </v-data-table>
@@ -221,6 +232,10 @@ export default class CredentialDetail extends Vue {
 
   get credRevoked(): boolean | undefined {
     return this.getSelectedCredential?.revoked;
+  }
+
+  get credRevokedDate(): Date | undefined {
+    return this.getSelectedCredential?.revoked_date;
   }
 
   get proofValues(): Record<string, string>[] | undefined {
