@@ -10,6 +10,7 @@ import credentialType, {
 } from "./modules/credential-type";
 import doc, { State as DocState } from "./modules/doc";
 import entity, { State as EntityState } from "./modules/entity";
+import feedback from "./modules/feedback";
 import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
 import stats, { State as StatsState } from "./modules/statistics";
@@ -38,6 +39,7 @@ export default new Vuex.Store({
     credentialType,
     doc,
     entity,
+    feedback,
     icon,
     search,
     stats,
