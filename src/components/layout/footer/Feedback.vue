@@ -6,7 +6,7 @@
           <div class="text-center">
             <p class="pt-4 text-h5 font-weight-bold">
               <span v-if="!submitted">How was your experience?</span>
-              <span v-else>Thank you for submiting feedback</span>
+              <span v-else>Thank you for submitting feedback</span>
             </p>
             <div v-if="!submitted">
               <div>
