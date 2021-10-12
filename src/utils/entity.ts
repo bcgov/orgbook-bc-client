@@ -61,8 +61,8 @@ export function credOrRelationshipToDisplay(
       { key: "type", value: "reason_description" },
       credItem.attributes
     )?.value;
-    if(registration_reason !== undefined){
-      display.registration_reason = `reason.${registration_reason}`
+    if (registration_reason !== undefined) {
+      display.registration_reason = `reason.${registration_reason}`;
     }
     display.revoked = credItem.revoked;
     display.revoked_date = credItem.revoked_date;

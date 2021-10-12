@@ -12,7 +12,7 @@
       class="accent rounded"
       @click="toTop"
     >
-      <v-icon>{{mdiArrowUp}}</v-icon>
+      <v-icon>{{ mdiArrowUp }}</v-icon>
     </v-btn>
     <div class="footer-feedback">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
@@ -74,10 +74,8 @@ interface Data {
     Feedback,
   },
   computed: {
-    ...mapGetters([
-      "mdiArrowUp",
-    ]),
-  }
+    ...mapGetters(["mdiArrowUp"]),
+  },
 })
 export default class Footer extends Vue {
   fab!: boolean;
@@ -95,8 +93,8 @@ export default class Footer extends Vue {
     this.fab = top > 20;
   }
 
-  toTop(){
-    this.$vuetify.goTo(0)
+  toTop() {
+    this.$vuetify.goTo(0);
   }
 }
 </script>
@@ -115,12 +113,11 @@ export default class Footer extends Vue {
   background: $secondary-color;
   color: $white;
 }
-.accent{
+.accent {
   background-color: $accent-color !important;
   color: $black !important;
 }
-.accent:focus::before{
+.accent:focus::before {
   opacity: 0;
 }
-
 </style>

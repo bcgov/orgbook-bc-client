@@ -11,7 +11,13 @@
         ></v-select>
       </div>
 
-      <div v-if="formData.reason && formData.reason == 'REGISTER_ORGANIZATION' && !additionalHelp">
+      <div
+        v-if="
+          formData.reason &&
+          formData.reason == 'REGISTER_ORGANIZATION' &&
+          !additionalHelp
+        "
+      >
         <p class="font-weight-bold">
           How to add your organization to OrgBook BC
         </p>
@@ -42,7 +48,9 @@
           <a href="mailto:bcregistries@gov.bc.ca">bcregistries@gov.bc.ca</a>, or
           by calling the BC Registries Help Desk at 1-800-663-6102.
         </p>
-        <p class="fake-link" @click="additionalHelp=true">I still need help</p>
+        <p class="fake-link" @click="additionalHelp = true">
+          I still need help
+        </p>
       </div>
 
       <div v-else-if="formData.reason">
@@ -94,7 +102,10 @@
 
       <v-btn
         id="contactSubmitButton"
-        v-if="formData.reason && (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)"
+        v-if="
+          formData.reason &&
+          (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)
+        "
         @click="submit"
         depressed
         :disabled="loading"
