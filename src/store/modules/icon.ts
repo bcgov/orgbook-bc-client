@@ -14,6 +14,8 @@ import {
   mdiMapMarker,
   mdiOpenInNew,
   mdiShieldCheckOutline,
+  mdiThumbDown,
+  mdiThumbUp,
 } from "@mdi/js";
 
 export interface State {
@@ -37,6 +39,8 @@ const state: State = {
     mdiMapMarker,
     mdiOpenInNew,
     mdiShieldCheckOutline,
+    mdiThumbDown,
+    mdiThumbUp,
   },
 };
 

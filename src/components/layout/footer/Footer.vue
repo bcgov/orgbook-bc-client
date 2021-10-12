@@ -14,7 +14,7 @@
     >
       <v-icon>{{ mdiArrowUp }}</v-icon>
     </v-btn>
-    <div class="footer-feedback">
+    <div class="footer-feedback" v-if="!feedbackSubmitted">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
           <v-col>
@@ -87,13 +87,20 @@ export default class Footer extends Vue {
     };
   }
 
-  onScroll() {
+  get feedbackSubmitted(): boolean {
+    return (
+      window.sessionStorage.getItem("Feedback") !== null &&
+      window.sessionStorage.getItem("Feedback") === "true"
+    );
+  }
+
+  onScroll(): void {
     if (typeof window === "undefined") return;
     const top = window.pageYOffset || 0;
     this.fab = top > 20;
   }
 
-  toTop() {
+  toTop(): void {
     this.$vuetify.goTo(0);
   }
 }

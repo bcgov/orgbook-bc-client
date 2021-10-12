@@ -1,10 +1,7 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Contact from "@/services/api/v2/contact.service";
-import {
-  IContactRequest,
-  IIncorrectInfoContactRequest,
-} from "@/interfaces/api/v2/contact.interface";
+import { IContactRequest } from "@/interfaces/api/v2/contact.interface";
 
 const contactService = new Contact();
 
@@ -29,11 +26,11 @@ const getters = {
 };
 
 const actions = {
-  async sendFeedback(
+  async sendContact(
     _: ActionContext<State, RootState>,
-    feedback: IContactRequest | IIncorrectInfoContactRequest
+    contact: IContactRequest
   ): Promise<void> {
-    await contactService.postFeedback(feedback);
+    await contactService.postContact(contact);
   },
 };
 
