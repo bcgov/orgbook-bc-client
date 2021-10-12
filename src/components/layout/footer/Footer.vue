@@ -88,7 +88,10 @@ export default class Footer extends Vue {
   }
 
   get feedbackSubmitted(): boolean {
-    return document.cookie.includes("Feedback=true");
+    return (
+      window.sessionStorage.getItem("Feedback") !== null &&
+      window.sessionStorage.getItem("Feedback") === "true"
+    );
   }
 
   onScroll(): void {
