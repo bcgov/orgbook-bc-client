@@ -3,46 +3,77 @@
     <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
-    <v-combobox
-      id="searchBar"
-      outlined
-      dense
-      hide-no-data
-      hide-details
-      background-color="white"
-      append-icon=""
-      v-model="q"
-      :auto-select-first="false"
-      :disabled="loading"
-      :items="items"
-      :search-input.sync="search"
-      :menu-props="{
-        value: !!(search && items.length),
-      }"
-      @change="changeSearch"
-      @keydown="enterSearch"
-      @update:search-input="autocompleteSearch"
-      @update:list-index="(i) => (index = i)"
-      aria-label="search-input"
-    >
-      <template v-slot:append-outer>
-        <v-progress-circular
-          v-if="pending"
-          size="24"
-          color="white"
-          indeterminate
-        ></v-progress-circular>
-        <v-icon
-          v-else
-          id="searchButton"
-          :disabled="!search || loading"
-          @click="submitSearch"
-          color="white"
-          aria-label="search-button"
-          >{{ mdiMagnify }}</v-icon
-        >
-      </template>
-    </v-combobox>
+    <div id="search">
+      <v-text-field
+        id="searchBar"
+        outlined
+        dense
+        hide-details
+        background-color="white"
+        v-model="q"
+        :disabled="loading"
+        @input="autocompleteSearch"
+        @keydown.esc="escapeSearch"
+        @keydown.enter="enterSearch"
+        @keydown.down="arrowDown"
+        @keydown.up="arrowUp"
+        autocomplete="off"
+      >
+        <template v-slot:append-outer>
+          <v-progress-circular
+            v-if="pending"
+            id="searchBarLoading"
+            size="24"
+            color="white"
+            indeterminate
+          ></v-progress-circular>
+          <v-icon
+            v-else
+            id="searchBarButton"
+            :disabled="!q || loading"
+            @click="submitSearch"
+            color="white"
+            aria-label="search-button"
+            >{{ mdiMagnify }}</v-icon
+          >
+        </template>
+      </v-text-field>
+      <v-list
+        dense
+        v-if="filteredItems.length"
+        id="searchBarResults"
+        elevation="8"
+      >
+        <v-list-item-group>
+          <v-list-item
+            v-for="(item, i) in filteredItems"
+            :key="i"
+            :class="{
+              'text-body-2': true,
+              'active-autocomplete': i === index,
+            }"
+            @click="changeSearch(item)"
+          >
+            <div>
+              <span>{{
+                item.substring(0, item.toLowerCase().indexOf(q.toLowerCase()))
+              }}</span>
+              <span class="font-weight-bold">{{
+                item.substring(
+                  item.toLowerCase().indexOf(q.toLowerCase()),
+                  item.toLowerCase().indexOf(q.toLowerCase()) + q.length
+                )
+              }}</span>
+              <span>{{
+                item.substring(
+                  item.toLowerCase().indexOf(q.toLowerCase()) + q.length
+                )
+              }}</span>
+            </div>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </div>
   </div>
 </template>
 
@@ -58,7 +89,6 @@ import { defaultQuery } from "@/utils/search";
 interface Data {
   index: number;
   items: string[];
-  search: string;
   q: string;
   pending: boolean;
 }
@@ -75,7 +105,6 @@ export default class SearchBar extends Vue {
   loading!: boolean;
   index!: number;
   items!: Array<string>;
-  search!: string;
   q!: string;
   pending!: boolean;
 
@@ -89,11 +118,16 @@ export default class SearchBar extends Vue {
 
   @Prop({ default: "" }) query!: string;
 
+  get filteredItems(): string[] {
+    return this.items.filter((item) => {
+      return item.toLowerCase().indexOf(this.q.toLowerCase()) >= 0;
+    });
+  }
+
   data(): Data {
     return {
       index: -1,
       items: [],
-      search: "",
       q: this.query || "",
       pending: false,
     };
@@ -122,34 +156,51 @@ export default class SearchBar extends Vue {
     if (!val || this.loading) {
       return;
     }
-    this.resetAutocomplete();
+    this.escapeSearch();
     this.debouncedAutocomplete(val);
   }
 
-  changeSearch(val: string): void {
-    if (val === this.search) {
+  changeSearch(q: string): void {
+    if (q === this.q) {
       return;
     }
-    this.executeSearch(val);
+    this.q = q;
+    this.executeSearch(q);
   }
 
-  enterSearch(e: KeyboardEvent): void {
-    if (e.key === "Escape" || e.code === "Escape") {
-      this.resetIndex();
-      this.resetAutocomplete();
-    } else if (e.key === "Enter" || e.code === "Enter") {
-      if (this.index >= 0) {
-        this.search = this.items[this.index];
-      }
-      this.submitSearch();
+  escapeSearch(): void {
+    this.resetIndex();
+    this.resetAutocomplete();
+  }
+
+  enterSearch(): void {
+    if (this.index >= 0) {
+      this.q = this.items[this.index];
+    }
+    this.submitSearch();
+  }
+
+  arrowDown(): void {
+    if (this.index < this.items.length - 1) {
+      this.index += 1;
+    } else {
+      this.index = 0;
+    }
+  }
+
+  arrowUp(): void {
+    if (this.index > 0) {
+      this.index -= 1;
+    } else {
+      this.index = this.items.length - 1;
     }
   }
 
   submitSearch(): void {
-    if (!this.search) {
+    if (!this.q) {
       return;
     }
-    this.executeSearch(this.search);
+    this.executeSearch(this.q);
   }
 
   private executeSearch(q: string) {
@@ -170,10 +221,22 @@ export default class SearchBar extends Vue {
 </script>
 
 <style lang="scss" scoped>
+#search {
+  position: relative;
+}
 #searchBar {
   color: $white !important;
 }
-#searchButton {
+#searchBarButton {
   color: $white !important;
+}
+#searchBarResults {
+  position: absolute;
+  width: calc(100% - 32px);
+  z-index: 8;
+  overflow: auto;
+}
+.active-autocomplete {
+  background-color: #e3e3e3;
 }
 </style>
