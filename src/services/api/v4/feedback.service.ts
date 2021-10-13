@@ -3,7 +3,7 @@ import ApiResource from "@/services/api/resource.service";
 import { IFeedback } from "@/interfaces/api/v2/feedback.interface";
 
 export default class Feedback extends ApiResource {
-  baseVersion = "v2";
+  baseVersion = "v4";
   basePath = "feedback";
 
   async postFeedback(feedback: IFeedback): Promise<HttpResponse<IFeedback>> {
