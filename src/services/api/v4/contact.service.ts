@@ -3,7 +3,7 @@ import ApiResource from "@/services/api/resource.service";
 import { IContactRequest } from "@/interfaces/api/v2/contact.interface";
 
 export default class Contact extends ApiResource {
-  baseVersion = "v2";
+  baseVersion = "v4";
   basePath = "contact";
 
   async postContact(
