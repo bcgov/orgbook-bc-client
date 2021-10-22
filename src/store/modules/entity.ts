@@ -108,7 +108,7 @@ const actions = {
     const filterFields: IEntityFacetField[] = [];
     creds.forEach((cred) => {
       let credDesc = cred.credential_type;
-      if (cred.schema_label !== undefined && cred.schema_label[i18n.locale] !== undefined) {
+      if (cred.schema_label && cred.schema_label[i18n.locale]) {
         credDesc = cred.schema_label[i18n.locale]
       }
       const idx = filterFields

@@ -165,7 +165,7 @@ export default class ContactForm extends Vue {
     return this.credentialTypes.map((type) => (
       
       {
-      text: type.schema_label !== undefined && type.schema_label[this.$i18n.locale] !== undefined ? 
+      text: type.schema_label && type.schema_label[this.$i18n.locale] ? 
         type.schema_label[this.$i18n.locale] : 
         type.description,
       value: type.id,
@@ -182,9 +182,6 @@ export default class ContactForm extends Vue {
       : "Message";
   }
 
-  hasSchemaLabel(type: ICredentialType, local:string): boolean{
-    return type.schema_label !== undefined && type.schema_label[local] !== undefined
-  }
 
   async submit(e: Event): Promise<void> {
     e.preventDefault();
