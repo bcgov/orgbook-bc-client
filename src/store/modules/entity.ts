@@ -9,6 +9,7 @@ import {
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { isRegType } from "@/utils/entity";
+import i18n from "@/i18n/index"
 
 const relationshipService = new Relationship();
 
@@ -105,17 +106,20 @@ const actions = {
     creds: Array<ICredentialDisplayType>
   ): void {
     const filterFields: IEntityFacetField[] = [];
-
     creds.forEach((cred) => {
+      let credDesc = cred.credential_type;
+      if (cred.schema_label !== undefined && cred.schema_label[i18n.locale] !== undefined) {
+        credDesc = cred.schema_label[i18n.locale]
+      }
       const idx = filterFields
         .map((field) => field.value)
-        .indexOf(cred.credential_type);
+        .indexOf(credDesc);
       if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
       } else {
         filterFields.push({
           text: cred.credential_type,
-          value: cred.credential_type,
+          value: credDesc,
           count: 1,
         });
       }

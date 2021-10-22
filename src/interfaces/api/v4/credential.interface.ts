@@ -45,6 +45,10 @@ export interface ICredentialDisplayType {
   revoked_date?: Date;
   value: string | number;
   relationship_types?: string[];
+  credential_title?: string;
+  highlighted_attributes?: string[];
+  schema_label?: Record<string, string>  
+  schema_description?: Record<string, string>
 }
 
 export interface ICredentialFormatted {

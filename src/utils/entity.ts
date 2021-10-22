@@ -67,6 +67,10 @@ export function credOrRelationshipToDisplay(
     display.revoked = credItem.revoked;
     display.revoked_date = credItem.revoked_date;
     display.value = credItem.names[0]?.text;
+    display.schema_label = credItem.credential_type.schema_label
+    display.schema_description = credItem.credential_type.schema_description
+    display.highlighted_attributes = credItem.credential_type.highlighted_attributes
+    display.credential_title = credItem.credential_type.credential_title
   } else {
     const relItem = item as IRelationship;
 
@@ -89,6 +93,10 @@ export function credOrRelationshipToDisplay(
     display.revoked_date = relItem.credential.revoked_date;
     display.relationship_types = relItem.attributes.map((attr) => attr.value);
     display.value = getRelationshipName(relItem);
+    display.schema_label = relItem.credential.credential_type.schema_label
+    display.schema_description = relItem.credential.credential_type.schema_description
+    display.highlighted_attributes = relItem.credential.credential_type.highlighted_attributes
+    display.credential_title = relItem.credential.credential_type.credential_title
   }
   return display;
 }
