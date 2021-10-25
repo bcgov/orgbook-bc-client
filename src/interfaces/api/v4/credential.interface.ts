@@ -47,8 +47,8 @@ export interface ICredentialDisplayType {
   relationship_types?: string[];
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: Record<string, string>  
-  schema_description?: Record<string, string>
+  schema_label?: Record<string, string>;
+  schema_description?: Record<string, string>;
 }
 
 export interface ICredentialFormatted {

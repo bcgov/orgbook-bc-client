@@ -1,7 +1,7 @@
 import { ActionContext } from "vuex";
 import { State as RootState } from "@/store/index";
 import Contact from "@/services/api/v4/contact.service";
-import { IContactRequest } from "@/interfaces/api/v2/contact.interface";
+import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
 
 const contactService = new Contact();
 

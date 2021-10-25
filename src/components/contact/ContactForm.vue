@@ -121,7 +121,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
-import { IContactRequest } from "@/interfaces/api/v2/contact.interface";
+import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
 import { contactReason } from "@/store/modules/contact";
 
 interface Data {
@@ -162,12 +162,11 @@ export default class ContactForm extends Vue {
   }
 
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
-    return this.credentialTypes.map((type) => (
-      
-      {
-      text: type.schema_label && type.schema_label[this.$i18n.locale] ? 
-        type.schema_label[this.$i18n.locale] : 
-        type.description,
+    return this.credentialTypes.map((type) => ({
+      text:
+        type.schema_label && type.schema_label[this.$i18n.locale]
+          ? type.schema_label[this.$i18n.locale]
+          : type.description,
       value: type.id,
     }));
   }

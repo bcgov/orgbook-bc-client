@@ -91,7 +91,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { IFeedback } from "@/interfaces/api/v2/feedback.interface";
+import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
 
 interface Data {
   reason: string;
