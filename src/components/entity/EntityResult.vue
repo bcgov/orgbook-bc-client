@@ -286,6 +286,11 @@
                                 DBA name registered
                               </div>
                             </div>
+                            <div v-else>
+                              <div class="font-weight-bold">
+                                {{ getCredentialLabel(cred) }}
+                              </div>
+                            </div>
                             <div v-if="cred.value">
                               {{ cred.value }}
                             </div>
@@ -319,6 +324,7 @@ import { selectFirstAttrItem } from "@/utils/attribute";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
+  getCredentialLabel,
 } from "@/utils/entity";
 import BackTo from "@/components/shared/BackTo.vue";
 import CredentialItem from "@/components/entity/CredentialItem.vue";
@@ -418,6 +424,7 @@ export default class EntityResult extends Vue {
     this.applyRegistrationTypeFilter,
   ];
   getRelationshipName = getRelationshipName;
+  getCredentialLabel = getCredentialLabel;
 
   data(): Data {
     return {

@@ -13,8 +13,8 @@ export interface ICredentialType extends IApiResource {
   issuer: IIssuer;
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: Record<string, string>  
-  schema_description?: Record<string, string>
+  schema_label?: Record<string, string>;
+  schema_description?: Record<string, string>;
 }
 
 export interface ICredentialTypeByIssuer {
