@@ -24,7 +24,7 @@
         </div>
         <div v-if="reason">
           <span>Reason:&nbsp;</span>
-          <span>{{ reason }}</span>
+          <span v-t="reason"></span>
         </div>
 
         <div v-for="(attr, i) in additionalAttributes" :key="i">

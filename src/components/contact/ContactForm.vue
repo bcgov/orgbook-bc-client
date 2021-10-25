@@ -162,8 +162,12 @@ export default class ContactForm extends Vue {
   }
 
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
-    return this.credentialTypes.map((type) => ({
-      text: type.description,
+    return this.credentialTypes.map((type) => (
+      
+      {
+      text: type.schema_label && type.schema_label[this.$i18n.locale] ? 
+        type.schema_label[this.$i18n.locale] : 
+        type.description,
       value: type.id,
     }));
   }
@@ -177,6 +181,7 @@ export default class ContactForm extends Vue {
       ? "Describe the problem"
       : "Message";
   }
+
 
   async submit(e: Event): Promise<void> {
     e.preventDefault();

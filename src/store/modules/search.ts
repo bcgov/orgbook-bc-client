@@ -30,6 +30,7 @@ import {
 } from "@/utils/search";
 import { objHasProp } from "@/utils/general";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import i18n from "@/i18n/index"
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
@@ -113,11 +114,14 @@ const getters = {
       keySelector: (filter?: ISearchFilter) => filter?.text || "",
       valueSelector: (filter?: ISearchFilter) => filter?.value || "",
       labelFormatter: (filter?: ISearchFilter) => {
-        return (
-          store.getters.credentialTypes.find(
-            (type: ICredentialType) => type.id.toString() === filter?.value
-          )?.description || ""
-        );
+        const credDesc = store.getters.credentialTypes.find(
+          (type: ICredentialType) => type.id.toString() === filter?.value
+        )
+        let retVal = credDesc.description || ""
+        if(credDesc.schema_label && credDesc.schema_label[i18n.locale]){
+          retVal = credDesc.schema_label[i18n.locale];
+        }
+        return retVal
       },
     };
     return (
