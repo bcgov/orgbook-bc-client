@@ -8,13 +8,13 @@
     header {
         # enable CSP
         Content-Security-Policy "default-src * data: blob: filesystem: 'unsafe-inline' 'unsafe-eval'";
-	    # enable HSTS
+        # enable HSTS
         Strict-Transport-Security "max-age=86400; includeSubDomains";
         # disable clients from sniffing the media type
         X-Content-Type-Options "nosniff";
         # XSS protection
         X-XSS-Protection 1;
-	    # clickjacking protection
+        # clickjacking protection
         X-Frame-Options DENY;
     }
 
