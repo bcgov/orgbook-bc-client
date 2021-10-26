@@ -342,7 +342,9 @@
                               </div>
                             </div>
                             <div v-else>
-                              <div class="font-weight-bold">{{cred.credential_type}}</div>
+                              <div class="font-weight-bold">
+                                {{ getCredentialLabel(cred) }}
+                              </div>
                             </div>
                             <div v-if="cred.value">
                               {{ cred.value }}
@@ -378,6 +380,7 @@ import { selectFirstAttrItem } from "@/utils/attribute";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
+  getCredentialLabel,
 } from "@/utils/entity";
 import BackTo from "@/components/shared/BackTo.vue";
 import CredentialItem from "@/components/entity/CredentialItem.vue";
@@ -387,7 +390,6 @@ import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue"
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
 import moment from "moment";
-import Dialog from "@/components/shared/Dialog.vue";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 
@@ -479,6 +481,7 @@ export default class EntityResult extends Vue {
     this.applyRegistrationTypeFilter,
   ];
   getRelationshipName = getRelationshipName;
+  getCredentialLabel = getCredentialLabel;
 
   data(): Data {
     return {

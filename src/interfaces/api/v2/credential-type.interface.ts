@@ -11,6 +11,10 @@ export interface ICredentialType extends IApiResource {
   last_issue_date: Date;
   schema: ISchema;
   issuer: IIssuer;
+  credential_title?: string;
+  highlighted_attributes?: string[];
+  schema_label?: Record<string, string>;
+  schema_description?: Record<string, string>;
 }
 
 export interface ICredentialTypeByIssuer {

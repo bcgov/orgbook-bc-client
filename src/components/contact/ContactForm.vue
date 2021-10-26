@@ -11,7 +11,13 @@
         ></v-select>
       </div>
 
-      <div v-if="formData.reason && formData.reason == 'REGISTER_ORGANIZATION' && !additionalHelp">
+      <div
+        v-if="
+          formData.reason &&
+          formData.reason == 'REGISTER_ORGANIZATION' &&
+          !additionalHelp
+        "
+      >
         <p class="font-weight-bold">
           How to add your organization to OrgBook BC
         </p>
@@ -42,7 +48,9 @@
           <a href="mailto:bcregistries@gov.bc.ca">bcregistries@gov.bc.ca</a>, or
           by calling the BC Registries Help Desk at 1-800-663-6102.
         </p>
-        <p class="fake-link" @click="additionalHelp=true">I still need help</p>
+        <p class="fake-link" @click="additionalHelp = true">
+          I still need help
+        </p>
       </div>
 
       <div v-else-if="formData.reason">
@@ -94,7 +102,10 @@
 
       <v-btn
         id="contactSubmitButton"
-        v-if="formData.reason && (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)"
+        v-if="
+          formData.reason &&
+          (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)
+        "
         @click="submit"
         depressed
         :disabled="loading"
@@ -110,10 +121,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
-import {
-  IContactRequest,
-  IIncorrectInfoContactRequest,
-} from "@/interfaces/api/v2/contact.interface";
+import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
 import { contactReason } from "@/store/modules/contact";
 
 interface Data {
@@ -128,18 +136,16 @@ interface Data {
     ...mapGetters(["loading", "credentialTypes"]),
   },
   methods: {
-    ...mapActions(["setLoading", "sendFeedback"]),
+    ...mapActions(["setLoading", "sendContact"]),
   },
 })
 export default class ContactForm extends Vue {
-  formData!: IContactRequest | IIncorrectInfoContactRequest;
+  formData!: IContactRequest;
   credentialTypes!: ICredentialType[];
   additionalHelp!: boolean;
 
   setLoading!: (loading: boolean) => void;
-  sendFeedback!: (
-    feedback: IContactRequest | IIncorrectInfoContactRequest
-  ) => Promise<void>;
+  sendContact!: (feedback: IContactRequest) => Promise<void>;
 
   data(): Data {
     return {
@@ -157,7 +163,10 @@ export default class ContactForm extends Vue {
 
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
     return this.credentialTypes.map((type) => ({
-      text: type.description,
+      text:
+        type.schema_label && type.schema_label[this.$i18n.locale]
+          ? type.schema_label[this.$i18n.locale]
+          : type.description,
       value: type.id,
     }));
   }
@@ -172,6 +181,7 @@ export default class ContactForm extends Vue {
       : "Message";
   }
 
+
   async submit(e: Event): Promise<void> {
     e.preventDefault();
     const isFormValid = (
@@ -179,7 +189,14 @@ export default class ContactForm extends Vue {
     ).validate();
     if (isFormValid) {
       this.setLoading(true);
-      await this.sendFeedback(this.formData);
+      const data = { ...this.formData };
+      data.reason = contactReason[this.formData.reason];
+      if (this.formData.error !== undefined) {
+        data.error = this.formattedCredentialTypes.filter(
+          (type) => String(type.value) === this.formData.error
+        )[0]?.text;
+      }
+      await this.sendContact(data);
       this.setLoading(false);
       router.push({ name: "Search" });
     }

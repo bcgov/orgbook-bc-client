@@ -12,20 +12,20 @@
     </div>
     <div>
       <v-card rounded="sm" class="mb-5 card">
-        <v-card-title class="pa-5">
-          <div class="text-h6 font-weight-bold">
+        <v-card-title class="pa-5 pb-0">
+          <p class="text-h6 font-weight-bold">
             <v-icon class="validated" v-if="!credRevoked">{{
               mdiShieldCheckOutline
             }}</v-icon>
             <span>{{ `${currCredTypeDesc} credential` }}</span
             ><span v-if="!credRevoked"> verified</span
             ><span v-else> claims</span>
-          </div>
-          <div v-if="!credRevoked" class="text-body-1 verification-time">
-            {{ `Cryptographically verified ${currDate}` }}
-          </div>
+          </p>
         </v-card-title>
         <v-card-text class="pa-5 pt-0">
+          <p v-if="!credRevoked" class="text-body-1 verification-time">
+            {{ `Cryptographically verified ${currDate}` }}
+          </p>
           <p>
             Issued: {{ currCredIssuedDate | formatDate }} • Effective:
             {{ currCredEffDate | formatDate
@@ -91,7 +91,7 @@
         <v-expansion-panels flat>
           <v-expansion-panel>
             <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              Claims <span v-if="!credRevoked">proven</span>
+              <p>Claims <span v-if="!credRevoked"> proven</span></p>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-5 pt-0">
               <v-data-table
@@ -122,7 +122,7 @@
         <v-expansion-panels flat>
           <v-expansion-panel>
             <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              Proof Details
+              <p>Proof Details</p>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-5 pt-0">
               <div class="proof-raw">
@@ -146,6 +146,7 @@ import {
   ICredential,
   ICredentialFormatted,
 } from "@/interfaces/api/v4/credential.interface";
+import i18n from "@/i18n/index";
 import router from "@/router";
 import moment from "moment";
 import BackTo from "@/components/shared/BackTo.vue";
@@ -227,7 +228,18 @@ export default class CredentialDetail extends Vue {
   }
 
   get currCredTypeDesc(): string | undefined {
-    return this.getSelectedCredential?.credential_type?.description;
+    if (!this.getSelectedCredential) {
+      return undefined;
+    }
+    let credDesc = this.getSelectedCredential.credential_type.description;
+    if (
+      this.getSelectedCredential.credential_type.schema_label &&
+      this.getSelectedCredential.credential_type.schema_label[i18n.locale]
+    ) {
+      credDesc =
+        this.getSelectedCredential.credential_type.schema_label[i18n.locale];
+    }
+    return credDesc;
   }
 
   get credRevoked(): boolean | undefined {
@@ -273,7 +285,7 @@ export default class CredentialDetail extends Vue {
         this.fetchPresId(credentialId),
       ]);
       //need a small timeout because the credential isn't always verified after fetchPresId returns
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 1000));
       await this.fetchPresEx({
         id: credentialId,
         presId: this.getPresentationId,
