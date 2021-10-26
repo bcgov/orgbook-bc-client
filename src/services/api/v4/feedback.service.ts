@@ -1,6 +1,6 @@
 import Http, { HttpResponse } from "@/services/http.service";
 import ApiResource from "@/services/api/resource.service";
-import { IFeedback } from "@/interfaces/api/v2/feedback.interface";
+import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
 
 export default class Feedback extends ApiResource {
   baseVersion = "v4";

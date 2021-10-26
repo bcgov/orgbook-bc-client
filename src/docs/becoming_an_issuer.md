@@ -8,9 +8,9 @@ showcaseDescription: See the process involved in adding (“issuing”) your org
 
 **Becoming an OrgBook BC issuer**
 
-If you’re reading this, you probably hold or use information about BC organizations that benefits citizens, other organizations, your teams, and others. Maybe you issue permits or licenses, or authorize the holding of information, or notify the public when certain processes are completed.
+As a public sector organization, you might hold or use information about BC organizations that benefits citizens, other organizations, and your teams. Alternatively, maybe you issue permits or licenses, or authorize the holding of information, or notify the public when certain processes are completed.
 
-Whatever the situation, you should consider becoming an OrgBook BC Issuer: an organization that provides—"issues"—their BC organization-related data to OrgBook BC.
+Whatever the situation, as long as you’re a public sector organization, you should consider becoming an OrgBook BC Issuer: an organization that provides—“issues”—their BC organization-related data to OrgBook BC.
 
 **Benefits for your organization**
 

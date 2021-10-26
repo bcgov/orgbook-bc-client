@@ -1,6 +1,6 @@
 import Http, { HttpResponse } from "@/services/http.service";
 import ApiResource from "@/services/api/resource.service";
-import { IContactRequest } from "@/interfaces/api/v2/contact.interface";
+import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
 
 export default class Contact extends ApiResource {
   baseVersion = "v4";
