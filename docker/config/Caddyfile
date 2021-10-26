@@ -51,4 +51,9 @@
     route /api/* {
         reverse_proxy {$API_HOST}:{$API_PORT}
     }
+
+    # Proxy requests to Hooks
+    route /hooks/* {
+        reverse_proxy {$PROXY_HOST}:{$PROXY_PORT}
+    }
 }
