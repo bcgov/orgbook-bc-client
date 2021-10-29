@@ -258,14 +258,7 @@
                     class="pl-0 timeline-cred"
                   >
                     <template #expansionPanels>
-                      <CredentialItem
-                        :authority="cred.authority"
-                        :authorityLink="cred.authorityLink"
-                        :expired="cred.revoked"
-                        :credId="cred.id"
-                        :reason="cred.registration_reason"
-                        :timeline="true"
-                      >
+                      <HighlightedCredItem :cred="cred">
                         <template #header>
                           <div class="text-body-2 timeline-cred-header">
                             <div v-if="cred.revoked" class="expired-credential">
@@ -291,12 +284,9 @@
                                 {{ getCredentialLabel(cred) }}
                               </div>
                             </div>
-                            <div v-if="cred.value">
-                              {{ cred.value }}
-                            </div>
                           </div>
                         </template>
-                      </CredentialItem>
+                      </HighlightedCredItem>
                     </template>
                   </EntityCard>
                 </div>
@@ -333,6 +323,7 @@ import EntityHeader from "@/components/entity/EntityHeader.vue";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
+import HighlightedCredItem from "@/components/entity/HighlightedCredItem.vue";
 import moment from "moment";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
@@ -354,6 +345,7 @@ interface Data {
     EntityFilterChips,
     EntityFilterFacetPanels,
     EntityFilterDialog,
+    HighlightedCredItem,
   },
   computed: {
     ...mapGetters([
@@ -470,7 +462,7 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.credential_type as string[]).includes(
-        cred.credential_type
+        getCredentialLabel(cred)
       )
     );
   }

@@ -49,6 +49,7 @@ export function credOrRelationshipToDisplay(
     date_effective: new Date(),
     revoked: false,
     value: "",
+    credential_type_id: 0,
   };
   if (isCredential(item)) {
     const credItem = item as ICredential;
@@ -63,7 +64,7 @@ export function credOrRelationshipToDisplay(
       credItem.attributes
     )?.value;
     if (registration_reason !== undefined) {
-      display.registration_reason = `reason.${registration_reason}`;
+      display.registration_reason = `reason_description.${registration_reason}`;
     }
     display.revoked = credItem.revoked;
     display.revoked_date = credItem.revoked_date;
@@ -73,6 +74,8 @@ export function credOrRelationshipToDisplay(
     display.highlighted_attributes =
       credItem.credential_type.highlighted_attributes;
     display.credential_title = credItem.credential_type.credential_title;
+    display.attributes = credItem.attributes;
+    display.credential_type_id = credItem.credential_type.id;
   } else {
     const relItem = item as IRelationship;
 
@@ -102,6 +105,8 @@ export function credOrRelationshipToDisplay(
       relItem.credential.credential_type.highlighted_attributes;
     display.credential_title =
       relItem.credential.credential_type.credential_title;
+    display.attributes = relItem.credential.attributes;
+    display.credential_type_id = relItem.credential.credential_type.id;
   }
   return display;
 }

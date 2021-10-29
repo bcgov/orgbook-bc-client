@@ -208,7 +208,7 @@ export default class CredentialDetail extends Vue {
   }
 
   get entityName(): string | undefined {
-    return this.getSelectedCredential?.topic?.names[0]?.text;
+    return this.selectedTopic.names[0]?.text;
   }
 
   get entitySourceID(): string | undefined {

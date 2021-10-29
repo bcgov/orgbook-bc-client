@@ -184,6 +184,9 @@ const actions = {
     baseFilter[params.filterField] = currFilters;
     commit("setFilter", baseFilter);
   },
+  clearFilter({ commit }: ActionContext<State, RootState>): void {
+    commit("clearFilter");
+  },
 };
 
 const mutations = {
@@ -204,6 +207,9 @@ const mutations = {
   setFilter: (state: State, filter: IEntityFilter): IEntityFilter | null => {
     state.entityFilter = { ...filter };
     return state.entityFilter;
+  },
+  clearFilter: (state: State): void => {
+    state.entityFilter = null;
   },
 };
 

@@ -33,6 +33,10 @@ export interface ICredential extends IApiResource {
   attributes: ICredentialAttribute[];
 }
 
+export interface ICredentialTypeClaimLabels extends ICredentialType {
+  claim_labels: Record<string, Record<string, string>>;
+}
+
 export interface ICredentialDisplayType {
   id: number;
   credential_type: string;
@@ -49,6 +53,8 @@ export interface ICredentialDisplayType {
   highlighted_attributes?: string[];
   schema_label?: Record<string, string>;
   schema_description?: Record<string, string>;
+  attributes?: ICredentialAttribute[];
+  credential_type_id: number;
 }
 
 export interface ICredentialFormatted {
