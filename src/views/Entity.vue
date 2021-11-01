@@ -29,10 +29,7 @@ export default class Entity extends Vue {
     next: NavigationGuardNext<Vue>
   ): Promise<void> {
     if (!to.fullPath.includes(from.fullPath)) {
-      console.log("filters cleared");
       this.clearFilter();
-    } else {
-      console.log("filters preserved");
     }
     next();
   }

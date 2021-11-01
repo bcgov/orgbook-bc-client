@@ -5,12 +5,11 @@ import {
   ICredentialTypeByIssuer,
 } from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v4/credential-type.service";
-import { ICredentialTypeClaimLabels } from "@/interfaces/api/v4/credential.interface";
 
 const credentialTypeSerivice = new CredentialType();
 
 export interface State {
-  types: ICredentialTypeClaimLabels[];
+  types: ICredentialType[];
   selected: ICredentialType | null;
 }
 
@@ -60,7 +59,7 @@ const actions = {
 };
 
 const mutations = {
-  setTypes(state: State, types: ICredentialTypeClaimLabels[]): void {
+  setTypes(state: State, types: ICredentialType[]): void {
     state.types = [...types];
   },
 };

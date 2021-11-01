@@ -33,10 +33,6 @@ export interface ICredential extends IApiResource {
   attributes: ICredentialAttribute[];
 }
 
-export interface ICredentialTypeClaimLabels extends ICredentialType {
-  claim_labels: Record<string, Record<string, string>>;
-}
-
 export interface ICredentialDisplayType {
   id: number;
   credential_type: string;

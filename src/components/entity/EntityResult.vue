@@ -167,11 +167,11 @@
 
     <!-- relationships related from -->
     <EntityCard
-      title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
       v-if="ownedByRelationship"
     >
+      <template title="Relationships"></template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is owned by:
@@ -198,11 +198,8 @@
     </EntityCard>
 
     <!-- credential timeline -->
-    <EntityCard
-      :expanded="credentialsExpanded"
-      title="Credentials"
-      ref="credentials"
-    >
+    <EntityCard :expanded="credentialsExpanded" ref="credentials">
+      <template #title>Credentials</template>
       <template>
         <!-- header content for the credential card -->
         <v-row>
@@ -258,7 +255,7 @@
                     class="pl-0 timeline-cred"
                   >
                     <template #expansionPanels>
-                      <HighlightedCredItem :cred="cred">
+                      <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
                           <div class="text-body-2 timeline-cred-header">
                             <div v-if="cred.revoked" class="expired-credential">
@@ -286,7 +283,7 @@
                             </div>
                           </div>
                         </template>
-                      </HighlightedCredItem>
+                      </CredentialItem>
                     </template>
                   </EntityCard>
                 </div>
@@ -323,7 +320,6 @@ import EntityHeader from "@/components/entity/EntityHeader.vue";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import HighlightedCredItem from "@/components/entity/HighlightedCredItem.vue";
 import moment from "moment";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
@@ -345,7 +341,6 @@ interface Data {
     EntityFilterChips,
     EntityFilterFacetPanels,
     EntityFilterDialog,
-    HighlightedCredItem,
   },
   computed: {
     ...mapGetters([
