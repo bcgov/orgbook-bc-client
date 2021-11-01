@@ -167,11 +167,11 @@
 
     <!-- relationships related from -->
     <EntityCard
-      title="Relationships"
       ref="relationships"
       :expanded="credentialsExpanded"
       v-if="ownedByRelationship"
     >
+      <template title="Relationships"></template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is owned by:
@@ -198,11 +198,8 @@
     </EntityCard>
 
     <!-- credential timeline -->
-    <EntityCard
-      :expanded="credentialsExpanded"
-      title="Credentials"
-      ref="credentials"
-    >
+    <EntityCard :expanded="credentialsExpanded" ref="credentials">
+      <template #title>Credentials</template>
       <template>
         <!-- header content for the credential card -->
         <v-row>
@@ -258,14 +255,7 @@
                     class="pl-0 timeline-cred"
                   >
                     <template #expansionPanels>
-                      <CredentialItem
-                        :authority="cred.authority"
-                        :authorityLink="cred.authorityLink"
-                        :expired="cred.revoked"
-                        :credId="cred.id"
-                        :reason="cred.registration_reason"
-                        :timeline="true"
-                      >
+                      <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
                           <div class="text-body-2 timeline-cred-header">
                             <div v-if="cred.revoked" class="expired-credential">
@@ -290,9 +280,6 @@
                               <div class="font-weight-bold">
                                 {{ getCredentialLabel(cred) }}
                               </div>
-                            </div>
-                            <div v-if="cred.value">
-                              {{ cred.value }}
                             </div>
                           </div>
                         </template>
@@ -470,7 +457,7 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.credential_type as string[]).includes(
-        cred.credential_type
+        getCredentialLabel(cred)
       )
     );
   }

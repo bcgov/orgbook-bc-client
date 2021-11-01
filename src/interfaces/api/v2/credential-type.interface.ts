@@ -15,6 +15,7 @@ export interface ICredentialType extends IApiResource {
   highlighted_attributes?: string[];
   schema_label?: Record<string, string>;
   schema_description?: Record<string, string>;
+  claim_labels?: Record<string, Record<string, string>>
 }
 
 export interface ICredentialTypeByIssuer {
