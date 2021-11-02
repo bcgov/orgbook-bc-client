@@ -54,7 +54,7 @@
     "ACT": "Active",
     "HIS": "Historical"
   },
-  "reason": {
+  "reason_description": {
     "Filing:ICORP": "Incorporation / registration",
     "Event:CONVFMREGI": "Incorporation / registration",
     "Event:SYSDF": "Dissolution",

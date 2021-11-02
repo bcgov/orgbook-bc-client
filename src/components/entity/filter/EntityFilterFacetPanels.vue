@@ -11,7 +11,8 @@
         filterField="authorities"
         :fields="getAuthorities"
       >
-        <template v-slot:title><Dialog>
+        <template v-slot:title
+          ><Dialog>
             <template #activator
               >Authority <v-icon>{{ mdiInformationOutline }}</v-icon></template
             >
@@ -23,8 +24,8 @@
                 issuer of Registrations, Business Numbers, and more.
               </p>
             </template>
-          </Dialog></template>
-        
+          </Dialog></template
+        >
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
         filterField="credential_type"
@@ -177,7 +178,7 @@ import {
   IEntityFilter,
 } from "@/interfaces/entity-filter.interface";
 import { isEntityFilterActive } from "@/utils/entity";
-import Dialog from "@/components/shared/Dialog.vue"
+import Dialog from "@/components/shared/Dialog.vue";
 
 interface Data {
   menuFrom: boolean;
@@ -201,7 +202,7 @@ interface Data {
       "getRegistrationTypes",
       "getEntityFilters",
       "mdiCalendar",
-      "mdiInformationOutline"
+      "mdiInformationOutline",
     ]),
   },
   methods: {

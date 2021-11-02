@@ -49,6 +49,8 @@ export interface ICredentialDisplayType {
   highlighted_attributes?: string[];
   schema_label?: Record<string, string>;
   schema_description?: Record<string, string>;
+  attributes?: ICredentialAttribute[];
+  credential_type_id: number;
 }
 
 export interface ICredentialFormatted {

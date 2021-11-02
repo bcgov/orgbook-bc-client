@@ -181,7 +181,6 @@ export default class ContactForm extends Vue {
       : "Message";
   }
 
-
   async submit(e: Event): Promise<void> {
     e.preventDefault();
     const isFormValid = (

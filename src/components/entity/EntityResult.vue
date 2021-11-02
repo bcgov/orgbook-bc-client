@@ -334,14 +334,7 @@
                     class="pl-0 timeline-cred"
                   >
                     <template #expansionPanels>
-                      <CredentialItem
-                        :authority="cred.authority"
-                        :authorityLink="cred.authorityLink"
-                        :expired="cred.revoked"
-                        :credId="cred.id"
-                        :reason="cred.registration_reason"
-                        :timeline="true"
-                      >
+                      <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
                           <div class="text-body-2 timeline-cred-header">
                             <div v-if="cred.revoked" class="expired-credential">
@@ -366,9 +359,6 @@
                               <div class="font-weight-bold">
                                 {{ getCredentialLabel(cred) }}
                               </div>
-                            </div>
-                            <div v-if="cred.value">
-                              {{ cred.value }}
                             </div>
                           </div>
                         </template>
@@ -548,7 +538,7 @@ export default class EntityResult extends Vue {
     }
     return filteredCreds.filter((cred) =>
       (this.getEntityFilters.credential_type as string[]).includes(
-        cred.credential_type
+        getCredentialLabel(cred)
       )
     );
   }
