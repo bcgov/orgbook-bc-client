@@ -11,7 +11,21 @@
         filterField="authorities"
         :fields="getAuthorities"
       >
-        <template v-slot:title> Authority </template>
+        <template v-slot:title
+          ><Dialog>
+            <template #activator
+              >Authority <v-icon>{{ mdiInformationOutline }}</v-icon></template
+            >
+            <template #content>
+              <h3>Authority:</h3>
+              <p>
+                The organization that issued the credential to OrgBook BC. An
+                example of an authority in OrgBook BC is BC Registries, the
+                issuer of Registrations, Business Numbers, and more.
+              </p>
+            </template>
+          </Dialog></template
+        >
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
         filterField="credential_type"
@@ -23,7 +37,22 @@
         filterField="registration_type"
         :fields="getRegistrationTypes"
       >
-        <template v-slot:title> Registration type </template>
+        <template v-slot:title>
+          <Dialog>
+            <template #activator
+              >Registration type
+              <v-icon>{{ mdiInformationOutline }}</v-icon></template
+            >
+            <template #content>
+              <h3>Authority:</h3>
+              <p>
+                The organization that issued the credential to OrgBook BC. An
+                example of an authority in OrgBook BC is BC Registries, the
+                issuer of Registrations, Business Numbers, and more.
+              </p>
+            </template>
+          </Dialog>
+        </template>
       </EntityFilterFacetPanel>
       <CustomFilterFacetPanel>
         <template #title> Date effective </template>
@@ -149,6 +178,7 @@ import {
   IEntityFilter,
 } from "@/interfaces/entity-filter.interface";
 import { isEntityFilterActive } from "@/utils/entity";
+import Dialog from "@/components/shared/Dialog.vue";
 
 interface Data {
   menuFrom: boolean;
@@ -160,6 +190,7 @@ interface Data {
 
 @Component({
   components: {
+    Dialog,
     EntityFilterFacetPanel,
     CustomFilterFacetPanel,
   },
@@ -171,6 +202,7 @@ interface Data {
       "getRegistrationTypes",
       "getEntityFilters",
       "mdiCalendar",
+      "mdiInformationOutline",
     ]),
   },
   methods: {

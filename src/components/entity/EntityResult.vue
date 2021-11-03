@@ -53,7 +53,42 @@
           <div class="mb-6 text-body-2">
             <span>{{ entityName }}</span>
             <span>&nbsp;is a&nbsp;</span>
-            <span class="fake-link" v-t="entityJurisdiction"></span>
+            <Dialog>
+              <template #activator
+                ><span class="fake-link" v-t="entityJurisdiction"></span
+                ><v-icon>{{ mdiInformationOutline }}</v-icon></template
+              >
+              <template #content>
+                <h3>BC Company</h3>
+                <p>
+                  In B.C., incorporation creates a legal entity known as a
+                  corporation, commonly referred to as a company. Three types of
+                  companies may be created through incorporation:
+                </p>
+                <ul>
+                  <li>Limited company (most common)</li>
+                  <li>Unlimited liability company</li>
+                  <li>Community contribution company</li>
+                </ul>
+                <h3>What Incorporation Means</h3>
+                <p>
+                  Companies are incorporated in B.C. under the Business
+                  Corporations Act. The Act gives incorporated companies:
+                </p>
+                <ul>
+                  <li>All the powers of an individual</li>
+                  <li>
+                    An independent existence – separate and distinct from its
+                    shareholders
+                  </li>
+                  <li>An unlimited life expectancy</li>
+                  <li>
+                    A company can acquire assets, go into debt, enter into
+                    contracts, sue or be sued.
+                  </li>
+                </ul>
+              </template>
+            </Dialog>
           </div>
           <div class="text-body-2">
             <div>
@@ -78,7 +113,22 @@
       :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
-      <template #title>Relationships</template>
+      <template #title
+        ><Dialog>
+          <template #activator
+            >Relationships
+            <v-icon>{{ mdiInformationOutline }}</v-icon></template
+          >
+          <template #content>
+            <h3>Relationships:</h3>
+            <p>
+              The organizational connections between this credential and other
+              credentials. An example relationship in OrgBook BC is one
+              registered organization “Doing Business As” another.
+            </p>
+          </template>
+        </Dialog></template
+      >
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
@@ -171,7 +221,22 @@
       :expanded="credentialsExpanded"
       v-if="ownedByRelationship"
     >
-      <template title="Relationships"></template>
+      <template #title
+        ><Dialog>
+          <template #activator
+            >Relationships
+            <v-icon>{{ mdiInformationOutline }}</v-icon></template
+          >
+          <template #content>
+            <h3>Relationships:</h3>
+            <p>
+              The organizational connections between this credential and other
+              credentials. An example relationship in OrgBook BC is one
+              registered organization “Doing Business As” another.
+            </p>
+          </template>
+        </Dialog>
+      </template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           {{ entityName }} is owned by:
@@ -199,7 +264,21 @@
 
     <!-- credential timeline -->
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
-      <template #title>Credentials</template>
+      <template #title>
+        <Dialog>
+          <template #activator
+            >Credentials <v-icon>{{ mdiInformationOutline }}</v-icon></template
+          >
+          <template #content>
+            <h3>Credential:</h3>
+            <p>
+              Something that details a qualification, registration or authority
+              of an organization. An example of a credential in OrgBook BC is
+              the Business Number credential for a registered corporation.
+            </p>
+          </template>
+        </Dialog>
+      </template>
       <template>
         <!-- header content for the credential card -->
         <v-row>
@@ -323,6 +402,7 @@ import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vu
 import moment from "moment";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
+import Dialog from "@/components/shared/Dialog.vue";
 
 interface Data {
   currentTab: string;
@@ -336,6 +416,7 @@ interface Data {
   components: {
     BackTo,
     CredentialItem,
+    Dialog,
     EntityCard,
     EntityHeader,
     EntityFilterChips,
