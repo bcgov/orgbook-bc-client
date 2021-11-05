@@ -212,7 +212,6 @@ export default class HighlightedCredItem extends Vue {
     let retval: Record<string, string>[] = [];
     if (this.cred.highlighted_attributes) {
       this.cred.highlighted_attributes.forEach((accessor) => {
-        console.log(accessor);
         const attrLabel = this.getClaimLabel(
           this.cred.credential_type_id,
           accessor
@@ -240,10 +239,6 @@ export default class HighlightedCredItem extends Vue {
       });
     }
     return retval;
-  }
-
-  async created(): Promise<void> {
-    // console.log(JSON.stringify(this.credentialTypes))
   }
 }
 </script>
