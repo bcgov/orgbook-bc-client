@@ -105,7 +105,7 @@ export function credOrRelationshipToDisplay(
       relItem.credential.credential_type.highlighted_attributes;
     display.credential_title =
       relItem.credential.credential_type.credential_title;
-    display.attributes = relItem.credential.attributes;
+    display.attributes = relItem.attributes;
     display.credential_type_id = relItem.credential.credential_type.id;
   }
   return display;

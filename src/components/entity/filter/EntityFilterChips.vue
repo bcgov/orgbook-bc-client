@@ -55,9 +55,13 @@ export default class EntityFilterChips extends Vue {
         typeof this.getEntityFilters[key] === "string" &&
         this.getEntityFilters[key] !== ""
       ) {
+        let prefix = "";
+        if (key.startsWith("date")) {
+          prefix = key === "date_min" ? "From: " : "To: ";
+        }
         chips.push({
           filterField: key,
-          filterString: this.getEntityFilters[key] as string,
+          filterString: (prefix + this.getEntityFilters[key]) as string,
         });
       } else if (this.getEntityFilters[key]) {
         chips.push({
