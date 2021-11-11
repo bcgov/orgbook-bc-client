@@ -11,21 +11,24 @@
         filterField="authorities"
         :fields="getAuthorities"
       >
-        <template v-slot:title
-          ><Dialog>
-            <template #activator
-              >Authority <v-icon>{{ mdiInformationOutline }}</v-icon></template
-            >
-            <template #content>
-              <h3>Authority:</h3>
-              <p>
-                The organization that issued the credential to OrgBook BC. An
-                example of an authority in OrgBook BC is BC Registries, the
-                issuer of Registrations, Business Numbers, and more.
-              </p>
-            </template>
-          </Dialog></template
-        >
+        <template v-slot:title>
+          <div class="flex">
+            Authority
+            <Dialog>
+              <template #activator>
+                <v-icon>{{ mdiInformationOutline }}</v-icon>
+              </template>
+              <template #content>
+                <h3>Authority:</h3>
+                <p>
+                  The organization that issued the credential to OrgBook BC. An
+                  example of an authority in OrgBook BC is BC Registries, the
+                  issuer of Registrations, Business Numbers, and more.
+                </p>
+              </template>
+            </Dialog>
+          </div>
+        </template>
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
         filterField="credential_type"
@@ -38,20 +41,22 @@
         :fields="getRegistrationTypes"
       >
         <template v-slot:title>
-          <Dialog>
-            <template #activator
-              >Registration type
-              <v-icon>{{ mdiInformationOutline }}</v-icon></template
-            >
-            <template #content>
-              <h3>Authority:</h3>
-              <p>
-                The organization that issued the credential to OrgBook BC. An
-                example of an authority in OrgBook BC is BC Registries, the
-                issuer of Registrations, Business Numbers, and more.
-              </p>
-            </template>
-          </Dialog>
+          <div class="flex">
+            Registration type
+            <Dialog>
+              <template #activator>
+                <v-icon>{{ mdiInformationOutline }}</v-icon></template
+              >
+              <template #content>
+                <h3>Registration type:</h3>
+                <p>
+                  How an organization is legally registered in British Columbia.
+                  For example, an organization in OrgBook BC may be legally
+                  registered as a Sole Proprietorship.
+                </p>
+              </template>
+            </Dialog>
+          </div>
         </template>
       </EntityFilterFacetPanel>
       <CustomFilterFacetPanel>
@@ -268,5 +273,9 @@ export default class EntityFilterFacetPanels extends Vue {
 }
 .facet-filter {
   min-height: 0 !important;
+}
+.flex {
+  display: flex;
+  align-items: center;
 }
 </style>
