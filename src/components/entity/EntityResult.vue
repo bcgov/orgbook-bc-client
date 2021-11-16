@@ -198,22 +198,47 @@
         </CredentialItem>
       </template>
       <template #footer>
-        <div class="pa-5 d-flex align-center">
+        <div
+          :class="{
+            'pa-5 d-flex': true,
+            'align-right': $vuetify.breakpoint.lgAndUp,
+          }"
+        >
           <span class="text-body-2">
             <v-row>
-              <v-col class="pb-0" cols="12" sm="12" lg="3">
-                Items displayed
+              <v-col
+                v-if="!$vuetify.breakpoint.lgAndUp"
+                class="pb-0"
+                cols="12"
+                sm="12"
+                lg="3"
+              >
+                <p class="mb-0">Items displayed</p>
               </v-col>
-              <v-col cols="12" sm="12" lg="9">
-                <v-row>
+              <v-col
+                cols="12"
+                sm="12"
+                :class="{
+                  'aligned pl-0': $vuetify.breakpoint.lgAndUp,
+                  'pt-0': !$vuetify.breakpoint.lgAndUp,
+                }"
+              >
+                <v-row class="align-right">
+                  <v-col
+                    v-if="$vuetify.breakpoint.lgAndUp"
+                    class="aligned"
+                    lg="3"
+                  >
+                    <p>Items displayed</p>
+                  </v-col>
                   <v-col class="pl-0" cols="4" sm="2" lg="3">
                     <v-select
                       v-model="itemsDisplayed"
-                      class="pt-0 mt-0"
+                      class="pt-0 mt-0 aligned"
                       :items="[5, 10, 25, 100]"
                     ></v-select>
                   </v-col>
-                  <v-col cols="8" sm="10" lg="6">
+                  <v-col cols="8" sm="10" lg="4">
                     {{ relationshipStartIndex + 1 }} -
                     {{
                       Math.min(
@@ -912,5 +937,14 @@ export default class EntityResult extends Vue {
 }
 .flex {
   display: flex;
+}
+.aligned {
+  display: flex;
+  align-items: center;
+}
+.align-right {
+  display: flex;
+  justify-content: right;
+  justify-items: right;
 }
 </style>
