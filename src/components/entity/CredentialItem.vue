@@ -45,7 +45,7 @@
             sm="12"
           >
             {{ attr["key"] }}:
-            <span v-t="attr['accessor'] + '.' + attr['value']"></span>
+            {{ translateValue(attr["accessor"], attr["value"]) }}
           </v-col>
         </v-row>
 
