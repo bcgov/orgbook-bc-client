@@ -866,7 +866,7 @@ export default class EntityResult extends Vue {
 
   get entityJurisdiction(): string | undefined {
     const state = selectFirstAttrItem(
-      { key: "type", value: "home_jurisdiction" },
+      { key: "type", value: "entity_type" },
       this.selectedTopic?.attributes
     );
     const ret = "entity_type." + state?.value;
