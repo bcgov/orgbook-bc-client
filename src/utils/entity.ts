@@ -70,7 +70,6 @@ export function credOrRelationshipToDisplay(
     display.revoked_date = credItem.revoked_date;
     display.value = credItem.names[0]?.text;
     display.schema_label = credItem.credential_type.schema_label;
-    display.schema_description = credItem.credential_type.schema_description;
     display.highlighted_attributes =
       credItem.credential_type.highlighted_attributes;
     display.credential_title = credItem.credential_type.credential_title;
@@ -99,8 +98,6 @@ export function credOrRelationshipToDisplay(
     display.relationship_types = relItem.attributes.map((attr) => attr.value);
     display.value = getRelationshipName(relItem);
     display.schema_label = relItem.credential.credential_type.schema_label;
-    display.schema_description =
-      relItem.credential.credential_type.schema_description;
     display.highlighted_attributes =
       relItem.credential.credential_type.highlighted_attributes;
     display.credential_title =
@@ -133,8 +130,8 @@ export function isEntityFilterActive(
 export function getCredentialLabel(cred: ICredentialDisplayType): string {
   let credDesc = cred.credential_type;
   const locale = i18n.locale;
-  if (cred.schema_label && cred.schema_label[locale]) {
-    credDesc = cred.schema_label[locale];
+  if (cred.schema_label && cred.schema_label.translations[locale].label) {
+    credDesc = cred.schema_label.translations[locale].label;
   }
   return credDesc;
 }

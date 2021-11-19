@@ -1,4 +1,5 @@
 import { IApiResource } from "../resource.interface";
+import { ISchemaLabel } from "../v4/credential.interface";
 import { IIssuer } from "./issuer.interface";
 import { ISchema } from "./schema.interface";
 
@@ -13,8 +14,7 @@ export interface ICredentialType extends IApiResource {
   issuer: IIssuer;
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: Record<string, string>;
-  schema_description?: Record<string, string>;
+  schema_label?: ISchemaLabel;
   claim_labels?: Record<string, Record<string, string>>;
 }
 

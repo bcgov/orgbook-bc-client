@@ -164,8 +164,8 @@ export default class ContactForm extends Vue {
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
     return this.credentialTypes.map((type) => ({
       text:
-        type.schema_label && type.schema_label[this.$i18n.locale]
-          ? type.schema_label[this.$i18n.locale]
+        type.schema_label && type.schema_label.translations[this.$i18n.locale].label
+          ? type.schema_label.translations[this.$i18n.locale].label
           : type.description,
       value: type.id,
     }));
