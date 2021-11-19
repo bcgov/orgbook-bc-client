@@ -293,6 +293,13 @@ export default class CredentialDetail extends Vue {
     } else {
       router.push("/search");
     }
+    if (!this.getSelectedCredential || !this.selectedTopic) {
+      // cred or source id invalid, failed to load credential
+      console.error(
+        "Invalid credential or source Id. Credential detail not retrieved"
+      );
+      router.push("/search");
+    }
     this.setLoading(false);
   }
 }

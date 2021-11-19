@@ -56,7 +56,9 @@
             <Dialog>
               <template #activator
                 ><span class="fake-link" v-t="entityJurisdiction"></span
-                ><v-icon>{{ mdiInformationOutline }}</v-icon></template
+                ><v-icon class="fake-link">{{
+                  mdiInformationOutline
+                }}</v-icon></template
               >
               <template #content>
                 <h3>BC Company</h3>
@@ -113,22 +115,26 @@
       :expanded="credentialsExpanded"
       v-if="businessAsRelationship.length > 0"
     >
-      <template #title
-        ><Dialog>
-          <template #activator
-            >Relationships
-            <v-icon>{{ mdiInformationOutline }}</v-icon></template
-          >
-          <template #content>
-            <h3>Relationships:</h3>
-            <p>
-              The organizational connections between this credential and other
-              credentials. An example relationship in OrgBook BC is one
-              registered organization “Doing Business As” another.
-            </p>
-          </template>
-        </Dialog></template
-      >
+      <template #title>
+        <div class="flex">
+          Relationships
+          <Dialog>
+            <template #activator>
+              <span class="fake-link"
+                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
+              ></template
+            >
+            <template #content>
+              <h3>Relationships:</h3>
+              <p>
+                The organizational connections between this credential and other
+                credentials. An example relationship in OrgBook BC is one
+                registered organization “Doing Business As” another.
+              </p>
+            </template>
+          </Dialog>
+        </div>
+      </template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
@@ -192,25 +198,69 @@
         </CredentialItem>
       </template>
       <template #footer>
-        <div class="pa-5 d-flex align-center justify-end">
-          <span class="text-body-2"
-            >Items displayed {{ relationshipStartIndex + 1 }} -
-            {{ relationshipStartIndex + 1 }} -
-            {{
-              Math.min(
-                Math.min(itemsDisplayed, businessAsRelationship.length) +
-                  relationshipStartIndex,
-                businessAsRelationship.length
-              )
-            }}
-            of {{ businessAsRelationship.length }}
+        <div
+          :class="{
+            'pa-5 d-flex': true,
+            'align-right': $vuetify.breakpoint.lgAndUp,
+          }"
+        >
+          <span class="text-body-2">
+            <v-row>
+              <v-col
+                v-if="!$vuetify.breakpoint.lgAndUp"
+                class="pb-0"
+                cols="12"
+                sm="12"
+                lg="3"
+              >
+                <p class="mb-0">Items displayed</p>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="12"
+                :class="{
+                  'aligned pl-0': $vuetify.breakpoint.lgAndUp,
+                  'pt-0': !$vuetify.breakpoint.lgAndUp,
+                }"
+              >
+                <v-row class="align-right">
+                  <v-col
+                    v-if="$vuetify.breakpoint.lgAndUp"
+                    class="aligned"
+                    lg="3"
+                  >
+                    <p>Items displayed</p>
+                  </v-col>
+                  <v-col class="pl-0" cols="4" sm="2" lg="3">
+                    <v-select
+                      v-model="itemsDisplayed"
+                      class="pt-0 mt-0 aligned"
+                      :items="[5, 10, 25, 100]"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="8" sm="10" lg="4">
+                    {{ relationshipStartIndex + 1 }} -
+                    {{
+                      Math.min(
+                        Math.min(
+                          itemsDisplayed,
+                          businessAsRelationship.length
+                        ) + relationshipStartIndex,
+                        businessAsRelationship.length
+                      )
+                    }}
+                    of {{ businessAsRelationship.length }}
+                    <v-btn icon @click="incRelationshipStartIndex(-1)">
+                      <v-icon>{{ mdiChevronLeft }}</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="incRelationshipStartIndex(1)">
+                      <v-icon>{{ mdiChevronRight }}</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
           </span>
-          <v-btn icon @click="incRelationshipStartIndex(-1)">
-            <v-icon>{{ mdiChevronLeft }}</v-icon>
-          </v-btn>
-          <v-btn icon @click="incRelationshipStartIndex(1)">
-            <v-icon>{{ mdiChevronRight }}</v-icon>
-          </v-btn>
         </div>
       </template>
     </EntityCard>
@@ -221,21 +271,25 @@
       :expanded="credentialsExpanded"
       v-if="ownedByRelationship"
     >
-      <template #title
-        ><Dialog>
-          <template #activator
-            >Relationships
-            <v-icon>{{ mdiInformationOutline }}</v-icon></template
-          >
-          <template #content>
-            <h3>Relationships:</h3>
-            <p>
-              The organizational connections between this credential and other
-              credentials. An example relationship in OrgBook BC is one
-              registered organization “Doing Business As” another.
-            </p>
-          </template>
-        </Dialog>
+      <template #title>
+        <div class="flex">
+          Relationships
+          <Dialog>
+            <template #activator>
+              <span class="fake-link"
+                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
+              >
+            </template>
+            <template #content>
+              <h3>Relationships:</h3>
+              <p>
+                The organizational connections between this credential and other
+                credentials. An example relationship in OrgBook BC is one
+                registered organization “Doing Business As” another.
+              </p>
+            </template>
+          </Dialog>
+        </div>
       </template>
       <template #subtitle>
         <div class="pl-5 pr-5 mb-5 text-body-2">
@@ -265,19 +319,25 @@
     <!-- credential timeline -->
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
       <template #title>
-        <Dialog>
-          <template #activator
-            >Credentials <v-icon>{{ mdiInformationOutline }}</v-icon></template
-          >
-          <template #content>
-            <h3>Credential:</h3>
-            <p>
-              Something that details a qualification, registration or authority
-              of an organization. An example of a credential in OrgBook BC is
-              the Business Number credential for a registered corporation.
-            </p>
-          </template>
-        </Dialog>
+        <div class="flex">
+          Credentials
+          <Dialog>
+            <template #activator>
+              <span class="fake-link"
+                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
+              ></template
+            >
+            <template #content>
+              <h3>Credential:</h3>
+              <p>
+                Something that details a qualification, registration or
+                authority of an organization. An example of a credential in
+                OrgBook BC is the Business Number credential for a registered
+                corporation.
+              </p>
+            </template>
+          </Dialog>
+        </div>
       </template>
       <template>
         <!-- header content for the credential card -->
@@ -806,7 +866,7 @@ export default class EntityResult extends Vue {
 
   get entityJurisdiction(): string | undefined {
     const state = selectFirstAttrItem(
-      { key: "type", value: "home_jurisdiction" },
+      { key: "type", value: "entity_type" },
       this.selectedTopic?.attributes
     );
     const ret = "entity_type." + state?.value;
@@ -840,6 +900,11 @@ export default class EntityResult extends Vue {
         sourceId,
         type: "registration.registries.ca",
       });
+      if (!this.selectedTopic) {
+        //sourceid is invalid, go back to search
+        console.error("Failed to fetch topic. Invalid source id");
+        this.$router.push("/");
+      }
       const topic: ITopic = this.$store.getters.selectedTopic;
       if (topic?.id) {
         await Promise.all([
@@ -869,5 +934,17 @@ export default class EntityResult extends Vue {
 }
 .progress {
   color: $secondary-color;
+}
+.flex {
+  display: flex;
+}
+.aligned {
+  display: flex;
+  align-items: center;
+}
+.align-right {
+  display: flex;
+  justify-content: right;
+  justify-items: right;
 }
 </style>
