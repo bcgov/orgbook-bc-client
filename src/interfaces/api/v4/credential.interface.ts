@@ -18,6 +18,10 @@ interface ICredentialAttribute {
   value: string | number | boolean;
 }
 
+export interface ISchemaLabel {
+  translations: Record<string, { label: string, description: string }>
+}
+
 export interface ICredential extends IApiResource {
   id: number;
   credential_id: string;
@@ -47,8 +51,7 @@ export interface ICredentialDisplayType {
   relationship_types?: string[];
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: Record<string, string>;
-  schema_description?: Record<string, string>;
+  schema_label?: ISchemaLabel;
   attributes?: ICredentialAttribute[];
   credential_type_id: number;
 }
