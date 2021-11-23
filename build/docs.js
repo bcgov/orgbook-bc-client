@@ -6,8 +6,8 @@ const { glob } = require("glob");
 const fm = require("front-matter");
 const mk = require("marked");
 
-async function buildDocs() {
-  glob(path.resolve(__dirname, "../src/docs/**/*.md"), async (err, files) => {
+async function mdToJson(mdDir, jsonFile) {
+  glob(path.resolve(__dirname, mdDir), async (err, files) => {
     if (err) {
       throw err;
     }
@@ -19,16 +19,21 @@ async function buildDocs() {
         return {
           ...content,
           html: mk(content.body, { breaks: true }),
-          path: path.relative(path.resolve(__dirname, "../src/docs/"), file),
+          path: path.relative(path.resolve(__dirname, mdDir), file),
         };
       })
     );
 
     await writeFile(
-      path.resolve(__dirname, "../src/assets/docs.json"),
+      path.resolve(__dirname, jsonFile),
       JSON.stringify(docs)
     );
   });
+}
+
+async function buildDocs() {
+  mdToJson("../src/docs/**/*.md", "../src/assets/docs.json");
+  mdToJson("../src/entityDescriptions/**/*.md", "../src/assets/entities.json");
 }
 
 module.exports = { buildDocs, default: buildDocs() };

@@ -61,34 +61,7 @@
                 }}</v-icon></template
               >
               <template #content>
-                <h3>BC Company</h3>
-                <p>
-                  In B.C., incorporation creates a legal entity known as a
-                  corporation, commonly referred to as a company. Three types of
-                  companies may be created through incorporation:
-                </p>
-                <ul>
-                  <li>Limited company (most common)</li>
-                  <li>Unlimited liability company</li>
-                  <li>Community contribution company</li>
-                </ul>
-                <h3>What Incorporation Means</h3>
-                <p>
-                  Companies are incorporated in B.C. under the Business
-                  Corporations Act. The Act gives incorporated companies:
-                </p>
-                <ul>
-                  <li>All the powers of an individual</li>
-                  <li>
-                    An independent existence – separate and distinct from its
-                    shareholders
-                  </li>
-                  <li>An unlimited life expectancy</li>
-                  <li>
-                    A company can acquire assets, go into debt, enter into
-                    contracts, sue or be sued.
-                  </li>
-                </ul>
+                <div v-html="entityDesc.html"></div>
               </template>
             </Dialog>
           </div>
@@ -463,6 +436,7 @@ import moment from "moment";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 import Dialog from "@/components/shared/Dialog.vue";
+import { IEntityDesc } from "@/interfaces/entity-desc";
 
 interface Data {
   currentTab: string;
@@ -486,7 +460,7 @@ interface Data {
   computed: {
     ...mapGetters([
       "credentialTypes",
-      "entityTest",
+      "entityDesc",
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getEntityFilters",
@@ -508,6 +482,7 @@ interface Data {
       "fetchFormattedIdentifiedTopic",
       "fetchTopicFullCredentialSet",
       "setCredentialType",
+      "setEntityDesc",
       "setRegistrationType",
       "setIssuers",
       "fetchRelationships",
@@ -517,6 +492,8 @@ interface Data {
 export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
+  entityDesc!: IEntityDesc;
+  setEntityDesc!: (name: string) => void;
   setIssuers!: (creds: ICredentialDisplayType[]) => void;
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
@@ -572,6 +549,12 @@ export default class EntityResult extends Vue {
       this.setCredentialType(this.entityCredentials);
       this.setRegistrationType(this.entityCredentials);
       this.setIssuers(this.entityCredentials);
+    }
+    if (this.entityJurisdiction) {
+      //convert entity type to file name
+      let fname = this.$t(this.entityJurisdiction) as string;
+      fname = fname.toLowerCase().replace(" ", "-");
+      this.setEntityDesc(fname);
     }
   }
 

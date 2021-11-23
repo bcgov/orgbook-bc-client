@@ -118,8 +118,8 @@ const getters = {
           (type: ICredentialType) => type.id.toString() === filter?.value
         );
         let retVal = credDesc.description || "";
-        if (credDesc.schema_label && credDesc.schema_label[i18n.locale]) {
-          retVal = credDesc.schema_label[i18n.locale];
+        if (credDesc.schema_label?.translations?.[i18n.locale]?.label) {
+          retVal = credDesc.schema_label.translations[i18n.locale].label;
         }
         return retVal;
       },

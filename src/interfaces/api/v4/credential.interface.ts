@@ -19,7 +19,7 @@ interface ICredentialAttribute {
 }
 
 export interface ISchemaLabel {
-  translations: Record<string, { label: string, description: string }>
+  translations: Record<string, { label: string; description: string }>;
 }
 
 export interface ICredential extends IApiResource {
