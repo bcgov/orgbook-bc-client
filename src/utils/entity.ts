@@ -130,7 +130,7 @@ export function isEntityFilterActive(
 export function getCredentialLabel(cred: ICredentialDisplayType): string {
   let credDesc = cred.credential_type;
   const locale = i18n.locale;
-  if (cred.schema_label && cred.schema_label.translations[locale].label) {
+  if (cred.schema_label?.translations?.[locale]?.label) {
     credDesc = cred.schema_label.translations[locale].label;
   }
   return credDesc;

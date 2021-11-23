@@ -233,11 +233,14 @@ export default class CredentialDetail extends Vue {
     }
     let credDesc = this.getSelectedCredential.credential_type.description;
     if (
-      this.getSelectedCredential.credential_type.schema_label &&
-      this.getSelectedCredential.credential_type.schema_label.translations[i18n.locale].label
+      this.getSelectedCredential.credential_type.schema_label?.translations?.[
+        i18n.locale
+      ]?.label
     ) {
       credDesc =
-        this.getSelectedCredential.credential_type.schema_label.translations[i18n.locale].label;
+        this.getSelectedCredential.credential_type.schema_label.translations[
+          i18n.locale
+        ].label;
     }
     return credDesc;
   }
