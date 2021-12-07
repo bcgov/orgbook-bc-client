@@ -54,8 +54,8 @@ export function credOrRelationshipToDisplay(
   if (isCredential(item)) {
     const credItem = item as ICredential;
     display.id = credItem.id;
-    display.authority = credItem.credential_type.issuer.name;
-    display.authorityLink = credItem.credential_type.issuer.url;
+    display.authority = credItem.credential_type?.issuer?.name;
+    display.authorityLink = credItem.credential_type?.issuer?.url;
     display.type = credItem.names[0]?.type;
     display.credential_type = credItem.credential_type.description;
     display.date_effective = credItem.effective_date;
