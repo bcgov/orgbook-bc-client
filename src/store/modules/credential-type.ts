@@ -5,15 +5,19 @@ import {
   ICredentialTypeByIssuer,
 } from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v4/credential-type.service";
+import SchemaType from "@/services/api/v4/schema.service";
 
 const credentialTypeSerivice = new CredentialType();
+const schemaTypeService = new SchemaType();
 
 export interface State {
+  schemaTypes: Record<string, ICredentialType[]>;
   types: ICredentialType[];
   selected: ICredentialType | null;
 }
 
 const state: State = {
+  schemaTypes: {},
   types: [],
   selected: null,
 };
@@ -21,6 +25,8 @@ const state: State = {
 const getters = {
   credentialType: (state: State): ICredentialType | null => state.selected,
   credentialTypes: (state: State): ICredentialType[] => state.types,
+  schemaTypes: (state: State): Record<string, ICredentialType[]> =>
+    state.schemaTypes,
   credentialTypesByIssuer: (state: State): ICredentialTypeByIssuer[] =>
     Object.values(
       state.types.reduce(
@@ -56,9 +62,23 @@ const actions = {
       commit("setTypes", []);
     }
   },
+  async fetchSchemaTypes({
+    commit,
+  }: ActionContext<State, RootState>): Promise<void> {
+    try {
+      const res = await schemaTypeService.getSchemaTypes();
+      commit("setSchemaTypes", res.data);
+    } catch (e) {
+      console.error(e);
+      commit("setSchemaTypes", {});
+    }
+  },
 };
 
 const mutations = {
+  setSchemaTypes(state: State, types: Record<string, ICredentialType[]>): void {
+    state.schemaTypes = { ...types };
+  },
   setTypes(state: State, types: ICredentialType[]): void {
     state.types = [...types];
   },
