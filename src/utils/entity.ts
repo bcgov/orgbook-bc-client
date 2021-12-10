@@ -3,6 +3,7 @@ import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
 import {
   ICredential,
   ICredentialDisplayType,
+  ICredentialAttribute,
 } from "@/interfaces/api/v4/credential.interface";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
@@ -10,6 +11,17 @@ import i18n from "@/i18n/index";
 
 export function isCredential(item: ICredential | IRelationship): boolean {
   return (item as ICredential)?.credential_type !== undefined;
+}
+
+export function getHighlightedAttributes(
+  item: ICredential | IRelationship,
+  title: string | undefined,
+  highlighted: string[] | undefined
+): string[] | undefined {
+  if (!title && !highlighted) {
+    return (item.attributes as ICredentialAttribute[]).map((attr) => attr.type);
+  }
+  return highlighted;
 }
 
 export function getRelationshipName(relationship: IRelationship): string {
@@ -70,8 +82,11 @@ export function credOrRelationshipToDisplay(
     display.revoked_date = credItem.revoked_date;
     display.value = credItem.names[0]?.text;
     display.schema_label = credItem.credential_type.schema_label;
-    display.highlighted_attributes =
-      credItem.credential_type.highlighted_attributes;
+    display.highlighted_attributes = getHighlightedAttributes(
+      credItem,
+      credItem.credential_type.credential_title,
+      credItem.credential_type.highlighted_attributes
+    );
     display.credential_title = credItem.credential_type.credential_title;
     display.attributes = credItem.attributes;
     display.credential_type_id = credItem.credential_type.id;
@@ -98,8 +113,11 @@ export function credOrRelationshipToDisplay(
     display.relationship_types = relItem.attributes.map((attr) => attr.value);
     display.value = getRelationshipName(relItem);
     display.schema_label = relItem.credential.credential_type.schema_label;
-    display.highlighted_attributes =
-      relItem.credential.credential_type.highlighted_attributes;
+    display.highlighted_attributes = getHighlightedAttributes(
+      relItem,
+      relItem.credential.credential_type.credential_title,
+      relItem.credential.credential_type.highlighted_attributes
+    );
     display.credential_title =
       relItem.credential.credential_type.credential_title;
     display.attributes = relItem.attributes;

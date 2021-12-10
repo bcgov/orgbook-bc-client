@@ -11,7 +11,7 @@ interface ICredentialName {
   credential_id: number;
 }
 
-interface ICredentialAttribute {
+export interface ICredentialAttribute {
   id: number;
   type: string;
   format: string;
