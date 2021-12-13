@@ -1,11 +1,9 @@
 module.exports = {
-  chainWebpack: config => {
-    config
-      .plugin('html')
-      .tap(args => {
-        args[0].title = "OrgBook BC";
-        return args;
-      })
+  chainWebpack: (config) => {
+    config.plugin("html").tap((args) => {
+      args[0].title = "OrgBook BC";
+      return args;
+    });
   },
   transpileDependencies: ["vuetify"],
   pluginOptions: {
@@ -30,7 +28,7 @@ module.exports = {
     devServer: {
       proxy: {
         "/api": {
-          target: "https://dev.orgbook.gov.bc.ca",
+          target: "https://test.orgbook.gov.bc.ca",
         },
       },
     },
