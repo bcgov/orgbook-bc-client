@@ -40,7 +40,7 @@
 
     # Required for SPA router to work
     @spa_router {
-        not path /api/*
+        not path /api/* /hooks/*
         file {
             try_files {path} /index.html
         }
@@ -54,6 +54,6 @@
 
     # Proxy requests to Hooks
     route /hooks/* {
-        reverse_proxy {$PROXY_HOST}:{$PROXY_PORT}
+        reverse_proxy {$API_HOST}:{$API_PORT}
     }
 }
