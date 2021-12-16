@@ -44,6 +44,12 @@
         id="searchBarResults"
         elevation="8"
       >
+        <div class="d-flex justify-end">
+          <v-btn small plain title @click="escapeSearch" color="secondary">
+            <span>Close</span>
+            <v-icon id="searchBarCloseIcon" small>{{ mdiClose }}</v-icon>
+          </v-btn>
+        </div>
         <v-list-item-group>
           <v-list-item
             v-for="(item, i) in filteredItems"
@@ -95,7 +101,7 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["loading", "mdiMagnify"]),
+    ...mapGetters(["loading", "mdiMagnify", "mdiClose"]),
   },
   methods: {
     ...mapActions(["fetchAutocomplete", "fetchSearch"]),
@@ -238,6 +244,9 @@ export default class SearchBar extends Vue {
   width: calc(100% - 32px);
   z-index: 8;
   overflow: auto;
+}
+#searchBarCloseIcon {
+  padding-top: 1px;
 }
 .active-autocomplete {
   background-color: #e3e3e3;
