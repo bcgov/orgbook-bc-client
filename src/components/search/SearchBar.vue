@@ -44,6 +44,12 @@
         id="searchBarResults"
         elevation="8"
       >
+        <div class="d-flex justify-end">
+          <v-btn small plain title @click="escapeSearch" color="secondary">
+            <span>Close</span>
+            <v-icon id="searchBarCloseIcon" small>{{ mdiClose }}</v-icon>
+          </v-btn>
+        </div>
         <v-list-item-group>
           <v-list-item
             v-for="(item, i) in filteredItems"
@@ -95,7 +101,7 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["loading", "mdiMagnify"]),
+    ...mapGetters(["loading", "mdiMagnify", "mdiClose"]),
   },
   methods: {
     ...mapActions(["fetchAutocomplete", "fetchSearch"]),
@@ -104,7 +110,7 @@ interface Data {
 export default class SearchBar extends Vue {
   loading!: boolean;
   index!: number;
-  items!: Array<string>;
+  items!: string[];
   q!: string;
   pending!: boolean;
 
@@ -135,7 +141,6 @@ export default class SearchBar extends Vue {
 
   async autocomplete(q: string): Promise<void> {
     try {
-      this.items = [] as string[];
       this.pending = true;
       const response = await this.fetchAutocomplete(q);
       this.items = (response?.results || [])
@@ -153,10 +158,10 @@ export default class SearchBar extends Vue {
   }
 
   autocompleteSearch(val: string): void {
+    this.escapeSearch();
     if (!val || this.loading) {
       return;
     }
-    this.escapeSearch();
     this.debouncedAutocomplete(val);
   }
 
@@ -204,8 +209,7 @@ export default class SearchBar extends Vue {
   }
 
   private executeSearch(q: string) {
-    this.resetIndex();
-    this.resetAutocomplete();
+    this.escapeSearch();
     const query = { ...defaultQuery, ...{ q } };
     this.fetchSearch(query);
   }
@@ -214,8 +218,13 @@ export default class SearchBar extends Vue {
     this.index = -1;
   }
 
+  private resetItems(): void {
+    this.items = [] as string[];
+  }
+
   private resetAutocomplete(): void {
-    this.items = [];
+    this.debouncedAutocomplete.cancel();
+    this.resetItems();
   }
 }
 </script>
@@ -235,6 +244,9 @@ export default class SearchBar extends Vue {
   width: calc(100% - 32px);
   z-index: 8;
   overflow: auto;
+}
+#searchBarCloseIcon {
+  padding-top: 1px;
 }
 .active-autocomplete {
   background-color: #e3e3e3;
