@@ -104,7 +104,7 @@ interface Data {
 export default class SearchBar extends Vue {
   loading!: boolean;
   index!: number;
-  items!: Array<string>;
+  items!: string[];
   q!: string;
   pending!: boolean;
 
@@ -135,7 +135,6 @@ export default class SearchBar extends Vue {
 
   async autocomplete(q: string): Promise<void> {
     try {
-      this.items = [] as string[];
       this.pending = true;
       const response = await this.fetchAutocomplete(q);
       this.items = (response?.results || [])
@@ -153,10 +152,10 @@ export default class SearchBar extends Vue {
   }
 
   autocompleteSearch(val: string): void {
+    this.escapeSearch();
     if (!val || this.loading) {
       return;
     }
-    this.escapeSearch();
     this.debouncedAutocomplete(val);
   }
 
@@ -204,8 +203,7 @@ export default class SearchBar extends Vue {
   }
 
   private executeSearch(q: string) {
-    this.resetIndex();
-    this.resetAutocomplete();
+    this.escapeSearch();
     const query = { ...defaultQuery, ...{ q } };
     this.fetchSearch(query);
   }
@@ -214,8 +212,13 @@ export default class SearchBar extends Vue {
     this.index = -1;
   }
 
+  private resetItems(): void {
+    this.items = [] as string[];
+  }
+
   private resetAutocomplete(): void {
-    this.items = [];
+    this.debouncedAutocomplete.cancel();
+    this.resetItems();
   }
 }
 </script>
