@@ -239,6 +239,6 @@
     "Event:ADSOCSS": "Warning issued for failure to file",
     "Event:SYSD1": "Warning issued for failure to file",
     "Filing:NWITH": "Withdrawal of filings",
-    "Event: CONVOTHER": "Other"
+    "Event:CONVOTHER": "Other"
   }
 }
