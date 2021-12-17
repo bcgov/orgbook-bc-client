@@ -34,7 +34,6 @@ export default class SearchDescription extends Vue {
         "Organization name",
         "Business number",
         "BC Registries ID",
-        "License or permit number",
       ],
     };
   }
