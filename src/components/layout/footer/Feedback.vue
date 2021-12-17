@@ -69,7 +69,7 @@
                       ></v-textarea>
                     </div>
                   </div>
-                  <div>
+                  <div class="d-inline-flex">
                     <v-btn
                       class="submit mr-3"
                       @click="submit"
