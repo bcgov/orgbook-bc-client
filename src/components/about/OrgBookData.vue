@@ -43,7 +43,7 @@
             </td>
             <td class="float-top pl-0 pr-0 pr-0 pt-2 pb-2 ml-2 mr-2">
               <div v-for="type in entry.credentialTypes" :key="type.id">
-                {{ type.description }}
+                {{ formattedDescription(type) }}
               </div>
             </td>
           </tr>
@@ -63,6 +63,8 @@
 </template>
 
 <script lang="ts">
+import i18n from "@/i18n";
+import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
@@ -71,7 +73,14 @@ import { mapGetters } from "vuex";
     ...mapGetters(["credentialTypesByIssuer"]),
   },
 })
-export default class OrgBookData extends Vue {}
+export default class OrgBookData extends Vue {
+  formattedDescription(type: ICredentialType): string {
+    return (
+      type.schema_label?.translations[i18n.locale].description ||
+      type.description
+    );
+  }
+}
 </script>
 
 <style lang="scss" scoped>
