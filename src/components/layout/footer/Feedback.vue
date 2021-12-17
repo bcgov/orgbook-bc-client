@@ -69,14 +69,21 @@
                       ></v-textarea>
                     </div>
                   </div>
-                  <div :class="{ 'text-right': $vuetify.breakpoint.mdAndDown }">
+                  <div class="d-inline-flex">
                     <v-btn
-                      class="submit"
+                      class="submit mr-3"
                       @click="submit"
-                      left
                       depressed
                       aria-label="submit-button"
                       >Submit</v-btn
+                    >
+                    <v-btn
+                      class="ml-3"
+                      @click="reason = ''"
+                      outlined
+                      depressed
+                      aria-label="cancel-button"
+                      >Cancel</v-btn
                     >
                   </div>
                 </v-col>
