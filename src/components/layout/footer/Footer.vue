@@ -36,18 +36,33 @@
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row>
           <v-col class="pl-1 pr-2 pt-0 pb-0">
-            <v-btn
-              v-for="link in links"
-              :key="link.path"
-              plain
-              text
-              color="white"
-              :to="{ name: link.name }"
-              :ripple="false"
-              :block="$vuetify.breakpoint.smAndDown"
-              class="d-inline-flex justify-start text-capitalize"
-              >{{ link.label }}</v-btn
-            >
+            <template v-for="link in links">
+              <v-btn
+                v-if="!link.external"
+                :key="link.path"
+                plain
+                text
+                color="white"
+                :to="{ name: link.name }"
+                :ripple="false"
+                :block="$vuetify.breakpoint.smAndDown"
+                class="d-inline-flex justify-start text-capitalize"
+                >{{ link.label }}</v-btn
+              >
+              <v-btn
+                v-if="link.external"
+                :key="link.path"
+                plain
+                text
+                color="white"
+                :href="link.path"
+                target="_"
+                :ripple="false"
+                :block="$vuetify.breakpoint.smAndDown"
+                class="d-inline-flex justify-start text-capitalize"
+                >{{ link.label }}</v-btn
+              >
+            </template>
           </v-col>
         </v-row>
       </v-container>
