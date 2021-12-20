@@ -66,7 +66,8 @@ export default class EntityFilterChips extends Vue {
       } else if (this.getEntityFilters[key]) {
         chips.push({
           filterField: key,
-          filterString: key as string,
+          filterString:
+            key === "show_expired" ? "Show Expired" : (key as string),
         });
       }
     });
