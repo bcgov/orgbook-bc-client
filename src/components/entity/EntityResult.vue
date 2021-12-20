@@ -165,11 +165,20 @@
                 }}
               </div>
               <h3>
-                <span class="fake-link">{{
-                  getRelationshipName(
+                <router-link
+                  :to="`/entity/${
                     businessAsRelationship[i + relationshipStartIndex]
-                  )
-                }}</span>
+                      .related_topic &&
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .related_topic.source_id
+                  }`"
+                  class="fake-link"
+                  >{{
+                    getRelationshipName(
+                      businessAsRelationship[i + relationshipStartIndex]
+                    )
+                  }}</router-link
+                >
               </h3>
             </div>
           </template>
@@ -268,9 +277,15 @@
           :effectiveDate="ownedByRelationship.credential.effective_date"
         >
           <template #header>
-            <div class="fake-link font-weight-bold">
+            <router-link
+              :to="`/entity/${
+                ownedByRelationship.related_topic &&
+                ownedByRelationship.related_topic.source_id
+              }`"
+              class="font-weight-bold"
+            >
               {{ getRelationshipName(ownedByRelationship) }}
-            </div>
+            </router-link>
           </template>
         </CredentialItem>
       </template>
@@ -401,7 +416,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import {
@@ -867,6 +882,10 @@ export default class EntityResult extends Vue {
   }
 
   async created(): Promise<void> {
+    await this.reload();
+  }
+
+  async reload(): Promise<void> {
     this.setLoading(true);
     const { sourceId } = this.$route.params;
 
@@ -892,6 +911,13 @@ export default class EntityResult extends Vue {
     this.setLoading(false);
     this.loadingCallBack();
   }
+
+  @Watch("$route.params")
+  async onRouteParamsChanged(params: any): Promise<void> {
+    if (params.sourceId) {
+      this.reload();
+    }
+  }
 }
 </script>
 
@@ -912,14 +938,5 @@ export default class EntityResult extends Vue {
 }
 .flex {
   display: flex;
-}
-.aligned {
-  display: flex;
-  align-items: center;
-}
-.align-right {
-  display: flex;
-  justify-content: right;
-  justify-items: right;
 }
 </style>
