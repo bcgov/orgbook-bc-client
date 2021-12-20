@@ -38,12 +38,7 @@
           >
         </template>
       </v-text-field>
-      <v-list
-        dense
-        v-if="filteredItems.length"
-        id="searchBarResults"
-        elevation="8"
-      >
+      <v-list dense v-if="items.length" id="searchBarResults" elevation="8">
         <div class="d-flex justify-end">
           <v-btn small plain title @click="escapeSearch" color="secondary">
             <span>Close</span>
@@ -52,7 +47,7 @@
         </div>
         <v-list-item-group>
           <v-list-item
-            v-for="(item, i) in filteredItems"
+            v-for="(item, i) in items"
             :key="i"
             :class="{
               'text-body-2': true,
@@ -64,12 +59,18 @@
               <span>{{
                 item.substring(0, item.toLowerCase().indexOf(q.toLowerCase()))
               }}</span>
-              <span class="font-weight-bold">{{
-                item.substring(
-                  item.toLowerCase().indexOf(q.toLowerCase()),
-                  item.toLowerCase().indexOf(q.toLowerCase()) + q.length
-                )
-              }}</span>
+              <span
+                :class="{
+                  'font-weight-bold':
+                    item.toLowerCase().indexOf(q.toLowerCase()) >= 0,
+                }"
+                >{{
+                  item.substring(
+                    item.toLowerCase().indexOf(q.toLowerCase()),
+                    item.toLowerCase().indexOf(q.toLowerCase()) + q.length
+                  )
+                }}</span
+              >
               <span>{{
                 item.substring(
                   item.toLowerCase().indexOf(q.toLowerCase()) + q.length
@@ -123,12 +124,6 @@ export default class SearchBar extends Vue {
   debouncedAutocomplete = _.debounce(this.autocomplete, 500);
 
   @Prop({ default: "" }) query!: string;
-
-  get filteredItems(): string[] {
-    return this.items.filter((item) => {
-      return item.toLowerCase().indexOf(this.q.toLowerCase()) >= 0;
-    });
-  }
 
   data(): Data {
     return {

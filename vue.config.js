@@ -28,7 +28,7 @@ module.exports = {
     devServer: {
       proxy: {
         "/api": {
-          target: "https://test.orgbook.gov.bc.ca",
+          target: "https://orgbook.gov.bc.ca",
         },
       },
     },
