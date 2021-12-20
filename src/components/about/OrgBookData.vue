@@ -76,8 +76,9 @@ import { mapGetters } from "vuex";
 export default class OrgBookData extends Vue {
   formattedDescription(type: ICredentialType): string {
     return (
-      type.schema_label?.translations[i18n.locale].description ||
-      type.description
+      type.schema_label?.translations?.[i18n.locale]?.description ||
+      type?.description ||
+      ""
     );
   }
 }
