@@ -49,14 +49,14 @@
         </CredentialItem>
       </template>
       <template #content>
-        <div class="pa-5">
+        <div class="pa-5 pt-2">
           <div class="mb-6 text-body-2">
             <span>{{ entityName }}</span>
             <span>&nbsp;is a&nbsp;</span>
             <Dialog>
               <template #activator
                 ><span class="fake-link" v-t="entityJurisdiction"></span
-                ><v-icon class="fake-link">{{
+                ><v-icon small class="fake-link mx-1">{{
                   mdiInformationOutline
                 }}</v-icon></template
               >
@@ -90,13 +90,18 @@
     >
       <template #title>
         <div class="flex">
-          Relationships
           <Dialog>
             <template #activator>
-              <span class="fake-link"
-                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
-              ></template
-            >
+              <span
+                class="fake-link text--primary"
+                style="text-decoration: none"
+              >
+                Relationships
+                <v-icon class="icon-dense" dense>{{
+                  mdiInformationOutline
+                }}</v-icon>
+              </span>
+            </template>
             <template #content>
               <h3>Relationships:</h3>
               <p>
@@ -109,7 +114,7 @@
         </div>
       </template>
       <template #subtitle>
-        <div class="pl-5 pr-5 mb-5 text-body-2">
+        <div class="px-5 mb-n2 text-body-2">
           <p>{{ entityName }} is doing business as:</p>
         </div>
       </template>
@@ -145,7 +150,7 @@
           "
         >
           <template #header>
-            <div class="text-body-2 timeline-cred-header">
+            <div class="text-body-2">
               <div
                 v-if="
                   businessAsRelationship[i + relationshipStartIndex].credential
@@ -171,66 +176,43 @@
         </CredentialItem>
       </template>
       <template #footer>
-        <div
-          :class="{
-            'pa-5 d-flex': true,
-            'align-right': $vuetify.breakpoint.lgAndUp,
-          }"
-        >
+        <div class="pa-5 d-flex align-center justify-center">
           <span class="text-body-2">
             <v-row>
-              <v-col
-                v-if="!$vuetify.breakpoint.lgAndUp"
-                class="pb-0"
-                cols="12"
-                sm="12"
-                lg="3"
-              >
-                <p class="mb-0">Items displayed</p>
+              <v-col class="d-flex align-center justify-center">
+                <p class="ma-0">Items displayed</p>
+              </v-col>
+              <v-col class="py-0 d-flex align-center justify-center">
+                <v-select
+                  v-model="itemsDisplayed"
+                  :items="[5, 10, 25, 100]"
+                ></v-select>
+              </v-col>
+              <v-col class="d-flex align-center justify-center">
+                <p class="ma-0">
+                  {{ relationshipStartIndex + 1 }} -
+                  {{
+                    Math.min(
+                      Math.min(itemsDisplayed, businessAsRelationship.length) +
+                        relationshipStartIndex,
+                      businessAsRelationship.length
+                    )
+                  }}
+                  of {{ businessAsRelationship.length }}
+                </p>
               </v-col>
               <v-col
-                cols="12"
-                sm="12"
                 :class="{
-                  'aligned pl-0': $vuetify.breakpoint.lgAndUp,
-                  'pt-0': !$vuetify.breakpoint.lgAndUp,
+                  'd-flex align-center flex-shrink-1': true,
+                  'justify-center': !$vuetify.breakpoint.lgAndUp,
                 }"
               >
-                <v-row class="align-right">
-                  <v-col
-                    v-if="$vuetify.breakpoint.lgAndUp"
-                    class="aligned"
-                    lg="3"
-                  >
-                    <p>Items displayed</p>
-                  </v-col>
-                  <v-col class="pl-0" cols="4" sm="2" lg="3">
-                    <v-select
-                      v-model="itemsDisplayed"
-                      class="pt-0 mt-0 aligned"
-                      :items="[5, 10, 25, 100]"
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="8" sm="10" lg="4">
-                    {{ relationshipStartIndex + 1 }} -
-                    {{
-                      Math.min(
-                        Math.min(
-                          itemsDisplayed,
-                          businessAsRelationship.length
-                        ) + relationshipStartIndex,
-                        businessAsRelationship.length
-                      )
-                    }}
-                    of {{ businessAsRelationship.length }}
-                    <v-btn icon @click="incRelationshipStartIndex(-1)">
-                      <v-icon>{{ mdiChevronLeft }}</v-icon>
-                    </v-btn>
-                    <v-btn icon @click="incRelationshipStartIndex(1)">
-                      <v-icon>{{ mdiChevronRight }}</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
+                <v-btn icon @click="incRelationshipStartIndex(-1)">
+                  <v-icon>{{ mdiChevronLeft }}</v-icon>
+                </v-btn>
+                <v-btn icon @click="incRelationshipStartIndex(1)">
+                  <v-icon>{{ mdiChevronRight }}</v-icon>
+                </v-btn>
               </v-col>
             </v-row>
           </span>
@@ -246,12 +228,17 @@
     >
       <template #title>
         <div class="flex">
-          Relationships
           <Dialog>
             <template #activator>
-              <span class="fake-link"
-                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
+              <span
+                class="fake-link text--primary"
+                style="text-decoration: none"
               >
+                Relationships
+                <v-icon class="icon-dense" dense>{{
+                  mdiInformationOutline
+                }}</v-icon>
+              </span>
             </template>
             <template #content>
               <h3>Relationships:</h3>
@@ -265,8 +252,8 @@
         </div>
       </template>
       <template #subtitle>
-        <div class="pl-5 pr-5 mb-5 text-body-2">
-          {{ entityName }} is owned by:
+        <div class="px-5 mb-n2 text-body-2">
+          <p>{{ entityName }} is owned by:</p>
         </div>
       </template>
       <template #expansionPanels>
@@ -293,13 +280,18 @@
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
       <template #title>
         <div class="flex">
-          Credentials
           <Dialog>
             <template #activator>
-              <span class="fake-link"
-                ><v-icon>{{ mdiInformationOutline }}</v-icon></span
-              ></template
-            >
+              <span
+                class="fake-link text--primary"
+                style="text-decoration: none"
+              >
+                Credentials
+                <v-icon class="icon-dense" dense>{{
+                  mdiInformationOutline
+                }}</v-icon>
+              </span>
+            </template>
             <template #content>
               <h3>Credential:</h3>
               <p>
@@ -369,7 +361,7 @@
                     <template #expansionPanels>
                       <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
-                          <div class="text-body-2 timeline-cred-header">
+                          <div class="text-body-2">
                             <div v-if="cred.revoked" class="expired-credential">
                               Expired: {{ cred.revoked_date | formatDate }}
                             </div>

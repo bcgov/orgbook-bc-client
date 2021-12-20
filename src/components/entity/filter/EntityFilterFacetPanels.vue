@@ -16,7 +16,7 @@
             Authority
             <Dialog>
               <template #activator>
-                <v-icon>{{ mdiInformationOutline }}</v-icon>
+                <v-icon small class="mx-1">{{ mdiInformationOutline }}</v-icon>
               </template>
               <template #content>
                 <h3>Authority:</h3>
@@ -45,7 +45,9 @@
             Registration type
             <Dialog>
               <template #activator>
-                <v-icon>{{ mdiInformationOutline }}</v-icon></template
+                <v-icon small class="mx-1">{{
+                  mdiInformationOutline
+                }}</v-icon></template
               >
               <template #content>
                 <h3>Registration type:</h3>
