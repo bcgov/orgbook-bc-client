@@ -7,13 +7,13 @@
       }"
     >
       <v-row>
-        <v-col cols="12" sm="12" class="pb-0">
+        <v-col cols="12" sm="12" class="pa-0">
           <slot name="header"></slot>
         </v-col>
-        <v-col v-if="topicName" cols="12" sm="12" class="pb-1 pt-0">
+        <v-col v-if="topicName" cols="12" sm="12" class="pa-0">
           <p class="mb-0">{{ topicName }}</p>
         </v-col>
-        <v-col v-if="credTitle" cols="12" sm="12" class="pb-1 pt-0">
+        <v-col v-if="credTitle" cols="12" sm="12" class="pa-0">
           <p class="mb-1">
             {{ credTitle["key"] }}:
             {{ translateValue(credTitle["accessor"], credTitle["value"]) }}
@@ -23,17 +23,19 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content
       :class="{
-        'pt-4 pl-n1 pr-n1': true,
-        'timeline-content': timeline,
+        'pt-0 px-n1': true,
+        'pt-4 timeline-content': timeline,
       }"
     >
-      <div class="ma-n1 pb-1 pt-1 text-body-2 text--secondary">
-        <div>
-          <span>Authority:&nbsp;</span>
-          <a :href="getAuthorityLink">
-            <span>{{ getAuthority }}</span>
-            <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
-          </a>
+      <div class="ma-n1 py-1 text-body-2 text--secondary">
+        <div :class="{ 'pb-3': timeline && !highlightedAttr.length }">
+          <div class="font-weight-bold">Authority</div>
+          <div>
+            <a :href="getAuthorityLink">
+              <span>{{ getAuthority }}</span>
+              <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
+            </a>
+          </div>
         </div>
 
         <v-row>
@@ -44,8 +46,10 @@
             cols="12"
             sm="12"
           >
-            {{ attr["key"] }}:
-            {{ translateValue(attr["accessor"], attr["value"]) }}
+            <div class="font-weight-bold">{{ attr["key"] }}</div>
+            <div>
+              {{ translateValue(attr["accessor"], attr["value"]) }}
+            </div>
           </v-col>
         </v-row>
 

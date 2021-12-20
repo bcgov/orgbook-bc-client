@@ -14,8 +14,8 @@
         'not-good-standing': state !== 'entity_status.ACT',
       }"
     >
-      <span v-if="state !== 'entity_status.ACT'">NOT&nbsp;</span>IN GOOD
-      STANDING
+      <span v-if="state === 'entity_status.ACT'">Active</span>
+      <span v-if="state === 'entity_status.HIS'">Historical</span>
     </div>
   </div>
 </template>
