@@ -62,3 +62,13 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Contributing
+
+**Pull requests are always welcome!**
+
+Please see the [Contributions Guide](CONTRIBUTING.md) for the repo.
+
+You may also create an issue if you would like to suggest additional resources to include in this repository.
+
+All contrbutions to this repository should adhere to our [Code of Conduct](./CODE_OF_CONDUCT).
