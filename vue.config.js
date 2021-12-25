@@ -29,8 +29,16 @@ module.exports = {
       proxy: {
         "/api": {
           target: "https://orgbook.gov.bc.ca",
+          // target: "http://localhost:8080",
         },
       },
     },
+  },
+  pwa: {
+    name: "OrgBook BC",
+    themeColor: "#003366",
+    msTileColor: "#000000",
+    appleMobileWebAppCapable: "yes",
+    appleMobileWebAppStatusBarStyle: "003366",
   },
 };

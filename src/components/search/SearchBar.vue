@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'pt-10 pb-10': $vuetify.breakpoint.mdAndUp }">
+  <div :class="{ 'pt-4 pb-10': $vuetify.breakpoint.mdAndUp }">
     <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
       Find an organization
     </p>
