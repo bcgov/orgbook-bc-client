@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="search-bar">
-      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-5">
+      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-3">
         <v-row>
-          <v-col class="d-flex flex-column flex-grow-1 ml-n3" cols="12" md="9">
+          <v-col class="d-flex flex-column flex-grow-1" cols="12" md="9">
             <p
               class="
                 font-weight-normal
@@ -13,9 +13,9 @@
             >
               A public directory of organizations registered in BC
             </p>
-            <SearchBar :query="q" />
+            <SearchBar :query="q" class="flex-grow-1" />
           </v-col>
-          <v-col class="flex-grow-0 pt-0 pb-0 ml-n3" cols="12" md="3">
+          <v-col class="flex-grow-0 pt-0 pb-0" cols="12" md="3">
             <SearchDescription
               class="pt-4"
               v-if="$vuetify.breakpoint.mdAndUp"

@@ -14,7 +14,7 @@
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5 pb-0">
           <p class="text-h6 font-weight-bold">
-            <v-icon class="validated" v-if="!credRevoked">{{
+            <v-icon class="validated pb-1" v-if="!credRevoked">{{
               mdiShieldCheckOutline
             }}</v-icon>
             <span>{{ `${currCredTypeDesc} credential` }}</span
