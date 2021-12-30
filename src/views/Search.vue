@@ -5,11 +5,7 @@
         <v-row>
           <v-col class="d-flex flex-column flex-grow-1" cols="12" md="9">
             <p
-              class="
-                font-weight-normal
-                flex-grow-1
-                text-md-h5 text-sm-h6 text-h6
-              "
+              class="font-weight-normal flex-grow-1 text-md-h5 text-sm-h6 text-h6"
             >
               A public directory of organizations registered in BC
             </p>
