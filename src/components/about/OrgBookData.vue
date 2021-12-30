@@ -7,30 +7,12 @@
         <thead>
           <tr>
             <th
-              class="
-                text-left text-body-2 text--primary
-                font-weight-bold
-                pl-0
-                pr-0
-                pt-2
-                pb-2
-                ml-2
-                mr-2
-              "
+              class="text-left text-body-2 text--primary font-weight-bold pl-0 pr-0 pt-2 pb-2 ml-2 mr-2"
             >
               Issuer
             </th>
             <th
-              class="
-                text-left text-body-2 text--primary
-                font-weight-bold
-                pl-0
-                pr-0
-                pt-2
-                pb-2
-                ml-2
-                mr-2
-              "
+              class="text-left text-body-2 text--primary font-weight-bold pl-0 pr-0 pt-2 pb-2 ml-2 mr-2"
             >
               Credentials
             </th>
