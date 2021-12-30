@@ -9,6 +9,7 @@ import { dateFilter } from "@/filters/date.filter";
 import { claimFormat } from "@/filters/claim.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
+import { newTracker, trackPageView } from "@snowplow/browser-tracker";
 
 Vue.config.productionTip = false;
 Vue.filter("formatDate", dateFilter);
@@ -30,6 +31,13 @@ async function init() {
     },
     render: (h) => h(App),
   }).$mount("#app");
+
+  // Snowplow tracking
+  newTracker("OrgBookClient", "spt.apps.gov.bc.ca", {
+    appId: "#app",
+    plugins: [],
+  });
+  trackPageView();
 }
 
 init();
