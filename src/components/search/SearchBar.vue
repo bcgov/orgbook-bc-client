@@ -18,6 +18,7 @@
         @keydown.down="arrowDown"
         @keydown.up="arrowUp"
         autocomplete="off"
+        clearable
       >
         <template v-slot:append-outer>
           <v-progress-circular
