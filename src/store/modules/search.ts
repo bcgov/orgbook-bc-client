@@ -31,6 +31,7 @@ import {
 import { objHasProp } from "@/utils/general";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import i18n from "@/i18n/index";
+import { unwrapTranslations } from "@/utils/entity";
 
 const v4SearchService = new v4Search();
 const v3SearchService = new v3Search();
@@ -118,8 +119,13 @@ const getters = {
           (type: ICredentialType) => type.id.toString() === filter?.value
         );
         let retVal = credDesc.description || "";
-        if (credDesc.schema_label?.translations?.[i18n.locale]?.label) {
-          retVal = credDesc.schema_label.translations[i18n.locale].label;
+        if (unwrapTranslations(credDesc.schema_label)?.[i18n.locale]?.label) {
+          retVal = (
+            unwrapTranslations(credDesc.schema_label) as Record<
+              string,
+              { label: string; description: string }
+            >
+          )[i18n.locale].label;
         }
         return retVal;
       },

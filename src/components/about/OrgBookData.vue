@@ -47,6 +47,7 @@
 <script lang="ts">
 import i18n from "@/i18n";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
+import { unwrapTranslations } from "@/utils/entity";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
@@ -58,7 +59,7 @@ import { mapGetters } from "vuex";
 export default class OrgBookData extends Vue {
   formattedDescription(type: ICredentialType): string {
     return (
-      type.schema_label?.translations?.[i18n.locale]?.description ||
+      unwrapTranslations(type.schema_label)?.[i18n.locale]?.description ||
       type?.description ||
       ""
     );

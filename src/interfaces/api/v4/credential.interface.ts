@@ -51,7 +51,7 @@ export interface ICredentialDisplayType {
   relationship_types?: string[];
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: ISchemaLabel;
+  schema_label?: Record<string, { label: string; description: string }>;
   attributes?: ICredentialAttribute[];
   credential_type_id: number;
 }

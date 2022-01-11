@@ -14,7 +14,9 @@ export interface ICredentialType extends IApiResource {
   issuer: IIssuer;
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: ISchemaLabel;
+  schema_label?:
+    | ISchemaLabel
+    | Record<string, { label: string; description: string }>;
   claim_labels?: Record<string, Record<string, string>>;
 }
 
