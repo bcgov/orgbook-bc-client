@@ -178,6 +178,7 @@ interface Data {
       "setLoading",
       "fetchPresId",
       "fetchPresEx",
+      "fetchFormattedIdentifiedTopic",
     ]),
   },
 })
@@ -192,6 +193,13 @@ export default class CredentialDetail extends Vue {
   fetchSelectedCredential!: (id: string) => Promise<void>;
   fetchPresId!: (id: string) => Promise<void>;
   fetchPresEx!: (params: { id: string; presId: string }) => Promise<void>;
+  fetchFormattedIdentifiedTopic!: ({
+    sourceId,
+    type,
+  }: {
+    sourceId: string;
+    type: string;
+  }) => Promise<void>;
   setLoading!: (loading: boolean) => void;
 
   data(): Data {
@@ -286,6 +294,10 @@ export default class CredentialDetail extends Vue {
       await Promise.all([
         this.fetchSelectedCredential(credentialId),
         this.fetchPresId(credentialId),
+        this.fetchFormattedIdentifiedTopic({
+        sourceId,
+        type: "registration.registries.ca",
+      })
       ]);
       //need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 1000));
