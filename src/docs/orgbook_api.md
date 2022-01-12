@@ -10,7 +10,7 @@ showcaseDescription: Learn about the developer tools—the “API”—for addin
 
 Anyone is able to use OrgBook BC data in their own services. Rather than needing to use the OrgBook BC website interface, the data is available directly from OrgBook BC using what developers call an API. Your developers could use this, for example, to integrate OrgBook BC data into your business processes.
 
-Developers can review the [API specification](http://orgbook.gov.bc.ca/api/) and the [API documentation](https://github.com/bcgov/orgbook-bc-api-docs). There will **soon** be an [API demo](https://github.com/bcgov/orgbook-api/blob/main/README.md) for developers to see it in action.
+Developers can review the [API specification](http://orgbook.gov.bc.ca/api/) and the [API documentation](https://github.com/bcgov/orgbook-bc-api-docs). There is also an [API demo](https://github.com/bcgov/orgbook-bc-api-docs/tree/main/demo) for developers to see it in action.
 
 Any use of the API is subject to the [terms of service](https://github.com/bcgov/orgbook-api/blob/main/LICENSE).
 
