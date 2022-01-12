@@ -49,6 +49,7 @@ export function getRelationshipIssuer(
   )?.credential_type?.issuer;
 }
 
+// TODO: remove after backend update
 export function unwrapTranslations(
   label:
     | ISchemaLabel
@@ -98,6 +99,7 @@ export function credOrRelationshipToDisplay(
     display.revoked = credItem.revoked;
     display.revoked_date = credItem.revoked_date;
     display.value = credItem.names[0]?.text;
+    // TODO: remove unwrap func after backend update
     display.schema_label = unwrapTranslations(
       credItem.credential_type.schema_label
     );
@@ -131,6 +133,7 @@ export function credOrRelationshipToDisplay(
     display.revoked_date = relItem.credential.revoked_date;
     display.relationship_types = relItem.attributes.map((attr) => attr.value);
     display.value = getRelationshipName(relItem);
+    // TODO: remove unwrap func after backend update
     display.schema_label = unwrapTranslations(
       relItem.credential.credential_type.schema_label
     );

@@ -18,6 +18,7 @@ export interface ICredentialAttribute {
   value: string | number | boolean;
 }
 
+// TODO: remove ISchemaLabel after schema structure update to backend
 export interface ISchemaLabel {
   translations: Record<string, { label: string; description: string }>;
 }

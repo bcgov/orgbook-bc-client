@@ -59,6 +59,7 @@ import { mapGetters } from "vuex";
 export default class OrgBookData extends Vue {
   formattedDescription(type: ICredentialType): string {
     return (
+      // TODO: change to type.schema_label?.[i18n.locale]?.description after update to backend
       unwrapTranslations(type.schema_label)?.[i18n.locale]?.description ||
       type?.description ||
       ""

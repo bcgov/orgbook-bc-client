@@ -119,6 +119,7 @@ const getters = {
           (type: ICredentialType) => type.id.toString() === filter?.value
         );
         let retVal = credDesc.description || "";
+        // TODO: remove unwrapTranslations after backend update
         if (unwrapTranslations(credDesc.schema_label)?.[i18n.locale]?.label) {
           retVal = (
             unwrapTranslations(credDesc.schema_label) as Record<
