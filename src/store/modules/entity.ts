@@ -15,6 +15,7 @@ const relationshipService = new Relationship();
 
 export interface State {
   relationships: Relationship[];
+  top: number;
   selected: {
     topic: ITopic | null;
     credentialSet: ICredentialSet | null;
@@ -29,6 +30,7 @@ export interface State {
 
 const state: State = {
   relationships: [],
+  top: 0,
   selected: {
     topic: null,
     credentialSet: null,
@@ -42,6 +44,7 @@ const state: State = {
 };
 
 const getters = {
+  getScrollY: (state: State): number => state.top,
   getRelationships: (state: State): Relationship[] => state.relationships,
   getAuthorities: (state: State): Array<IEntityFacetField> =>
     state.filterValues.authorities,
@@ -76,6 +79,10 @@ const actions = {
     } catch (e) {
       console.error(e);
     }
+  },
+
+  setScrollY({ commit }: ActionContext<State, RootState>, top: number): void {
+    commit("setScrollY", top);
   },
 
   //entity filter actions
@@ -193,7 +200,9 @@ const mutations = {
   setRelationships: (state: State, relationships: Relationship[]): void => {
     state.relationships = relationships;
   },
-
+  setScrollY(state: State, top: number): void {
+    state.top = top;
+  },
   //entity filter mutations
   setCredTypes(state: State, credTypes: IEntityFacetField[]): void {
     state.filterValues.credentialType = credTypes;
