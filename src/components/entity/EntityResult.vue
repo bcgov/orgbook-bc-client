@@ -193,6 +193,7 @@
               </v-col>
               <v-col class="py-0 d-flex align-center justify-center">
                 <v-select
+                  @change="correctRelDisplay"
                   v-model="itemsDisplayed"
                   :items="[5, 10, 25, 100]"
                 ></v-select>
@@ -216,10 +217,22 @@
                   'justify-center': !$vuetify.breakpoint.lgAndUp,
                 }"
               >
-                <v-btn icon @click="incRelationshipStartIndex(-1)">
+                <v-btn
+                  :class="{ hidden: relationshipStartIndex <= 0 }"
+                  icon
+                  @click="incRelationshipStartIndex(-1)"
+                >
                   <v-icon>{{ mdiChevronLeft }}</v-icon>
                 </v-btn>
-                <v-btn icon @click="incRelationshipStartIndex(1)">
+                <v-btn
+                  :class="{
+                    hidden:
+                      relationshipStartIndex + itemsDisplayed >=
+                      businessAsRelationship.length,
+                  }"
+                  icon
+                  @click="incRelationshipStartIndex(1)"
+                >
                   <v-icon>{{ mdiChevronRight }}</v-icon>
                 </v-btn>
               </v-col>
@@ -655,6 +668,21 @@ export default class EntityResult extends Vue {
     });
   }
 
+  correctRelDisplay(): void {
+    // deal with issue of switching display intervals in the middle of a set
+    if (this.relationshipStartIndex % this.itemsDisplayed) {
+      this.relationshipStartIndex =
+        Math.floor(this.relationshipStartIndex / this.itemsDisplayed) *
+        this.itemsDisplayed;
+    }
+
+    //refocus relationships on selection change
+    this.$vuetify.goTo(this.$refs["relationships"] as VuetifyGoToTarget, {
+      duration: 500,
+      easing: "easeInOutCubic",
+    });
+  }
+
   incRelationshipStartIndex(num: number): void {
     const interval = Math.min(
       this.businessAsRelationship.length,
@@ -943,5 +971,9 @@ export default class EntityResult extends Vue {
 }
 .flex {
   display: flex;
+}
+.hidden {
+  //we want an element to be hidden but still take up space
+  visibility: hidden;
 }
 </style>

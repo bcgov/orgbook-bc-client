@@ -1,14 +1,14 @@
 <template>
   <div class="search-facet-panels">
     <v-expansion-panels multiple flat accordion v-model="panels">
+      <SearchFilterFacetPanel :fields="entityStatusFilters">
+        <template v-slot:title> Organization Status </template>
+      </SearchFilterFacetPanel>
       <SearchFilterFacetPanel
         :fields="topEntityTypeFilters"
         :more="moreEntityTypeFilters"
       >
         <template v-slot:title> Organization Type </template>
-      </SearchFilterFacetPanel>
-      <SearchFilterFacetPanel :fields="entityStatusFilters">
-        <template v-slot:title> Organization Status </template>
       </SearchFilterFacetPanel>
       <SearchFilterFacetPanel :fields="credentialTypeFilters">
         <template v-slot:title> Credential </template>
