@@ -49,11 +49,17 @@
 
     # Proxy requests to API service
     route /api/* {
-        reverse_proxy {$API_HOST}:{$API_PORT}
+        reverse_proxy {$API_HOST}:{$API_PORT} {
+            header_up Host {upstream_hostport}
+	        header_up X-Forwarded-Host {host}
+        }
     }
 
     # Proxy requests to Hooks
     route /hooks/* {
-        reverse_proxy {$API_HOST}:{$API_PORT}
+        reverse_proxy {$API_HOST}:{$API_PORT} {
+            header_up Host {upstream_hostport}
+	        header_up X-Forwarded-Host {host}
+        }
     }
 }
