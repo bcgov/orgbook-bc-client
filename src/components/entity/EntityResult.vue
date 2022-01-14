@@ -472,6 +472,7 @@ interface Data {
       "selectedTopicFullCredentialSet",
       "getEntityFilters",
       "getRelationships",
+      "getScrollY",
       "mdiArrowUp",
       "mdiArrowDown",
       "mdiArrowLeft",
@@ -521,6 +522,7 @@ export default class EntityResult extends Vue {
   credentialTimeOrder!: number;
   getEntityFilters!: IEntityFilter;
   getRelationships!: IRelationship[];
+  getScrollY!: number;
   relationshipStartIndex!: number;
   itemsDisplayed!: number;
   loading!: boolean;
@@ -562,6 +564,9 @@ export default class EntityResult extends Vue {
       let fname = this.$t(this.entityJurisdiction) as string;
       fname = fname.toLowerCase().replace(" ", "-");
       this.setEntityDesc(fname);
+    }
+    if (this.getScrollY) {
+      this.$vuetify.goTo(this.getScrollY, { duration: 0 });
     }
   }
 
