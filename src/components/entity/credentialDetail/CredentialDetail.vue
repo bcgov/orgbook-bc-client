@@ -295,9 +295,9 @@ export default class CredentialDetail extends Vue {
         this.fetchSelectedCredential(credentialId),
         this.fetchPresId(credentialId),
         this.fetchFormattedIdentifiedTopic({
-        sourceId,
-        type: "registration.registries.ca",
-      })
+          sourceId,
+          type: "registration.registries.ca",
+        }),
       ]);
       //need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 1000));

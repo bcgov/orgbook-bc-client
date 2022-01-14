@@ -17,17 +17,19 @@ Component.registerHooks(["beforeRouteLeave"]);
     EntityResult,
   },
   methods: {
-    ...mapActions(["clearFilter"]),
+    ...mapActions(["clearFilter", "setScrollY"]),
   },
 })
 export default class Entity extends Vue {
   clearFilter!: () => Promise<void>;
+  setScrollY!: (top: number) => void;
 
   async beforeRouteLeave(
     to: Route,
     from: Route,
     next: NavigationGuardNext<Vue>
   ): Promise<void> {
+    this.setScrollY(window.scrollY);
     if (!to.fullPath.includes(from.fullPath)) {
       this.clearFilter();
     }
