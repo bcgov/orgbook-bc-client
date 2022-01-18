@@ -150,6 +150,7 @@ import i18n from "@/i18n/index";
 import router from "@/router";
 import moment from "moment";
 import BackTo from "@/components/shared/BackTo.vue";
+import { unwrapTranslations } from "@/utils/entity";
 
 interface Data {
   headers: Record<string, string>[];
@@ -241,14 +242,15 @@ export default class CredentialDetail extends Vue {
     }
     let credDesc = this.getSelectedCredential.credential_type.description;
     if (
-      this.getSelectedCredential.credential_type.schema_label?.translations?.[
-        i18n.locale
-      ]?.label
+      unwrapTranslations(
+        this.getSelectedCredential.credential_type.schema_label
+      )?.[i18n.locale]?.label
     ) {
-      credDesc =
-        this.getSelectedCredential.credential_type.schema_label.translations[
-          i18n.locale
-        ].label;
+      credDesc = (
+        unwrapTranslations(
+          this.getSelectedCredential.credential_type.schema_label
+        ) as Record<string, { label: string; description: string }>
+      )[i18n.locale].label;
     }
     return credDesc;
   }
