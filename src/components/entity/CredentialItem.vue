@@ -178,14 +178,18 @@ export default class HighlightedCredItem extends Vue {
     if (!this.cred) {
       return undefined;
     }
-    let retval: { [index: string]: string } = {};
+    let retval: { [index: string]: string | undefined } = {};
     const claimLabel = this.getClaimLabel(
       this.cred.credential_type_id,
       this.cred.credential_title
     );
 
+    const default_title = this.cred.rel_id
+      ? { "Relationship description": this.cred.rel_id as string }
+      : { "Registration number": this.sourceId };
+
     if (claimLabel === undefined) {
-      retval = { "Registration number": this.sourceId };
+      retval = default_title;
     } else {
       let value = selectFirstAttrItem(
         { key: "type", value: this.cred.credential_title },
@@ -198,13 +202,13 @@ export default class HighlightedCredItem extends Vue {
       if (value?.value) {
         retval[claimLabel] = value.value as string;
       } else {
-        retval = { "Registration number": this.sourceId };
+        retval = default_title;
       }
     }
     let accessor = this.cred.credential_title ? this.cred.credential_title : "";
     return {
       key: Object.keys(retval)[0],
-      value: retval[Object.keys(retval)[0]],
+      value: retval[Object.keys(retval)[0]] as string,
       accessor: accessor,
     };
   }

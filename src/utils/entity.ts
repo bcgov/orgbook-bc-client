@@ -94,6 +94,7 @@ export function credOrRelationshipToDisplay(
     const relItem = item as IRelationship;
 
     display.id = relItem.credential.id;
+    display.rel_id = relItem.related_topic?.source_id;
     display.authority = "";
     display.authorityLink = "";
     if (credSet !== undefined) {
