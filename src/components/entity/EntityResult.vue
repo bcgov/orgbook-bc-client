@@ -193,6 +193,7 @@
               </v-col>
               <v-col class="py-0 d-flex align-center justify-center">
                 <v-select
+                  @change="correctRelDisplay"
                   v-model="itemsDisplayed"
                   :items="[5, 10, 25, 100]"
                 ></v-select>
@@ -666,6 +667,20 @@ export default class EntityResult extends Vue {
         this.businessAsRelationship.length
     )
       this.relationshipStartIndex += num * interval;
+  }
+
+  correctRelDisplay(): void {
+    // deal with issue of switching display intervals in the middle of a set
+    if (this.relationshipStartIndex % this.itemsDisplayed) {
+      this.relationshipStartIndex =
+        Math.floor(this.relationshipStartIndex / this.itemsDisplayed) *
+        this.itemsDisplayed;
+    }
+    //refocus relationships on selection change
+    this.$vuetify.goTo(this.$refs["relationships"] as VuetifyGoToTarget, {
+      duration: 500,
+      easing: "easeInOutCubic",
+    });
   }
 
   switchCredentialTimeOrder(): void {
