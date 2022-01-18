@@ -10,15 +10,17 @@
         <v-col cols="12" sm="12" class="pa-0">
           <slot name="header"></slot>
         </v-col>
-        <v-col v-if="topicName" cols="12" sm="12" class="pa-0">
-          <p class="mb-0">{{ topicName }}</p>
-        </v-col>
-        <v-col v-if="credTitle" cols="12" sm="12" class="pa-0">
-          <p class="mb-1">
-            {{ credTitle["key"] }}:
-            {{ translateValue(credTitle["accessor"], credTitle["value"]) }}
-          </p>
-        </v-col>
+        <div v-if="!disableDefaultHeader">
+          <v-col v-if="topicName" cols="12" sm="12" class="pa-0">
+            <p class="mb-0">{{ topicName }}</p>
+          </v-col>
+          <v-col v-if="credTitle" cols="12" sm="12" class="pa-0">
+            <p class="mb-1">
+              {{ credTitle["key"] }}:
+              {{ translateValue(credTitle["accessor"], credTitle["value"]) }}
+            </p>
+          </v-col>
+        </div>
       </v-row>
     </v-expansion-panel-header>
     <v-expansion-panel-content
@@ -107,6 +109,7 @@ export default class CredentialItem extends Vue {
   @Prop({ default: "" }) effectiveDate!: string;
   @Prop({ default: false }) expired!: boolean;
   @Prop({ default: "" }) credId!: number;
+  @Prop({ default: false }) disableDefaultHeader!: boolean;
 
   @Prop({ default: false }) timeline!: boolean;
 
@@ -131,7 +134,9 @@ export default class CredentialItem extends Vue {
   }
 
   get sourceId(): string {
-    const { sourceId } = this.$route.params;
+    const { sourceId } = this.cred?.rel_id
+      ? { sourceId: this.cred.rel_id }
+      : this.$route.params;
     return sourceId;
   }
 
