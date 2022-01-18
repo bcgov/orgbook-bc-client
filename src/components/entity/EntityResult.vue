@@ -219,10 +219,21 @@
                   'justify-center': !$vuetify.breakpoint.lgAndUp,
                 }"
               >
-                <v-btn icon @click="incRelationshipStartIndex(-1)">
+                <v-btn
+                  :disabled="relationshipStartIndex <= 0"
+                  icon
+                  @click="incRelationshipStartIndex(-1)"
+                >
                   <v-icon>{{ mdiChevronLeft }}</v-icon>
                 </v-btn>
-                <v-btn icon @click="incRelationshipStartIndex(1)">
+                <v-btn
+                  :disabled="
+                    relationshipStartIndex + itemsDisplayed >=
+                    businessAsRelationship.length
+                  "
+                  icon
+                  @click="incRelationshipStartIndex(1)"
+                >
                   <v-icon>{{ mdiChevronRight }}</v-icon>
                 </v-btn>
               </v-col>
