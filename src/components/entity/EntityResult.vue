@@ -165,20 +165,22 @@
                 }}
               </div>
               <h3>
-                <router-link
-                  :to="`/entity/${
-                    businessAsRelationship[i + relationshipStartIndex]
-                      .related_topic &&
-                    businessAsRelationship[i + relationshipStartIndex]
-                      .related_topic.source_id
-                  }`"
-                  class="fake-link"
-                  >{{
-                    getRelationshipName(
+                <span @click.stop>
+                  <router-link
+                    :to="`/entity/${
                       businessAsRelationship[i + relationshipStartIndex]
-                    )
-                  }}</router-link
-                >
+                        .related_topic &&
+                      businessAsRelationship[i + relationshipStartIndex]
+                        .related_topic.source_id
+                    }`"
+                    class="fake-link"
+                    >{{
+                      getRelationshipName(
+                        businessAsRelationship[i + relationshipStartIndex]
+                      )
+                    }}</router-link
+                  >
+                </span>
               </h3>
             </div>
           </template>
@@ -193,6 +195,7 @@
               </v-col>
               <v-col class="py-0 d-flex align-center justify-center">
                 <v-select
+                  @change="correctRelDisplay"
                   v-model="itemsDisplayed"
                   :items="[5, 10, 25, 100]"
                 ></v-select>
@@ -216,10 +219,21 @@
                   'justify-center': !$vuetify.breakpoint.lgAndUp,
                 }"
               >
-                <v-btn icon @click="incRelationshipStartIndex(-1)">
+                <v-btn
+                  :disabled="relationshipStartIndex <= 0"
+                  icon
+                  @click="incRelationshipStartIndex(-1)"
+                >
                   <v-icon>{{ mdiChevronLeft }}</v-icon>
                 </v-btn>
-                <v-btn icon @click="incRelationshipStartIndex(1)">
+                <v-btn
+                  :disabled="
+                    relationshipStartIndex + itemsDisplayed >=
+                    businessAsRelationship.length
+                  "
+                  icon
+                  @click="incRelationshipStartIndex(1)"
+                >
                   <v-icon>{{ mdiChevronRight }}</v-icon>
                 </v-btn>
               </v-col>
@@ -272,15 +286,17 @@
           :effectiveDate="ownedByRelationship.credential.effective_date"
         >
           <template #header>
-            <router-link
-              :to="`/entity/${
-                ownedByRelationship.related_topic &&
-                ownedByRelationship.related_topic.source_id
-              }`"
-              class="font-weight-bold"
-            >
-              {{ getRelationshipName(ownedByRelationship) }}
-            </router-link>
+            <span @click.stop>
+              <router-link
+                :to="`/entity/${
+                  ownedByRelationship.related_topic &&
+                  ownedByRelationship.related_topic.source_id
+                }`"
+                class="font-weight-bold"
+              >
+                {{ getRelationshipName(ownedByRelationship) }}
+              </router-link>
+            </span>
           </template>
         </CredentialItem>
       </template>
@@ -661,6 +677,20 @@ export default class EntityResult extends Vue {
         this.businessAsRelationship.length
     )
       this.relationshipStartIndex += num * interval;
+  }
+
+  correctRelDisplay(): void {
+    // deal with issue of switching display intervals in the middle of a set
+    if (this.relationshipStartIndex % this.itemsDisplayed) {
+      this.relationshipStartIndex =
+        Math.floor(this.relationshipStartIndex / this.itemsDisplayed) *
+        this.itemsDisplayed;
+    }
+    //refocus relationships on selection change
+    this.$vuetify.goTo(this.$refs["relationships"] as VuetifyGoToTarget, {
+      duration: 500,
+      easing: "easeInOutCubic",
+    });
   }
 
   switchCredentialTimeOrder(): void {

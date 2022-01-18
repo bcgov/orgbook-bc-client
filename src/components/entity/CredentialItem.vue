@@ -101,7 +101,7 @@ import { TranslateResult } from "vue-i18n";
     ]),
   },
 })
-export default class HighlightedCredItem extends Vue {
+export default class CredentialItem extends Vue {
   @Prop({}) cred!: ICredentialDisplayType;
 
   @Prop({ default: "" }) authority!: string;

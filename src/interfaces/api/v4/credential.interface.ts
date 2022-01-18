@@ -18,6 +18,7 @@ export interface ICredentialAttribute {
   value: string | number | boolean;
 }
 
+// TODO: remove ISchemaLabel after schema structure update to backend
 export interface ISchemaLabel {
   translations: Record<string, { label: string; description: string }>;
 }
@@ -52,7 +53,7 @@ export interface ICredentialDisplayType {
   relationship_types?: string[];
   credential_title?: string;
   highlighted_attributes?: string[];
-  schema_label?: ISchemaLabel;
+  schema_label?: Record<string, { label: string; description: string }>;
   attributes?: ICredentialAttribute[];
   credential_type_id: number;
 }
