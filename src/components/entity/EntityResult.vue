@@ -165,20 +165,22 @@
                 }}
               </div>
               <h3>
-                <router-link
-                  :to="`/entity/${
-                    businessAsRelationship[i + relationshipStartIndex]
-                      .related_topic &&
-                    businessAsRelationship[i + relationshipStartIndex]
-                      .related_topic.source_id
-                  }`"
-                  class="fake-link"
-                  >{{
-                    getRelationshipName(
+                <span @click.stop>
+                  <router-link
+                    :to="`/entity/${
                       businessAsRelationship[i + relationshipStartIndex]
-                    )
-                  }}</router-link
-                >
+                        .related_topic &&
+                      businessAsRelationship[i + relationshipStartIndex]
+                        .related_topic.source_id
+                    }`"
+                    class="fake-link"
+                    >{{
+                      getRelationshipName(
+                        businessAsRelationship[i + relationshipStartIndex]
+                      )
+                    }}</router-link
+                  >
+                </span>
               </h3>
             </div>
           </template>
@@ -278,15 +280,17 @@
           :effectiveDate="ownedByRelationship.credential.effective_date"
         >
           <template #header>
-            <router-link
-              :to="`/entity/${
-                ownedByRelationship.related_topic &&
-                ownedByRelationship.related_topic.source_id
-              }`"
-              class="font-weight-bold"
-            >
-              {{ getRelationshipName(ownedByRelationship) }}
-            </router-link>
+            <span @click.stop>
+              <router-link
+                :to="`/entity/${
+                  ownedByRelationship.related_topic &&
+                  ownedByRelationship.related_topic.source_id
+                }`"
+                class="font-weight-bold"
+              >
+                {{ getRelationshipName(ownedByRelationship) }}
+              </router-link>
+            </span>
           </template>
         </CredentialItem>
       </template>
