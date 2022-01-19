@@ -134,9 +134,7 @@ export default class CredentialItem extends Vue {
   }
 
   get sourceId(): string {
-    const { sourceId } = this.cred?.rel_id
-      ? { sourceId: this.cred.rel_id }
-      : this.$route.params;
+    const { sourceId } = this.$route.params;
     return sourceId;
   }
 
