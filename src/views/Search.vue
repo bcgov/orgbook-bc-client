@@ -5,11 +5,22 @@
         <v-row>
           <v-col class="d-flex flex-column flex-grow-1" cols="12" md="9">
             <p
-              class="font-weight-normal flex-grow-1 text-md-h5 text-sm-h6 text-h6"
+              class="
+                font-weight-normal
+                flex-grow-1
+                text-md-h5 text-sm-h6 text-h6
+              "
             >
               A public directory of organizations registered in BC
             </p>
             <SearchBar :query="q" class="flex-grow-1" />
+            <v-row>
+              <v-col cols="12" class="pl-0">
+                <router-link class="advanced-link" to="/search/advanced"
+                  >Advanced Search</router-link
+                >
+              </v-col>
+            </v-row>
           </v-col>
           <v-col class="flex-grow-0 pt-0 pb-0" cols="12" md="3">
             <SearchDescription
@@ -92,7 +103,7 @@ export default class Search extends Vue {
 
   async created(): Promise<void> {
     const query = this.$route.query as unknown as ISearchQuery;
-    if (query?.q) {
+    if (query?.q || query?.credential_type_id) {
       await this.extractQueryAndDispatchSearch(query);
     } else {
       this.resetSearch();
@@ -112,7 +123,7 @@ export default class Search extends Vue {
     // Need to call next first otherwise the URL is updated after the search completes
     next();
     const query = this.$route.query as unknown as ISearchQuery;
-    if (query?.q) {
+    if (query?.q || query?.credential_type_id) {
       await this.extractQueryAndDispatchSearch(query);
     } else {
       this.resetSearch();
@@ -141,6 +152,9 @@ export default class Search extends Vue {
 <style lang="scss" scoped>
 .search-bar {
   background: $secondary-color;
+  color: $white;
+}
+.advanced-link {
   color: $white;
 }
 </style>

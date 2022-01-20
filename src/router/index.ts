@@ -10,7 +10,12 @@ const routes: Array<RouteConfig> = [
     name: "Search",
     component: Search,
   },
-
+  {
+    path: "/search/advanced",
+    name: "AdvancedSearch",
+    component: () =>
+      import(/* webpackChunkName: "advancedSearch" */ "@/views/AdvancedSearch.vue"),
+  },
   {
     path: "/entity/:sourceId",
     name: "Entity",
