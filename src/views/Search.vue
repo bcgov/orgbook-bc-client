@@ -92,7 +92,7 @@ export default class Search extends Vue {
 
   async created(): Promise<void> {
     const query = this.$route.query as unknown as ISearchQuery;
-    if (query?.q) {
+    if (query?.q || query?.credential_type_id) {
       await this.extractQueryAndDispatchSearch(query);
     } else {
       this.resetSearch();
@@ -112,7 +112,7 @@ export default class Search extends Vue {
     // Need to call next first otherwise the URL is updated after the search completes
     next();
     const query = this.$route.query as unknown as ISearchQuery;
-    if (query?.q) {
+    if (query?.q || query?.credential_type_id) {
       await this.extractQueryAndDispatchSearch(query);
     } else {
       this.resetSearch();
