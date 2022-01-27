@@ -64,8 +64,8 @@
           outlined
           dense
           v-model="formData.from_name"
-          required
           label="Name"
+          :rules="alwaysRequired"
         ></v-text-field>
 
         <v-text-field
@@ -73,6 +73,7 @@
           dense
           v-model="formData.from_email"
           label="Email address"
+          :rules="[...alwaysRequired,...emailRules]"
         ></v-text-field>
 
         <div :hidden="incorrectHidden">
@@ -82,6 +83,7 @@
             v-model="formData.error"
             :items="formattedCredentialTypes"
             label="What Information is incorrect?"
+            :rules="condRequired"
           ></v-select>
 
           <v-text-field
@@ -89,6 +91,7 @@
             dense
             v-model="formData.identifier"
             label="Identifier (such as the incorporation number, registration number, or licence / permit number)"
+            :rules="condRequired"
           ></v-text-field>
         </div>
 
@@ -97,14 +100,14 @@
           dense
           v-model="formData.comments"
           :label="labelMessage"
+          :rules="alwaysRequired"
         ></v-textarea>
       </div>
 
       <v-btn
         id="contactSubmitButton"
         v-if="
-          formData.reason &&
-          (formData.reason != 'REGISTER_ORGANIZATION' || additionalHelp)
+          this.formData.reason != 'REGISTER_ORGANIZATION' || this.additionalHelp
         "
         @click="submit"
         depressed
@@ -126,15 +129,16 @@ import { contactReason } from "@/store/modules/contact";
 import { unwrapTranslations } from "@/utils/entity";
 
 interface Data {
-  formData: {
-    reason: string;
-  };
+  formData: IContactRequest;
   additionalHelp: boolean;
+  emailRules: Array<boolean | string | ((v: string) => string | boolean)>;
+  alwaysRequired: Array<boolean | string | ((v: string) => string | boolean)>;
+  condRequired: Array<boolean | string | ((v: string) => string | boolean)>;
 }
 
 @Component({
   computed: {
-    ...mapGetters(["loading", "credentialTypes"]),
+    ...mapGetters(["loading", "credentialTypes", "getLikeStatus"]),
   },
   methods: {
     ...mapActions(["setLoading", "sendContact"]),
@@ -144,14 +148,31 @@ export default class ContactForm extends Vue {
   formData!: IContactRequest;
   credentialTypes!: ICredentialType[];
   additionalHelp!: boolean;
+  getLikeStatus!: "like" | "dislike" | "";
+  emailRules!: Array<boolean | string | ((v: string) => string | boolean)>;
 
   setLoading!: (loading: boolean) => void;
   sendContact!: (feedback: IContactRequest) => Promise<void>;
+  // eslint-disable-next-line
+  emailRegexp = RegExp(/.+@.+/);
 
   data(): Data {
     return {
-      formData: { reason: "" },
+      formData: {
+        reason: "FEEDBACK",
+        from_name: "",
+        from_email: "",
+        comments: "",
+      },
       additionalHelp: false,
+      emailRules: [
+        // eslint-disable-next-line
+        (v: string) => this.emailRegexp.test(v) || "E-mail must be valid",
+      ],
+      alwaysRequired: [(v: string) => !!v || "This field is required"],
+      condRequired: [
+        (v: string) => !!v || this.incorrectHidden || "This field is required",
+      ],
     };
   }
 
@@ -160,6 +181,17 @@ export default class ContactForm extends Vue {
       text: contactReason[key],
       value: key,
     }));
+  }
+
+  get submitEnabled(): boolean {
+    return !!(
+      this.formData.reason &&
+      (this.formData.reason != "REGISTER_ORGANIZATION" ||
+        this.additionalHelp) &&
+      this.formData.from_name &&
+      this.formData.from_email &&
+      this.emailRegexp.test(this.formData.from_email)
+    );
   }
 
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
@@ -194,6 +226,9 @@ export default class ContactForm extends Vue {
     ).validate();
     if (isFormValid) {
       this.setLoading(true);
+      if(this.getLikeStatus !== ""){
+        this.formData.comments = `${this.getLikeStatus}:\n${this.formData.comments}`
+      }
       const data = { ...this.formData };
       data.reason = contactReason[this.formData.reason];
       if (this.formData.error !== undefined) {

@@ -14,7 +14,7 @@
     >
       <v-icon>{{ mdiArrowUp }}</v-icon>
     </v-btn>
-    <div class="footer-feedback" v-if="!feedbackSubmitted">
+    <div class="footer-feedback" >
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
           <v-col>

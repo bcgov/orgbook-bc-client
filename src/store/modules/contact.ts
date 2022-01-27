@@ -6,6 +6,7 @@ import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
 const contactService = new Contact();
 
 export const contactReason: { [key: string]: string } = {
+  FEEDBACK: "Submit a comment/suggestion about Orgbook",
   INCORRECT_INFO: "My organization's information is incorrect",
   REGISTER_ORGANIZATION: "I want my organization listed on OrgBook BC",
   REGISTER_ISSUER: "I want to become an OrgBook BC issuer",
