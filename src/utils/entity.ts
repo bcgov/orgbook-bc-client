@@ -25,6 +25,12 @@ export function getHighlightedAttributes(
   return highlighted;
 }
 
+export function isExpired(attrs: ICredentialAttribute[] | undefined): string {
+  const date = selectFirstAttrItem({ key: "type", value: "expiry_date" }, attrs)
+    ?.value as string | undefined;
+  return date && Date.now() > new Date(date).getTime() ? date : "";
+}
+
 export function getRelationshipName(relationship: IRelationship): string {
   let ret = "";
   const relNameLength = relationship?.related_topic?.names?.length;
