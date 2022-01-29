@@ -90,6 +90,7 @@ import { dateFilter } from "@/filters/date.filter";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { TranslateResult } from "vue-i18n";
+import { isExpired } from "@/utils/entity";
 
 @Component({
   computed: {
@@ -117,6 +118,8 @@ export default class CredentialItem extends Vue {
 
   credentialTypes!: ICredentialType[];
 
+  isExpired = isExpired;
+
   get getAuthorityLink(): string | URL {
     return this.cred ? this.cred.authorityLink : this.authorityLink;
   }
@@ -126,7 +129,9 @@ export default class CredentialItem extends Vue {
   }
 
   get getCredRevoked(): boolean {
-    return this.cred ? this.cred.revoked : this.expired;
+    return this.cred
+      ? this.cred.revoked || !!this.isExpired(this.cred.attributes)
+      : this.expired;
   }
 
   get getCredId(): number {
