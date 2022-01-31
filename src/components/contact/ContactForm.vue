@@ -183,17 +183,6 @@ export default class ContactForm extends Vue {
     }));
   }
 
-  get submitEnabled(): boolean {
-    return !!(
-      this.formData.reason &&
-      (this.formData.reason != "REGISTER_ORGANIZATION" ||
-        this.additionalHelp) &&
-      this.formData.from_name &&
-      this.formData.from_email &&
-      this.emailRegexp.test(this.formData.from_email)
-    );
-  }
-
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
     return this.credentialTypes.map((type) => ({
       // TODO: remove unwrap translations functions after backend update
