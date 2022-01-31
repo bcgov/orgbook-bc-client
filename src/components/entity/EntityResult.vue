@@ -158,7 +158,7 @@
                 "
                 class="expired-credential"
               >
-                Expired:
+                Replaced:
                 {{
                   businessAsRelationship[i + relationshipStartIndex].credential
                     .revoked_date | formatDate
@@ -389,7 +389,14 @@
                         <template #header>
                           <div class="text-body-2">
                             <div v-if="cred.revoked" class="expired-credential">
-                              Expired: {{ cred.revoked_date | formatDate }}
+                              Replaced: {{ cred.revoked_date | formatDate }}
+                            </div>
+                            <div
+                              v-else-if="isExpired(cred.attributes)"
+                              class="expired-credential"
+                            >
+                              Expired:
+                              {{ isExpired(cred.attributes) | formatDate }}
                             </div>
                             <div
                               v-if="cred.registration_reason"
@@ -441,6 +448,7 @@ import { selectFirstAttrItem } from "@/utils/attribute";
 import {
   getRelationshipName,
   credOrRelationshipToDisplay,
+  isExpired,
   getCredentialLabel,
 } from "@/utils/entity";
 import BackTo from "@/components/shared/BackTo.vue";
@@ -550,6 +558,7 @@ export default class EntityResult extends Vue {
   ];
   getRelationshipName = getRelationshipName;
   getCredentialLabel = getCredentialLabel;
+  isExpired = isExpired;
 
   data(): Data {
     return {
@@ -654,7 +663,9 @@ export default class EntityResult extends Vue {
   ): Array<ICredentialDisplayType> {
     var filteredCreds = [...creds];
     if (!this.getEntityFilters.show_expired) {
-      filteredCreds = creds.filter((cred) => !cred.revoked);
+      filteredCreds = creds.filter(
+        (cred) => !cred.revoked && !this.isExpired(cred.attributes)
+      );
     }
     return filteredCreds;
   }

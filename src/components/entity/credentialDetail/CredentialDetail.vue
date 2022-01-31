@@ -5,7 +5,7 @@
       <v-alert prominent type="error" class="red">
         <v-row align="center">
           <v-col class="grow">
-            Credential has expired and can no longer be verified
+            {{ errorWording }}
           </v-col>
         </v-row>
       </v-alert>
@@ -150,7 +150,7 @@ import i18n from "@/i18n/index";
 import router from "@/router";
 import moment from "moment";
 import BackTo from "@/components/shared/BackTo.vue";
-import { unwrapTranslations } from "@/utils/entity";
+import { unwrapTranslations, isExpired } from "@/utils/entity";
 
 interface Data {
   headers: Record<string, string>[];
@@ -191,6 +191,7 @@ export default class CredentialDetail extends Vue {
   getPresentationId!: string;
   getPresentationEX!: ICredentialProof;
   sourceId!: string;
+  isExpired = isExpired;
   fetchSelectedCredential!: (id: string) => Promise<void>;
   fetchPresId!: (id: string) => Promise<void>;
   fetchPresEx!: (params: { id: string; presId: string }) => Promise<void>;
@@ -256,11 +257,41 @@ export default class CredentialDetail extends Vue {
   }
 
   get credRevoked(): boolean | undefined {
-    return this.getSelectedCredential?.revoked;
+    return (
+      this.getSelectedCredential?.revoked ||
+      !!this.isExpired(this.getSelectedCredential?.attributes)
+    );
   }
 
-  get credRevokedDate(): Date | undefined {
-    return this.getSelectedCredential?.revoked_date;
+  get credRevokedDate(): Date | string | undefined {
+    return (
+      this.getSelectedCredential?.revoked_date ||
+      this.isExpired(this.getSelectedCredential?.attributes)
+    );
+  }
+
+  get errorWording(): string {
+    if (!this.credRevoked) {
+      return "";
+    }
+    // Credential is expired and has been replaced. It can no longer be verified. (replaced and expired)
+    // Credential is expired. It can no longer be verified. (expired)
+    // Credential has been replaced. It can no longer be verified. (replaced)
+    const replaced = !!this.getSelectedCredential?.revoked;
+    const expired = !!this.isExpired(this.getSelectedCredential?.attributes);
+    let base = "Credential ";
+    if (expired) {
+      base += "is expired";
+      if (replaced) {
+        base += " and ";
+      } else {
+        base += ".";
+      }
+    }
+    if (replaced) {
+      base += "has been replaced.";
+    }
+    return base + " It can no longer be verified";
   }
 
   get proofValues(): Record<string, string>[] | undefined {
