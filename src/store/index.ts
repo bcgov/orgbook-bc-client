@@ -16,6 +16,7 @@ import icon, { State as IconState } from "./modules/icon";
 import search, { State as SearchState } from "./modules/search";
 import stats, { State as StatsState } from "./modules/statistics";
 import topic, { State as TopicState } from "./modules/topic";
+import like, {State as LikeState} from "./modules/like";
 
 Vue.use(Vuex);
 
@@ -31,6 +32,7 @@ export interface State {
   search: SearchState;
   stats: StatsState;
   topic: TopicState;
+  like: LikeState;
 }
 
 export default new Vuex.Store({
@@ -47,5 +49,6 @@ export default new Vuex.Store({
     search,
     stats,
     topic,
+    like,
   },
 });

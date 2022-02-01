@@ -4,91 +4,35 @@
       <v-col cols="12" sm="6" lg="6" offset-sm="3" offset-lg="3">
         <v-container>
           <div class="text-center">
-            <p class="pt-4 text-h5 font-weight-bold">
-              <span v-if="!submitted">How was your experience?</span>
-              <span v-else>Thank you for submitting feedback</span>
-            </p>
-            <div v-if="!submitted">
-              <div>
-                <p>What do you think about OrgBook BC?</p>
-                <v-btn
-                  fab
-                  tile
-                  outlined
-                  @click="reason = 'like'"
-                  class="mr-3 fab"
-                >
-                  <v-icon>{{ mdiThumbUp }}</v-icon>
-                </v-btn>
-                <v-btn
-                  fab
-                  tile
-                  outlined
-                  @click="reason = 'dislike'"
-                  class="ml-3 fab"
-                >
-                  <v-icon>{{ mdiThumbDown }}</v-icon>
-                </v-btn>
-              </div>
+            <div v-if="!getLikeStatus">
+              <p class="pt-4 text-h5 font-weight-bold">
+                <span v-if="!getLikeStatus">How was your experience?</span>
+              </p>
+              <p>What do you think about OrgBook BC?</p>
+              <v-btn fab tile outlined @click="like" class="mr-3 fab">
+                <v-icon>{{ mdiThumbUp }}</v-icon>
+              </v-btn>
+              <v-btn fab tile outlined @click="dislike" class="ml-3 fab">
+                <v-icon>{{ mdiThumbDown }}</v-icon>
+              </v-btn>
+            </div>
 
-              <v-row v-if="reason !== ''">
-                <v-col cols="12" lg="8" offset-lg="2">
-                  <div class="text-center">
-                    <p class="font-weight-bold pt-4">
-                      Thanks for letting us know.
-                      <span v-if="isLike">Tell us a bit more!</span
-                      ><span v-else
-                        >Please tell us more so we can improve!</span
-                      >
-                    </p>
-                    <p class="pt-4">
-                      <span v-if="isLike"
-                        >What did you like about your experience today?</span
-                      >
-                      <span v-else>What were you looking for today?</span>
-                    </p>
-                    <v-textarea
-                      outlined
-                      required
-                      v-model="comments"
-                      auto-grow
-                      rows="2"
-                      class="feedback text-center"
-                    ></v-textarea>
-                    <div v-if="!isLike">
-                      <p class="pt-4">
-                        How would you like us to improve OrgBook?
-                      </p>
-                      <v-textarea
-                        outlined
-                        v-model="improvements"
-                        required
-                        auto-grow
-                        rows="2"
-                        class="feedback text-center"
-                      ></v-textarea>
-                    </div>
-                  </div>
-                  <div class="d-inline-flex">
+            <v-row v-if="getLikeStatus && !atContactPage">
+              <v-col cols="12" lg="8" offset-lg="2">
+                <div class="text-center">
+                  <router-link to="/contact">
                     <v-btn
-                      class="submit mr-3"
+                      class="submit"
                       @click="submit"
                       depressed
                       aria-label="submit-button"
-                      >Submit</v-btn
+                      >Submit a comment</v-btn
                     >
-                    <v-btn
-                      class="ml-3"
-                      @click="reason = ''"
-                      outlined
-                      depressed
-                      aria-label="cancel-button"
-                      >Cancel</v-btn
-                    >
-                  </div>
-                </v-col>
-              </v-row>
-            </div>
+                  </router-link>
+                </div>
+                <div class="d-inline-flex"></div>
+              </v-col>
+            </v-row>
           </div>
         </v-container>
       </v-col>
@@ -99,6 +43,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
+import { trackStructEvent } from "@snowplow/browser-tracker";
 
 interface Data {
   reason: string;
@@ -109,10 +54,10 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["mdiThumbDown", "mdiThumbUp"]),
+    ...mapGetters(["mdiThumbDown", "mdiThumbUp", "getLikeStatus"]),
   },
   methods: {
-    ...mapActions(["sendFeedback", "setLoading"]),
+    ...mapActions(["sendFeedback", "setLoading", "setLike"]),
   },
 })
 export default class Feedback extends Vue {
@@ -120,9 +65,12 @@ export default class Feedback extends Vue {
   comments!: string;
   improvements!: string;
   submitted!: boolean;
+  getLikeStatus!: "like" | "dislike" | "";
 
   sendFeedback!: (feedback: IFeedback) => Promise<void>;
   setLoading!: (loading: boolean) => void;
+  setLike!: (like: "like" | "dislike" | "") => void;
+
   data(): Data {
     return {
       reason: "",
@@ -131,6 +79,31 @@ export default class Feedback extends Vue {
       submitted: false,
     };
   }
+
+  like(): void {
+    trackStructEvent({
+      category: "Feedback",
+      action: "Submit",
+      label: "Like",
+      value: 0.0,
+    });
+    this.setLike("like");
+  }
+
+  dislike(): void {
+    trackStructEvent({
+      category: "Feedback",
+      action: "Submit",
+      label: "Dislike",
+      value: 0.0,
+    });
+    this.setLike("dislike");
+  }
+
+  get atContactPage(): boolean {
+    return this.$route.path.includes("/contact");
+  }
+
   async submit(): Promise<void> {
     this.setLoading(true);
     await this.sendFeedback({
@@ -142,6 +115,7 @@ export default class Feedback extends Vue {
     this.submitted = true;
     this.setLoading(false);
   }
+
   get isLike(): boolean {
     return this.reason === "like";
   }
