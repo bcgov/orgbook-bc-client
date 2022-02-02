@@ -34,7 +34,25 @@
         filterField="credential_type"
         :fields="getCredentialTypes"
       >
-        <template v-slot:title> Credential type </template>
+        <template v-slot:title>
+          <div class="flex">
+            Credential type
+            <Dialog>
+              <template #activator>
+                <v-icon small class="mx-1">{{ mdiInformationOutline }}</v-icon>
+              </template>
+              <template #content>
+                <h3>Credential:</h3>
+                <p>
+                  Something that details a qualification, registration or
+                  authority of an organization. An example of a credential in
+                  OrgBook BC is the Business Number credential for a registered
+                  corporation.
+                </p>
+              </template>
+            </Dialog>
+          </div>
+        </template>
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
         filterField="registration_type"
@@ -62,7 +80,25 @@
         </template>
       </EntityFilterFacetPanel>
       <CustomFilterFacetPanel>
-        <template #title> Date effective </template>
+        <template #title>
+          <div class="flex">
+            Date effective
+            <Dialog>
+              <template #activator>
+                <v-icon small class="mx-1">{{
+                  mdiInformationOutline
+                }}</v-icon></template
+              >
+              <template #content>
+                <h3>Date effective:</h3>
+                <p>
+                  The date that a credential became effective. An effective
+                  credential is one that is considered valid and usable.
+                </p>
+              </template>
+            </Dialog>
+          </div>
+        </template>
         <template #content>
           <div class="pt-2 pb-2">
             <v-menu
@@ -134,7 +170,26 @@
         </template>
       </CustomFilterFacetPanel>
       <CustomFilterFacetPanel>
-        <template #title>Show Expired</template>
+        <template #title>
+          <div class="flex">
+            Show Expired
+            <Dialog>
+              <template #activator>
+                <v-icon small class="mx-1">{{
+                  mdiInformationOutline
+                }}</v-icon></template
+              >
+              <template #content>
+                <h3>Expired credential:</h3>
+                <p>
+                  An expired credential is one that has an expiry date before
+                  the current date, or has been revoked by the credential
+                  issuer.
+                </p>
+              </template>
+            </Dialog>
+          </div>
+        </template>
         <template #content>
           <v-list class="pt-2 pb-2" flat>
             <v-list-item-group multiple active-class="">
