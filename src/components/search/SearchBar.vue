@@ -1,8 +1,10 @@
 <template>
   <div :class="{ 'pt-4 pb-10': $vuetify.breakpoint.mdAndUp }">
-    <p class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
-      Find an organization
-    </p>
+    <span class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
+      <SearchHelpPopup>
+        <template #title>Find an organization</template>
+      </SearchHelpPopup>
+    </span>
     <div id="search">
       <v-text-field
         id="searchBar"
@@ -93,6 +95,7 @@ import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/search";
+import SearchHelpPopup from "./SearchHelpPopup.vue";
 
 interface Data {
   index: number;
@@ -102,8 +105,11 @@ interface Data {
 }
 
 @Component({
+  components: {
+    SearchHelpPopup,
+  },
   computed: {
-    ...mapGetters(["loading", "mdiMagnify", "mdiClose"]),
+    ...mapGetters(["loading", "mdiMagnify", "mdiClose", "mdiHelpCircle"]),
   },
   methods: {
     ...mapActions(["fetchAutocomplete", "fetchSearch"]),
