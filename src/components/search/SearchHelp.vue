@@ -14,6 +14,11 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content class="ml-n6 search-help-content">
         <slot name="content"></slot>
+        <SearchHelpPopup>
+          <template #title>
+            Not finding what you're looking for
+          </template>
+        </SearchHelpPopup>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -22,12 +27,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import SearchHelpPopup from "./SearchHelpPopup.vue";
 
 interface Data {
   open: boolean;
 }
 
 @Component({
+  components: {
+    SearchHelpPopup,
+  },
   computed: {
     ...mapGetters(["mdiClose"]),
   },
