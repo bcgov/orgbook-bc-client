@@ -81,22 +81,22 @@ export default class Feedback extends Vue {
   }
 
   like(): void {
-    trackStructEvent({
-      category: "Feedback",
-      action: "Submit",
-      label: "Like",
-      value: 0.0,
-    });
+    // trackStructEvent({
+    //   category: "Feedback",
+    //   action: "Submit",
+    //   label: "Like",
+    //   value: 0.0,
+    // });
     this.setLike("like");
   }
 
   dislike(): void {
-    trackStructEvent({
-      category: "Feedback",
-      action: "Submit",
-      label: "Dislike",
-      value: 0.0,
-    });
+    // trackStructEvent({
+    //   category: "Feedback",
+    //   action: "Submit",
+    //   label: "Dislike",
+    //   value: 0.0,
+    // });
     this.setLike("dislike");
   }
 
