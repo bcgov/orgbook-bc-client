@@ -58,11 +58,11 @@ configureEnvironment() {
 	done
 
 	# orgbook-web
-	export PUBLIC_WEB_HOST_NAME=http://localhost
-	export PUBLIC_WEB_HOST_PORT=8082
-	export PUBLIC_WEB_HOST_TLS=off
-	export PUBLIC_API_HOST=api
-	export PUBLIC_API_PORT=5000
+	export PUBLIC_WEB_HOST_NAME=${PUBLIC_WEB_HOST_NAME:-http://localhost}
+	export PUBLIC_WEB_HOST_PORT=${PUBLIC_WEB_HOST_PORT:-8082}
+	export PUBLIC_WEB_HOST_TLS=${PUBLIC_WEB_HOST_TLS:-off}
+	export PUBLIC_API_HOST=${PUBLIC_API_HOST:-https://orgbook.gov.bc.ca}
+	export PUBLIC_API_PORT=${PUBLIC_API_PORT:-443}
 }
 
 cleanUpEnvironment() {

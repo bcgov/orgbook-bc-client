@@ -4,7 +4,7 @@ ARG runtime_image=caddy:alpine
 # build stage
 FROM ${build_image} as build-stage
 WORKDIR /app
-COPY package*.json .
+COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
