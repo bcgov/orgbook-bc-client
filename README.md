@@ -24,50 +24,44 @@ followed by
 ```
 
 ## Development
+### Getting Started
+The Orgbook BC project sits on top of verifiable credential technology facilitated by Aries VCR. A locally running instance of Aries VCR is not required to run the Orgbook BC web application on your own machine. By default Orgbook BC forwards API calls to the publicly running instance of the Orgbook API [here](https://orgbook.gov.bc.ca/api/). The Orgbook API is simply an Aries VCR instance containing credential information about BC Business entities. You can change your local instance of Orgbook to point to any running instance of an Aries VCR agent by editing the `vue.config.js` file outlined in this section [here](#proxy-configuration). If you would like to setup a locally running instance of Aries VCR to test with Orgbook, then follow the instructions [here](https://github.com/bcgov/aries-vcr/tree/master/docs). To run Orgbook in development mode look at the project setup section [here](#project-setup)
 
+### Proxy Configuration
+The `vue.config.js` file contains configuration information for the Orgbook BC project, including the URL of the Aries VCR API that Orgbook will send requests to.
+~~~ typescript
+  configureWebpack: {
+    devtool: "source-map",
+    devServer: {
+      proxy: {
+        "/api": {
+          target: "https://orgbook.gov.bc.ca",
+          // target: "http://localhost:8080",
+        },
+      },
+    },
+  },
+~~~
+Simply change the `target` to the URL of the Aries VCR instance that you wish to use. Some examples are `https://dev.orgbook.gov.bc.ca`, `https://test.orgbook.gov.bc.ca`, or `http://localhost:8080` if you are running Aries VCR locally on port 8080
 ### Project setup
+Orgbook relies on npm and the Vue.js framework. Please make sure npm is up to date and installed on your system.
+After you've verified npm is installed, run the following command in the base folder of the application to install the project dependencies.
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+Once all the dependencies have been installed successfully, you can start the project locally. Run the following command in the base folder of the application to start Orgbook BC on your local machine.
+Orgbook will use port 8080 by default. Go to http://localhost:8080 to see your locally running instance of Orgbook
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Contributing
 
 **Pull requests are always welcome!**
 
 Please see the [Contributions Guide](CONTRIBUTING.md) for the repo.
+
+Before contributing please run `npm run lint` and fix any linter warnings in your code contribution.
 
 You may also create an issue if you would like to suggest additional resources to include in this repository.
 
