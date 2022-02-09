@@ -306,28 +306,7 @@
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
       <template #title>
         <div class="flex">
-          <Dialog>
-            <template #activator>
-              <span
-                class="fake-link text--primary"
-                style="text-decoration: none"
-              >
-                Credentials
-                <v-icon class="icon-dense" dense>{{
-                  mdiInformationOutline
-                }}</v-icon>
-              </span>
-            </template>
-            <template #content>
-              <h3>Credential:</h3>
-              <p>
-                Something that details a qualification, registration or
-                authority of an organization. An example of a credential in
-                OrgBook BC is the Business Number credential for a registered
-                corporation.
-              </p>
-            </template>
-          </Dialog>
+          Credentials
         </div>
       </template>
       <template>
