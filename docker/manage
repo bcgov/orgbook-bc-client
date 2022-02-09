@@ -1,147 +1,151 @@
 #!/bin/bash
 export MSYS_NO_PATHCONV=1
 # getDockerHost; for details refer to https://github.com/bcgov/DITP-DevOps/tree/main/code/snippets#getdockerhost
-. /dev/stdin <<<"$(cat <(curl -s --raw https://raw.githubusercontent.com/bcgov/DITP-DevOps/main/code/snippets/getDockerHost))" 
+. /dev/stdin <<<"$(cat <(curl -s --raw https://raw.githubusercontent.com/bcgov/DITP-DevOps/main/code/snippets/getDockerHost))"
 export DOCKERHOST=$(getDockerHost)
 set -e
 
 SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd)"
 
 toLower() {
-	echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
+  echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
 }
 
 echoError() {
-	_msg=${1}
-	_red='\033[0;31m'
-	_nc='\033[0m' # No Color
-	echo -e "${_red}${_msg}${_nc}" >&2
+  _msg=${1}
+  _red='\033[0;31m'
+  _nc='\033[0m' # No Color
+  echo -e "${_red}${_msg}${_nc}" >&2
 }
 
 functionExists() {
-	(
-		if [ ! -z ${1} ] && type ${1} &>/dev/null; then
-			return 0
-		else
-			return 1
-		fi
-	)
+  (
+    if [ ! -z ${1} ] && type ${1} &>/dev/null; then
+      return 0
+    else
+      return 1
+    fi
+  )
 }
 
 configureEnvironment() {
-	if [ -f .env ]; then
-		while read line; do
-			if [[ ! "$line" =~ ^\# ]] && [[ "$line" =~ .*= ]]; then
-				export ${line//[$'\r\n']/}
-			fi
-		done <.env
-	fi
+  if [ -f .env ]; then
+    while read line; do
+      if [[ ! "$line" =~ ^\# ]] && [[ "$line" =~ .*= ]]; then
+        export ${line//[$'\r\n']/}
+      fi
+    done <.env
+  fi
 
-	for arg in "$@"; do
-		# Remove recognized arguments from the list after processing.
-		shift
+  for arg in "$@"; do
+    # Remove recognized arguments from the list after processing.
+    shift
 
-		# echo "arg: ${arg}"
-		# echo "Remaining: ${@}"
+    # echo "arg: ${arg}"
+    # echo "Remaining: ${@}"
 
-		case "$arg" in
-		*=*)
-			# echo "Exporting ..."
-			export "${arg}"
-			;;
-		*)
-			# echo "Saving for later ..."
-			# If not recognized, save it for later procesing ...
-			set -- "$@" "$arg"
-			;;
-		esac
-	done
+    case "$arg" in
+    *=*)
+      # echo "Exporting ..."
+      export "${arg}"
+      ;;
+    *)
+      # echo "Saving for later ..."
+      # If not recognized, save it for later procesing ...
+      set -- "$@" "$arg"
+      ;;
+    esac
+  done
 
-	# orgbook-web
-	export PUBLIC_WEB_HOST_NAME=${PUBLIC_WEB_HOST_NAME:-http://localhost}
-	export PUBLIC_WEB_HOST_PORT=${PUBLIC_WEB_HOST_PORT:-8082}
-	export PUBLIC_WEB_HOST_TLS=${PUBLIC_WEB_HOST_TLS:-off}
-	export PUBLIC_API_HOST=${PUBLIC_API_HOST:-https://orgbook.gov.bc.ca}
-	export PUBLIC_API_PORT=${PUBLIC_API_PORT:-443}
+  # Defaults
+  # orgbook-web
+  export PUBLIC_WEB_HOST_NAME=${PUBLIC_WEB_HOST_NAME:-http://localhost}
+  export PUBLIC_WEB_HOST_PORT=${PUBLIC_WEB_HOST_PORT:-8082}
+  export PUBLIC_WEB_HOST_TLS=${PUBLIC_WEB_HOST_TLS:-off}
+  export PUBLIC_API_HOST=${PUBLIC_API_HOST:-https://orgbook.gov.bc.ca}
+  export PUBLIC_API_PORT=${PUBLIC_API_PORT:-443}
 }
 
 cleanUpEnvironment() {
-	_projectName=${COMPOSE_PROJECT_NAME:-docker}
+  _projectName=${COMPOSE_PROJECT_NAME:-docker}
 
-	echo "Stopping and removing any running containers ..."
-	docker-compose down -v
+  echo "Stopping and removing any running containers ..."
+  docker-compose down -v
 
-	_pattern="^${_projectName}_\|^docker_"
-	_volumes=$(docker volume ls -q | grep ${_pattern})
+  _pattern="^${_projectName}_\|^docker_"
+  _volumes=$(docker volume ls -q | grep ${_pattern})
 
-	if [ ! -z "${_volumes}" ]; then
-		echo "Removing project volumes ..."
-		echo ${_volumes} | xargs docker volume rm
-	else
-		echo "No project volumes exist."
-	fi
+  if [ ! -z "${_volumes}" ]; then
+    echo "Removing project volumes ..."
+    echo ${_volumes} | xargs docker volume rm
+  else
+    echo "No project volumes exist."
+  fi
 
-	echo "Removing build cache ..."
-	rm -Rf ../.cache
+  echo "Removing build cache ..."
+  rm -Rf ../.cache
 }
 
 getStartupParams() {
-	CONTAINERS=""
-	ARGS=""
+  CONTAINERS=""
+  ARGS=""
 
-	for arg in $@; do
-		case "$arg" in
-		*=*)
-		# Skip it
-		;;
-		-*)
-		ARGS+=" $arg"
-		;;
-		*)
-		CONTAINERS+=" $arg"
-		;;
-		esac
-	done
+  for arg in $@; do
+    case "$arg" in
+    *=*)
+    # Skip it
+    ;;
+    -*)
+    ARGS+=" $arg"
+    ;;
+    *)
+    CONTAINERS+=" $arg"
+    ;;
+    esac
+  done
 
-	if [ -z "$CONTAINERS" ]; then
-		CONTAINERS="$DEFAULT_CONTAINERS"
-	fi
+  if [ -z "$CONTAINERS" ]; then
+    CONTAINERS="$DEFAULT_CONTAINERS"
+  fi
 
-	echo ${ARGS} ${CONTAINERS}
+  echo ${ARGS} ${CONTAINERS}
 }
 
 build-all() {
-	build-web
+  build-web
 }
 
 build-web() {
-	echo -e "\nBuilding orgbook-web image..."
-	docker build \
-		-t 'orgbook-web' \
-		-f '../docker/Dockerfile' '../'
+  echo -e "\nBuilding orgbook-web image..."
+  docker build \
+    -t 'orgbook-web' \
+    -f '../docker/Dockerfile' '../'
 }
 
 # ==================================================================================================
 # Usage:
 # --------------------------------------------------------------------------------------------------
 usage() {
-	cat <<-EOF
-		Usage: $0 [command] [options]
-		Commands:
-		build	-	Build the docker images for the project. You need to do this first, since the
-					builds require a combination of Docker and S2I builds.
-		up		-	Creates application containers from the built images and starts services based
-					on the docker-compose.yml file.
-		start	-	Same as up.
-		restart	-	Re-starts application containers, useful when updating the container image
-					during development.
-		logs	-	Display logs from the docker compose run (ctrl-c to exit).
-		stop	-	Stops services. This is a non-destructive process. Any created volumes and
-					containers are not deleted so they will be reused the next time you run start.
-		down	-	Brings down services and removes any created volumes (storage) and containers.
-		rm		-   Same as down.
-	EOF
-	exit 1
+  cat <<-EOF
+  Usage: $0 [command] [options]
+
+  Examples:
+  $0 start PUBLIC_API_HOST=https://orgbook.gov.bc.ca PUBLIC_API_PORT=443
+    - Connect the local instance of OrgBook BC Client to the production OrgBook's API.
+
+  Commands:
+    build     - Build the docker images for the project. You need to do this first, since the
+                builds require a combination of Docker and S2I builds.
+    up/start  - Creates application containers from the built images and starts services based
+                on the docker-compose.yml file.
+    restart   - Re-starts application containers, useful when updating the container image
+                during development.
+    logs      - Display logs from the docker compose run (ctrl-c to exit).
+    stop      - Stops services. This is a non-destructive process. Any created volumes and
+                containers are not deleted so they will be reused the next time you run start.
+    down/rm   - Brings down services and removes any created volumes (storage) and containers.
+EOF
+  exit 1
 }
 
 # --------------------------------------------------------------------------------------------------
@@ -155,55 +159,55 @@ COMMAND=$(toLower ${1})
 shift || COMMAND=usage
 
 case "${COMMAND}" in
-start | up)
-	_startupParams=$(getStartupParams --force-recreate $@)
-	configureEnvironment "$@"
-	docker-compose up -d ${_startupParams}
-	docker-compose logs -f
-	;;
-restart)
-	_startupParams=$(getStartupParams $@)
-	configureEnvironment "$@"
-	docker-compose stop ${_startupParams}
-	docker-compose up -d ${_startupParams}
-	;;
-logs)
-	configureEnvironment "$@"
-	docker-compose logs -f
-	;;
-stop)
-	configureEnvironment
-	docker-compose stop
-	;;
-rm | down)
-	configureEnvironment
-	cleanUpEnvironment
-	;;
-build)
-	configureEnvironment "$@"
+  start | up)
+    _startupParams=$(getStartupParams --force-recreate $@)
+    configureEnvironment "$@"
+    docker-compose up -d ${_startupParams}
+    docker-compose logs -f
+    ;;
+  restart)
+    _startupParams=$(getStartupParams $@)
+    configureEnvironment "$@"
+    docker-compose stop ${_startupParams}
+    docker-compose up -d ${_startupParams}
+    ;;
+  logs)
+    configureEnvironment "$@"
+    docker-compose logs -f
+    ;;
+  stop)
+    configureEnvironment
+    docker-compose stop
+    ;;
+  rm | down)
+    configureEnvironment
+    cleanUpEnvironment
+    ;;
+  build)
+    configureEnvironment "$@"
 
-	buildImage=$(toLower ${1})
-	shift || buildImage=all
-	buildImage=$(echo ${buildImage} | sed s~^orgbook-~~)
-	case "$buildImage" in
-	*=*)
-		buildImage=all
-		;;
-	esac
+    buildImage=$(toLower ${1})
+    shift || buildImage=all
+    buildImage=$(echo ${buildImage} | sed s~^orgbook-~~)
+    case "$buildImage" in
+    *=*)
+      buildImage=all
+      ;;
+    esac
 
-	if functionExists "build-${buildImage}"; then
-		eval "build-${buildImage}"
-	else
-		msg="The build function, build-${buildImage}, does not exist. "
-		msg+="Please check your build parameters and try again.\n"
-		msg+="Use '-h' to get full help details."
-		echoError "$msg"
-		exit 1
-	fi
-	;;
-*)
-	usage
-	;;
+    if functionExists "build-${buildImage}"; then
+      eval "build-${buildImage}"
+    else
+      msg="The build function, build-${buildImage}, does not exist. "
+      msg+="Please check your build parameters and try again.\n"
+      msg+="Use '-h' to get full help details."
+      echoError "$msg"
+      exit 1
+    fi
+    ;;
+  *)
+    usage
+    ;;
 esac
 
 popd >/dev/null
