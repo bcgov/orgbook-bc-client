@@ -15,9 +15,7 @@
       <v-expansion-panel-content class="ml-n6 search-help-content">
         <slot name="content"></slot>
         <SearchHelpPopup>
-          <template #title>
-            Not finding what you're looking for
-          </template>
+          <template #title> Not finding what you're looking for </template>
         </SearchHelpPopup>
       </v-expansion-panel-content>
     </v-expansion-panel>

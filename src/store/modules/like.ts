@@ -12,7 +12,7 @@ const state: State = {
 const getters = {
   getLikeStatus: (state: State): "like" | "dislike" | "" => {
     return state.like;
-  }
+  },
 };
 
 const actions = {
