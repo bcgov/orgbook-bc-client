@@ -305,9 +305,7 @@
     <!-- credential timeline -->
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
       <template #title>
-        <div class="flex">
-          Credentials
-        </div>
+        <div class="flex">Credentials</div>
       </template>
       <template>
         <!-- header content for the credential card -->

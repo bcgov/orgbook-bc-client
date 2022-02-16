@@ -168,9 +168,6 @@ export default class SearchBar extends Vue {
   }
 
   changeSearch(q: string): void {
-    if (q === this.q) {
-      return;
-    }
     this.q = q;
     this.executeSearch(q);
   }

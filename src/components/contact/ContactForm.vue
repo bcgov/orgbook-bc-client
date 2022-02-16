@@ -73,7 +73,7 @@
           dense
           v-model="formData.from_email"
           label="Email address"
-          :rules="[...alwaysRequired,...emailRules]"
+          :rules="[...alwaysRequired, ...emailRules]"
         ></v-text-field>
 
         <div :hidden="incorrectHidden">
@@ -215,8 +215,8 @@ export default class ContactForm extends Vue {
     ).validate();
     if (isFormValid) {
       this.setLoading(true);
-      if(this.getLikeStatus !== ""){
-        this.formData.comments = `${this.getLikeStatus}:\n${this.formData.comments}`
+      if (this.getLikeStatus !== "") {
+        this.formData.comments = `${this.getLikeStatus}:\n${this.formData.comments}`;
       }
       const data = { ...this.formData };
       data.reason = contactReason[this.formData.reason];

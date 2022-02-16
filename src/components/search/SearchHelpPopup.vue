@@ -2,8 +2,9 @@
   <Dialog>
     <template #activator>
       <span @click.stop><slot name="title"></slot> </span
-      ><v-icon class="icon-dense fake-link search-help" dense>{{
-        mdiHelpCircle
+      ><v-icon small class="fake-link search-help mx-1">{{
+          mdiHelpCircleOutline,
+
       }}</v-icon>
     </template>
     <template #content>
@@ -56,7 +57,7 @@ import Dialog from "@/components/shared/Dialog.vue";
     Dialog,
   },
   computed: {
-    ...mapGetters(["mdiHelpCircle"]),
+    ...mapGetters(["mdiHelpCircleOutline"]),
   },
 })
 export default class SearchHelpPopup extends Vue {}
