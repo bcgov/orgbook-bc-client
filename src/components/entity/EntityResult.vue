@@ -366,13 +366,13 @@
                         <template #header>
                           <div class="text-body-2">
                             <div v-if="cred.revoked" class="expired-credential">
-                              Replaced: {{ cred.revoked_date | formatDate }}
+                              Credential replaced: {{ cred.revoked_date | formatDate }}
                             </div>
                             <div
                               v-else-if="isExpired(cred.attributes)"
                               class="expired-credential"
                             >
-                              Expired:
+                              Credential expired:
                               {{ isExpired(cred.attributes) | formatDate }}
                             </div>
                             <div
