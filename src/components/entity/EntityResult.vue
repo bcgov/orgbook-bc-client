@@ -150,7 +150,7 @@
           "
         >
           <template #header>
-            <div class="text-body-2">
+            <div>
               <div
                 v-if="
                   businessAsRelationship[i + relationshipStartIndex].credential
@@ -158,30 +158,30 @@
                 "
                 class="expired-credential"
               >
-                Replaced:
+                <v-icon>{{mdiCircleMedium}}</v-icon>
+                Credential expired:
                 {{
                   businessAsRelationship[i + relationshipStartIndex].credential
                     .revoked_date | formatDate
                 }}
               </div>
-              <h3>
-                <span @click.stop>
-                  <router-link
-                    :to="`/entity/${
+              <v-icon v-else>{{mdiCircleMedium}}</v-icon>
+              <span @click.stop>
+                <router-link
+                  :to="`/entity/${
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .related_topic &&
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .related_topic.source_id
+                  }`"
+                  class="font-weight-bold"
+                  >{{
+                    getRelationshipName(
                       businessAsRelationship[i + relationshipStartIndex]
-                        .related_topic &&
-                      businessAsRelationship[i + relationshipStartIndex]
-                        .related_topic.source_id
-                    }`"
-                    class="fake-link"
-                    >{{
-                      getRelationshipName(
-                        businessAsRelationship[i + relationshipStartIndex]
-                      )
-                    }}</router-link
-                  >
-                </span>
-              </h3>
+                    )
+                  }}</router-link
+                >
+              </span>
             </div>
           </template>
         </CredentialItem>
@@ -475,6 +475,7 @@ interface Data {
       "mdiMapMarker",
       "mdiChevronLeft",
       "mdiChevronRight",
+      "mdiCircleMedium",
       "mdiInformationOutline",
       "loading",
     ]),
