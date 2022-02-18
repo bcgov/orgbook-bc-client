@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'pt-4 pb-10': $vuetify.breakpoint.mdAndUp }">
     <span class="font-weight-bold mb-1" v-if="$vuetify.breakpoint.mdAndUp">
-      <SearchHelpPopup>
+      <SearchHelpPopup :light="true">
         <template #title>Find an organization</template>
       </SearchHelpPopup>
     </span>
