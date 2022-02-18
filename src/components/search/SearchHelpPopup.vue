@@ -2,7 +2,7 @@
   <Dialog>
     <template #activator>
       <span @click.stop><slot name="title"></slot> </span
-      ><v-icon small class="fake-link search-help mx-1">{{
+      ><v-icon small :class="{ 'search-help': light }" class="fake-link mx-1">{{
           mdiHelpCircleOutline,
 
       }}</v-icon>
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import Dialog from "@/components/shared/Dialog.vue";
 
@@ -60,7 +60,9 @@ import Dialog from "@/components/shared/Dialog.vue";
     ...mapGetters(["mdiHelpCircleOutline"]),
   },
 })
-export default class SearchHelpPopup extends Vue {}
+export default class SearchHelpPopup extends Vue {
+  @Prop({ default: false }) light!: boolean;
+}
 </script>
 <style lang="scss" scoped>
 .search-help {

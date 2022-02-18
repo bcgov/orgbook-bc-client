@@ -10,7 +10,11 @@
           'float-right': $vuetify.breakpoint.smAndDown,
         }"
       >
-        {{ pagedSearchTopics.total }} result(s)
+        <SearchHelpPopup
+          ><template #title>
+            {{ pagedSearchTopics.total }} result(s)</template
+          ></SearchHelpPopup
+        >
       </div>
     </v-col>
   </v-row>
@@ -20,9 +24,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterDialog from "./SearchFilterDialog.vue";
+import SearchHelpPopup from "@/components/search/SearchHelpPopup.vue";
 
 @Component({
   components: {
+    SearchHelpPopup,
     SearchFilterDialog,
   },
   computed: {

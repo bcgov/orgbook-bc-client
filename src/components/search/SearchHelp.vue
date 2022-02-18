@@ -14,7 +14,7 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content class="ml-n6 search-help-content">
         <slot name="content"></slot>
-        <SearchHelpPopup>
+        <SearchHelpPopup :light="true">
           <template #title> Not finding what you're looking for </template>
         </SearchHelpPopup>
       </v-expansion-panel-content>
