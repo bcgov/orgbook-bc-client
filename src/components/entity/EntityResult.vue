@@ -151,7 +151,7 @@
         >
           <template #header>
             <div>
-              <div
+              <span
                 v-if="
                   businessAsRelationship[i + relationshipStartIndex].credential
                     .revoked
@@ -159,12 +159,13 @@
                 class="expired-credential"
               >
                 <v-icon>{{ mdiCircleMedium }}</v-icon>
-                Credential expired:
+                Credential replaced:
                 {{
                   businessAsRelationship[i + relationshipStartIndex].credential
                     .revoked_date | formatDate
                 }}
-              </div>
+              </span>
+
               <v-icon v-else>{{ mdiCircleMedium }}</v-icon>
               <span @click.stop>
                 <router-link
@@ -247,7 +248,7 @@
     <EntityCard
       ref="relationships"
       :expanded="credentialsExpanded"
-      v-if="ownedByRelationship"
+      v-if="ownedByRelationship.length > 0"
     >
       <template #title>
         <div class="flex">
@@ -281,20 +282,32 @@
       </template>
       <template #expansionPanels>
         <CredentialItem
-          :cred="credOrRelationshipToDisplay(ownedByRelationship, credSet)"
+          v-for="(_, i) in ownedByRelationship"
+          :key="i"
+          :cred="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)"
           :disableDefaultHeader="true"
-          :effectiveDate="ownedByRelationship.credential.effective_date"
+          :effectiveDate="ownedByRelationship[i].credential.effective_date"
         >
           <template #header>
+            <span
+              v-if="ownedByRelationship[i].credential.revoked"
+              class="expired-credential"
+            >
+              <v-icon>{{ mdiCircleMedium }}</v-icon>
+              Credential replaced:
+              {{ ownedByRelationship[i].credential.revoked_date | formatDate }}
+            </span>
+
+            <v-icon v-else>{{ mdiCircleMedium }}</v-icon>
             <span @click.stop>
               <router-link
                 :to="`/entity/${
-                  ownedByRelationship.related_topic &&
-                  ownedByRelationship.related_topic.source_id
+                  ownedByRelationship[i].related_topic &&
+                  ownedByRelationship[i].related_topic.source_id
                 }`"
                 class="font-weight-bold"
               >
-                {{ getRelationshipName(ownedByRelationship) }}
+                {{ getRelationshipName(ownedByRelationship[i]) }}
               </router-link>
             </span>
           </template>
@@ -365,16 +378,15 @@
                       <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
                           <div class="text-body-2">
-                            <div v-if="cred.revoked" class="expired-credential">
-                              Credential replaced:
-                              {{ cred.revoked_date | formatDate }}
-                            </div>
-                            <div
-                              v-else-if="isExpired(cred.attributes)"
-                              class="expired-credential"
-                            >
-                              Credential expired:
-                              {{ isExpired(cred.attributes) | formatDate }}
+                            <div class="expired-credential">
+                              <div v-if="cred.revoked">
+                                Credential replaced:
+                                {{ cred.revoked_date | formatDate }}
+                              </div>
+                              <div v-else-if="isExpired(cred.attributes)">
+                                Credential expired:
+                                {{ isExpired(cred.attributes) | formatDate }}
+                              </div>
                             </div>
                             <div
                               v-if="cred.registration_reason"
@@ -741,16 +753,14 @@ export default class EntityResult extends Vue {
     );
   }
 
-  get ownedByRelationship(): IRelationship | undefined {
-    const relationships = this.getRelationships.filter(
+  get ownedByRelationship(): IRelationship[] {
+    return this.getRelationships.filter(
       (relationship) =>
         selectFirstAttrItem(
           { key: "value", value: "IsOwned" },
           relationship.attributes
         ) !== undefined
     );
-
-    return relationships.length > 0 ? relationships[0] : undefined;
   }
 
   get entityName(): string | undefined {
