@@ -158,14 +158,14 @@
                 "
                 class="expired-credential"
               >
-                <v-icon>{{mdiCircleMedium}}</v-icon>
+                <v-icon>{{ mdiCircleMedium }}</v-icon>
                 Credential expired:
                 {{
                   businessAsRelationship[i + relationshipStartIndex].credential
                     .revoked_date | formatDate
                 }}
               </div>
-              <v-icon v-else>{{mdiCircleMedium}}</v-icon>
+              <v-icon v-else>{{ mdiCircleMedium }}</v-icon>
               <span @click.stop>
                 <router-link
                   :to="`/entity/${
@@ -366,7 +366,8 @@
                         <template #header>
                           <div class="text-body-2">
                             <div v-if="cred.revoked" class="expired-credential">
-                              Credential replaced: {{ cred.revoked_date | formatDate }}
+                              Credential replaced:
+                              {{ cred.revoked_date | formatDate }}
                             </div>
                             <div
                               v-else-if="isExpired(cred.attributes)"
