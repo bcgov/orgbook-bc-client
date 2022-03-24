@@ -33,10 +33,11 @@
         <div :class="{ 'pb-3': timeline && !highlightedAttr.length }">
           <div class="font-weight-bold">Authority</div>
           <div>
-            <a :href="getAuthorityLink">
+            <a v-if="getAuthorityLink" :href="getAuthorityLink">
               <span>{{ getAuthority }}</span>
               <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
             </a>
+            <span v-else>{{ getAuthority }}</span>
           </div>
         </div>
 
