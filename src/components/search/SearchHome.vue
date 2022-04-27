@@ -55,7 +55,7 @@
           <div>
             <p>
               <span class="font-weight-bold">{{
-                statistics.counts.actual_item_count
+                statistics.credential_counts.registrations
               }}</span>
               active legal entities
             </p>
@@ -63,7 +63,7 @@
           <div>
             <p>
               <span class="font-weight-bold">{{
-                statistics.counts.credential
+                statistics.credential_counts.active
               }}</span>
               verifiable credentials held
             </p>
