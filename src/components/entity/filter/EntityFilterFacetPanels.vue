@@ -172,7 +172,7 @@
       <CustomFilterFacetPanel>
         <template #title>
           <div class="flex">
-            Show Expired
+            Show Inactive Credentials
             <Dialog>
               <template #activator>
                 <v-icon small class="mx-1">{{
@@ -218,7 +218,7 @@
                     ></v-simple-checkbox>
                   </v-list-item-action>
                   <v-list-item-content class="pt-1 pb-1">
-                    <div>Show Expired</div>
+                    <div>Show Inactive Credentials</div>
                   </v-list-item-content>
                 </template>
               </v-list-item>
