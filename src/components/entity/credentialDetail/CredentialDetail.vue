@@ -13,7 +13,7 @@
     <div>
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5 pb-0">
-          <p class="text-h6 font-weight-bold">
+          <p class="text-h6 font-weight-bold wrap">
             <v-icon class="validated pb-1" v-if="!credRevoked">{{
               mdiShieldCheckOutline
             }}</v-icon>
@@ -356,6 +356,9 @@ export default class CredentialDetail extends Vue {
 <style lang="scss">
 .card {
   @include card-raised;
+}
+.wrap{
+  word-break: break-word;
 }
 .verification-time {
   color: $gray;
