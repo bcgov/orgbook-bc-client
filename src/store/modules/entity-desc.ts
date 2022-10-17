@@ -20,14 +20,20 @@ const getters = {
 const actions = {
   setEntityDesc(
     { commit }: ActionContext<State, RootState>,
-    name: string
+    params: { code: string; fileName: string; displayName: string | undefined }
   ): void {
-    let entity = entities.filter((ent) => ent.attributes.name === name)[0];
+    // find the entity description file name
+    let entity = entities.filter(
+      (ent) => ent.attributes.name === params.fileName
+    )[0];
     if (!entity) {
       //use default value if unknown entity type
-      entity = entities.filter(
-        (ent) => ent.attributes.name === "bc-company"
-      )[0];
+      entity = entities.filter((ent) => ent.attributes.name === "undefined")[0];
+      let entityTypeDisplay = params.code;
+      if (params.displayName) {
+        entityTypeDisplay += `, ${params.displayName}`;
+      }
+      entity.html = entity.html.replace("@placeholder@", entityTypeDisplay);
     }
     commit("setEntityDesc", entity);
   },

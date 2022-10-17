@@ -34,7 +34,7 @@
             <Dialog>
               <template #activator><span class="fake-link" v-t="entityJurisdiction"></span>
                 <v-icon small class="fake-link mx-1">{{
-                    mdiInformationOutline
+                mdiInformationOutline
                 }}</v-icon>
               </template>
               <template #content>
@@ -45,9 +45,9 @@
           <div class="text-body-2">
             <div>
               {{
-                  `${entityTypeToRegValue(
-                    $t(entityJurisdiction)
-                  )}: ${entityIncorporationNumber} `
+              `${entityTypeToRegValue(
+              $t(entityJurisdiction)
+              )}: ${entityIncorporationNumber} `
               }}
             </div>
             <div>Registered on: {{ entityRegistrationDate | formatDate }}</div>
@@ -68,7 +68,7 @@
               <span class="fake-link text--primary" style="text-decoration: none">
                 Relationships
                 <v-icon class="icon-dense" dense>{{
-                    mdiInformationOutline
+                mdiInformationOutline
                 }}</v-icon>
               </span>
             </template>
@@ -93,9 +93,9 @@
           businessAsRelationship.length - relationshipStartIndex,
           itemsDisplayed
         )" :key="i" :expired="
-  businessAsRelationship[i + relationshipStartIndex].credential
-    .revoked
-" :authority="
+          businessAsRelationship[i + relationshipStartIndex].credential
+            .revoked
+        " :authority="
   credOrRelationshipToDisplay(
     businessAsRelationship[i + relationshipStartIndex],
     credSet
@@ -120,8 +120,8 @@
                 <v-icon>{{ mdiCircleMedium }}</v-icon>
                 Credential replaced:
                 {{
-                    businessAsRelationship[i + relationshipStartIndex].credential
-                      .revoked_date | formatDate
+                businessAsRelationship[i + relationshipStartIndex].credential
+                .revoked_date | formatDate
                 }}
               </span>
 
@@ -132,10 +132,10 @@
                 businessAsRelationship[i + relationshipStartIndex]
                   .related_topic.source_id
                 }`" class="font-weight-bold">{{
-      getRelationshipName(
-        businessAsRelationship[i + relationshipStartIndex]
-      )
-  }}</router-link>
+                getRelationshipName(
+                businessAsRelationship[i + relationshipStartIndex]
+                )
+                }}</router-link>
               </span>
             </div>
           </template>
@@ -155,11 +155,11 @@
                 <p class="ma-0">
                   {{ relationshipStartIndex + 1 }} -
                   {{
-                      Math.min(
-                        Math.min(itemsDisplayed, businessAsRelationship.length) +
-                        relationshipStartIndex,
-                        businessAsRelationship.length
-                      )
+                  Math.min(
+                  Math.min(itemsDisplayed, businessAsRelationship.length) +
+                  relationshipStartIndex,
+                  businessAsRelationship.length
+                  )
                   }}
                   of {{ businessAsRelationship.length }}
                 </p>
@@ -193,7 +193,7 @@
               <span class="fake-link text--primary" style="text-decoration: none">
                 Relationships
                 <v-icon class="icon-dense" dense>{{
-                    mdiInformationOutline
+                mdiInformationOutline
                 }}</v-icon>
               </span>
             </template>
@@ -253,7 +253,7 @@
               <span class="fake-link" @click="switchCredentialTimeOrder">Sort by date</span>
               <v-icon class="icon-dense" dense v-if="credentialTimeOrder === 1">{{ mdiArrowUp }}</v-icon>
               <v-icon class="icon-dense" dense v-else>{{
-                  mdiArrowDown
+              mdiArrowDown
               }}</v-icon>
             </div>
           </v-col>
@@ -405,7 +405,7 @@ export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
   entityDesc!: IEntityDesc;
-  setEntityDesc!: (name: string) => void;
+  setEntityDesc!: (params: { code: string, fileName: string, displayName: string | undefined }) => void;
   setIssuers!: (creds: ICredentialDisplayType[]) => void;
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
@@ -466,9 +466,21 @@ export default class EntityResult extends Vue {
     }
     if (this.entityJurisdiction) {
       //convert entity type to file name
-      let fname = this.$t(this.entityJurisdiction) as string;
-      fname = fname.toLowerCase().replace(" ", "-");
-      this.setEntityDesc(fname);
+      let fileName = this.$t(this.entityJurisdiction) as string;
+      let displayName = undefined
+      if(fileName !== this.entityJurisdiction){
+        // translation success
+        displayName = fileName
+      }
+
+      // get the entity code, ex: BC, A, SP, etc 
+      const codeSplit = this.entityJurisdiction.split(".")
+      const code = codeSplit[codeSplit.length - 1]
+
+      // convert to markdown file name
+      fileName = fileName.toLowerCase().replace(" ", "-");
+
+      this.setEntityDesc({code, fileName, displayName});
     }
     if (this.getScrollY) {
       this.$vuetify.goTo(this.getScrollY, { duration: 0 });
