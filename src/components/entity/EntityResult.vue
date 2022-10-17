@@ -1,26 +1,48 @@
 <template>
   <div v-if="!loading">
     <BackTo />
-    <EntityHeader :name="entityName" :businessNumber="entityBusinessNumber" :jurisdiction="entityJurisdiction"
-      :state="entityState" class="mb-2" />
+    <EntityHeader
+      :name="entityName"
+      :businessNumber="entityBusinessNumber"
+      :jurisdiction="entityJurisdiction"
+      :state="entityState"
+      class="mb-2"
+    />
     <v-tabs v-model="currentTab" slider-size="5px">
-      <v-tab v-for="(item, i) in tabItems" :key="i" :ripple="false" active-class="tab-active"
-        @click="tabClick(item.refname)" class="text-capitalize">{{ item.text }}</v-tab>
+      <v-tab
+        v-for="(item, i) in tabItems"
+        :key="i"
+        :ripple="false"
+        active-class="tab-active"
+        @click="tabClick(item.refname)"
+        class="text-capitalize"
+        >{{ item.text }}</v-tab
+      >
     </v-tabs>
     <v-divider></v-divider>
     <v-row>
-      <v-col :class="{
-        'pa-0 pt-2 pb-4': true,
-        'text-right': $vuetify.breakpoint.smAndUp,
-      }"><span class="text-body-2 show-all-statuses vertical-align-middle" @click="toggleCredentialsExpanded">Show
-          all Credential statuses</span></v-col>
+      <v-col
+        :class="{
+          'pa-0 pt-2 pb-4': true,
+          'text-right': $vuetify.breakpoint.smAndUp,
+        }"
+        ><span
+          class="text-body-2 show-all-statuses vertical-align-middle"
+          @click="toggleCredentialsExpanded"
+          >Show all Credential statuses</span
+        ></v-col
+      >
     </v-row>
 
     <!-- topic -->
     <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
-        <CredentialItem :authority="entityRegistrationIssuer" :authorityLink="entityRegistrationIssuerUrl"
-          :effectiveDate="entityEffectiveDate" :credId="entityNameCredId">
+        <CredentialItem
+          :authority="entityRegistrationIssuer"
+          :authorityLink="entityRegistrationIssuerUrl"
+          :effectiveDate="entityEffectiveDate"
+          :credId="entityNameCredId"
+        >
           <template #header>
             <div class="text-h6 font-weight-bold">Registration</div>
           </template>
@@ -32,9 +54,10 @@
             <span>{{ entityName }}</span>
             <span>&nbsp;is a&nbsp;</span>
             <Dialog>
-              <template #activator><span class="fake-link" v-t="entityJurisdiction"></span>
+              <template #activator
+                ><span class="fake-link" v-t="entityJurisdiction"></span>
                 <v-icon small class="fake-link mx-1">{{
-                    mdiInformationOutline
+                  mdiInformationOutline
                 }}</v-icon>
               </template>
               <template #content>
@@ -45,9 +68,9 @@
           <div class="text-body-2">
             <div>
               {{
-                  `${entityTypeToRegValue(
-                    $t(entityJurisdiction)
-                  )}: ${entityIncorporationNumber} `
+                `${entityTypeToRegValue(
+                  $t(entityJurisdiction)
+                )}: ${entityIncorporationNumber} `
               }}
             </div>
             <div>Registered on: {{ entityRegistrationDate | formatDate }}</div>
@@ -60,15 +83,22 @@
     </EntityCard>
 
     <!-- relationships related to -->
-    <EntityCard ref="relationships" :expanded="credentialsExpanded" v-if="businessAsRelationship.length > 0">
+    <EntityCard
+      ref="relationships"
+      :expanded="credentialsExpanded"
+      v-if="businessAsRelationship.length > 0"
+    >
       <template #title>
         <div class="flex">
           <Dialog>
             <template #activator>
-              <span class="fake-link text--primary" style="text-decoration: none">
+              <span
+                class="fake-link text--primary"
+                style="text-decoration: none"
+              >
                 Relationships
                 <v-icon class="icon-dense" dense>{{
-                    mdiInformationOutline
+                  mdiInformationOutline
                 }}</v-icon>
               </span>
             </template>
@@ -89,53 +119,69 @@
         </div>
       </template>
       <template #expansionPanels>
-        <CredentialItem v-for="(_, i) in Math.min(
-          businessAsRelationship.length - relationshipStartIndex,
-          itemsDisplayed
-        )" :key="i" :expired="
-  businessAsRelationship[i + relationshipStartIndex].credential
-    .revoked
-" :authority="
-  credOrRelationshipToDisplay(
-    businessAsRelationship[i + relationshipStartIndex],
-    credSet
-  ).authority
-" :authorityLink="
-  credOrRelationshipToDisplay(
-    businessAsRelationship[i + relationshipStartIndex],
-    credSet
-  ).authorityLink
-" :effectiveDate="
-  businessAsRelationship[i + relationshipStartIndex].credential
-    .effective_date
-" :credId="
-  businessAsRelationship[i + relationshipStartIndex].credential.id
-">
+        <CredentialItem
+          v-for="(_, i) in Math.min(
+            businessAsRelationship.length - relationshipStartIndex,
+            itemsDisplayed
+          )"
+          :key="i"
+          :expired="
+            businessAsRelationship[i + relationshipStartIndex].credential
+              .revoked
+          "
+          :authority="
+            credOrRelationshipToDisplay(
+              businessAsRelationship[i + relationshipStartIndex],
+              credSet
+            ).authority
+          "
+          :authorityLink="
+            credOrRelationshipToDisplay(
+              businessAsRelationship[i + relationshipStartIndex],
+              credSet
+            ).authorityLink
+          "
+          :effectiveDate="
+            businessAsRelationship[i + relationshipStartIndex].credential
+              .effective_date
+          "
+          :credId="
+            businessAsRelationship[i + relationshipStartIndex].credential.id
+          "
+        >
           <template #header>
             <div>
-              <span v-if="
-                businessAsRelationship[i + relationshipStartIndex].credential
-                  .revoked
-              " class="expired-credential">
+              <span
+                v-if="
+                  businessAsRelationship[i + relationshipStartIndex].credential
+                    .revoked
+                "
+                class="expired-credential"
+              >
                 <v-icon>{{ mdiCircleMedium }}</v-icon>
                 Credential replaced:
                 {{
-                    businessAsRelationship[i + relationshipStartIndex].credential
-                      .revoked_date | formatDate
+                  businessAsRelationship[i + relationshipStartIndex].credential
+                    .revoked_date | formatDate
                 }}
               </span>
 
               <v-icon v-else>{{ mdiCircleMedium }}</v-icon>
               <span @click.stop>
-                <router-link :to="`/entity/${businessAsRelationship[i + relationshipStartIndex]
-                .related_topic &&
-                businessAsRelationship[i + relationshipStartIndex]
-                  .related_topic.source_id
-                }`" class="font-weight-bold">{{
-      getRelationshipName(
-        businessAsRelationship[i + relationshipStartIndex]
-      )
-  }}</router-link>
+                <router-link
+                  :to="`/entity/${
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .related_topic &&
+                    businessAsRelationship[i + relationshipStartIndex]
+                      .related_topic.source_id
+                  }`"
+                  class="font-weight-bold"
+                  >{{
+                    getRelationshipName(
+                      businessAsRelationship[i + relationshipStartIndex]
+                    )
+                  }}</router-link
+                >
               </span>
             </div>
           </template>
@@ -149,32 +195,46 @@
                 <p class="ma-0">Items displayed</p>
               </v-col>
               <v-col class="py-0 d-flex align-center justify-center">
-                <v-select @change="correctRelDisplay" v-model="itemsDisplayed" :items="[5, 10, 25, 100]"></v-select>
+                <v-select
+                  @change="correctRelDisplay"
+                  v-model="itemsDisplayed"
+                  :items="[5, 10, 25, 100]"
+                ></v-select>
               </v-col>
               <v-col class="d-flex align-center justify-center">
                 <p class="ma-0">
                   {{ relationshipStartIndex + 1 }} -
                   {{
-                      Math.min(
-                        Math.min(itemsDisplayed, businessAsRelationship.length) +
+                    Math.min(
+                      Math.min(itemsDisplayed, businessAsRelationship.length) +
                         relationshipStartIndex,
-                        businessAsRelationship.length
-                      )
+                      businessAsRelationship.length
+                    )
                   }}
                   of {{ businessAsRelationship.length }}
                 </p>
               </v-col>
-              <v-col :class="{
-                'd-flex align-center flex-shrink-1': true,
-                'justify-center': !$vuetify.breakpoint.lgAndUp,
-              }">
-                <v-btn :disabled="relationshipStartIndex <= 0" icon @click="incRelationshipStartIndex(-1)">
+              <v-col
+                :class="{
+                  'd-flex align-center flex-shrink-1': true,
+                  'justify-center': !$vuetify.breakpoint.lgAndUp,
+                }"
+              >
+                <v-btn
+                  :disabled="relationshipStartIndex <= 0"
+                  icon
+                  @click="incRelationshipStartIndex(-1)"
+                >
                   <v-icon>{{ mdiChevronLeft }}</v-icon>
                 </v-btn>
-                <v-btn :disabled="
-                  relationshipStartIndex + itemsDisplayed >=
-                  businessAsRelationship.length
-                " icon @click="incRelationshipStartIndex(1)">
+                <v-btn
+                  :disabled="
+                    relationshipStartIndex + itemsDisplayed >=
+                    businessAsRelationship.length
+                  "
+                  icon
+                  @click="incRelationshipStartIndex(1)"
+                >
                   <v-icon>{{ mdiChevronRight }}</v-icon>
                 </v-btn>
               </v-col>
@@ -185,15 +245,22 @@
     </EntityCard>
 
     <!-- relationships related from -->
-    <EntityCard ref="relationships" :expanded="credentialsExpanded" v-if="ownedByRelationship.length > 0">
+    <EntityCard
+      ref="relationships"
+      :expanded="credentialsExpanded"
+      v-if="ownedByRelationship.length > 0"
+    >
       <template #title>
         <div class="flex">
           <Dialog>
             <template #activator>
-              <span class="fake-link text--primary" style="text-decoration: none">
+              <span
+                class="fake-link text--primary"
+                style="text-decoration: none"
+              >
                 Relationships
                 <v-icon class="icon-dense" dense>{{
-                    mdiInformationOutline
+                  mdiInformationOutline
                 }}</v-icon>
               </span>
             </template>
@@ -214,11 +281,18 @@
         </div>
       </template>
       <template #expansionPanels>
-        <CredentialItem v-for="(_, i) in ownedByRelationship" :key="i"
-          :cred="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)" :disableDefaultHeader="true"
-          :effectiveDate="ownedByRelationship[i].credential.effective_date">
+        <CredentialItem
+          v-for="(_, i) in ownedByRelationship"
+          :key="i"
+          :cred="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)"
+          :disableDefaultHeader="true"
+          :effectiveDate="ownedByRelationship[i].credential.effective_date"
+        >
           <template #header>
-            <span v-if="ownedByRelationship[i].credential.revoked" class="expired-credential">
+            <span
+              v-if="ownedByRelationship[i].credential.revoked"
+              class="expired-credential"
+            >
               <v-icon>{{ mdiCircleMedium }}</v-icon>
               Credential replaced:
               {{ ownedByRelationship[i].credential.revoked_date | formatDate }}
@@ -226,9 +300,13 @@
 
             <v-icon v-else>{{ mdiCircleMedium }}</v-icon>
             <span @click.stop>
-              <router-link :to="`/entity/${ownedByRelationship[i].related_topic &&
-              ownedByRelationship[i].related_topic.source_id
-              }`" class="font-weight-bold">
+              <router-link
+                :to="`/entity/${
+                  ownedByRelationship[i].related_topic &&
+                  ownedByRelationship[i].related_topic.source_id
+                }`"
+                class="font-weight-bold"
+              >
                 {{ getRelationshipName(ownedByRelationship[i]) }}
               </router-link>
             </span>
@@ -245,31 +323,52 @@
       <template>
         <!-- header content for the credential card -->
         <v-row>
-          <v-col class="d-flex justify-start align-end pl-5 pt-0" v-if="$vuetify.breakpoint.smAndDown">
+          <v-col
+            class="d-flex justify-start align-end pl-5 pt-0"
+            v-if="$vuetify.breakpoint.smAndDown"
+          >
             <EntityFilterDialog />
           </v-col>
           <v-col class="d-flex justify-end align-end pr-5 pt-0">
             <div class="text-body-2">
-              <span class="fake-link" @click="switchCredentialTimeOrder">Sort by date</span>
-              <v-icon class="icon-dense" dense v-if="credentialTimeOrder === 1">{{ mdiArrowUp }}</v-icon>
+              <span class="fake-link" @click="switchCredentialTimeOrder"
+                >Sort by date</span
+              >
+              <v-icon
+                class="icon-dense"
+                dense
+                v-if="credentialTimeOrder === 1"
+                >{{ mdiArrowUp }}</v-icon
+              >
               <v-icon class="icon-dense" dense v-else>{{
-                  mdiArrowDown
+                mdiArrowDown
               }}</v-icon>
             </div>
           </v-col>
         </v-row>
         <!-- body content of the credential card -->
         <v-row>
-          <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="4" class="pa-0">
+          <v-col
+            v-if="$vuetify.breakpoint.mdAndUp"
+            cols="12"
+            md="4"
+            class="pa-0"
+          >
             <EntityFilterFacetPanels />
           </v-col>
           <v-col cols="12" md="8" class="pa-5 pl-3 pt-0">
             <EntityFilterChips class="pb-2" />
             <v-timeline dense align-top class="pa-0">
-              <v-timeline-item v-for="(cred, i) in filteredEntityCredentials" :key="i" color="#38598A" small>
+              <v-timeline-item
+                v-for="(cred, i) in filteredEntityCredentials"
+                :key="i"
+                color="#38598A"
+                small
+              >
                 <div class="pl-3 mt-n3">
                   <div class="text-body-2 font-weight-bold mb-2">
-                    {{ cred.date_effective | formatDate }} - <span v-if="cred.revoked">
+                    {{ cred.date_effective | formatDate }} -
+                    <span v-if="cred.revoked">
                       Credential replaced:
                       {{ cred.revoked_date | formatDate }}
                     </span>
@@ -277,22 +376,28 @@
                       Credential expired:
                       {{ isExpired(cred.attributes) | formatDate }}
                     </span>
-                    <span v-else>
-                      Present
-                    </span>
-
+                    <span v-else> Present </span>
                   </div>
-                  <EntityCard :expanded="credentialsExpanded" :timeline="true" class="pl-0 timeline-cred">
+                  <EntityCard
+                    :expanded="credentialsExpanded"
+                    :timeline="true"
+                    class="pl-0 timeline-cred"
+                  >
                     <template #expansionPanels>
                       <CredentialItem :cred="cred" :timeline="true">
                         <template #header>
                           <div class="text-body-2">
-                            <div v-if="cred.registration_reason" class="font-weight-bold"
-                              v-t="cred.registration_reason"></div>
-                            <div v-else-if="
-                              cred.relationship_types &&
-                              cred.relationship_types.length
-                            ">
+                            <div
+                              v-if="cred.registration_reason"
+                              class="font-weight-bold"
+                              v-t="cred.registration_reason"
+                            ></div>
+                            <div
+                              v-else-if="
+                                cred.relationship_types &&
+                                cred.relationship_types.length
+                              "
+                            >
                               <div class="font-weight-bold">
                                 DBA name registered
                               </div>
@@ -405,7 +510,11 @@ export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
   currentTab!: string;
   entityDesc!: IEntityDesc;
-  setEntityDesc!: (name: string) => void;
+  setEntityDesc!: (params: {
+    code: string;
+    fileName: string;
+    displayName: string | undefined;
+  }) => void;
   setIssuers!: (creds: ICredentialDisplayType[]) => void;
   setCredentialType!: (creds: ICredentialDisplayType[]) => void;
   setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
@@ -435,12 +544,12 @@ export default class EntityResult extends Vue {
   credentialFilters: {
     (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
   }[] = [
-      this.applyDateFilter,
-      this.applyExpiredFilter,
-      this.applyCredentialTypeFilter,
-      this.applyIssuerFilter,
-      this.applyRegistrationTypeFilter,
-    ];
+    this.applyDateFilter,
+    this.applyExpiredFilter,
+    this.applyCredentialTypeFilter,
+    this.applyIssuerFilter,
+    this.applyRegistrationTypeFilter,
+  ];
   getRelationshipName = getRelationshipName;
   getCredentialLabel = getCredentialLabel;
   isExpired = isExpired;
@@ -466,9 +575,21 @@ export default class EntityResult extends Vue {
     }
     if (this.entityJurisdiction) {
       //convert entity type to file name
-      let fname = this.$t(this.entityJurisdiction) as string;
-      fname = fname.toLowerCase().replace(" ", "-");
-      this.setEntityDesc(fname);
+      let fileName = this.$t(this.entityJurisdiction) as string;
+      let displayName = undefined;
+      if (fileName !== this.entityJurisdiction) {
+        // translation success
+        displayName = fileName;
+      }
+
+      // get the entity code, ex: BC, A, SP, etc
+      const codeSplit = this.entityJurisdiction.split(".");
+      const code = codeSplit[codeSplit.length - 1];
+
+      // convert to markdown file name
+      fileName = fileName.toLowerCase().replace(" ", "-");
+
+      this.setEntityDesc({ code, fileName, displayName });
     }
     if (this.getScrollY) {
       this.$vuetify.goTo(this.getScrollY, { duration: 0 });
@@ -570,7 +691,7 @@ export default class EntityResult extends Vue {
     if (
       this.relationshipStartIndex + num * interval >= 0 &&
       this.relationshipStartIndex + num * interval <
-      this.businessAsRelationship.length
+        this.businessAsRelationship.length
     )
       this.relationshipStartIndex += num * interval;
   }

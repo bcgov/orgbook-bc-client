@@ -357,7 +357,7 @@ export default class CredentialDetail extends Vue {
 .card {
   @include card-raised;
 }
-.wrap{
+.wrap {
   word-break: break-word;
 }
 .verification-time {
