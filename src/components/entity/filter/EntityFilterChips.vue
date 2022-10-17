@@ -67,7 +67,9 @@ export default class EntityFilterChips extends Vue {
         chips.push({
           filterField: key,
           filterString:
-            key === "show_expired" ? "Show Inactive Credentials" : (key as string),
+            key === "show_expired"
+              ? "Show Inactive Credentials"
+              : (key as string),
         });
       }
     });
