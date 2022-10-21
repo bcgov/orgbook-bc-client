@@ -55,36 +55,106 @@
     "HIS": "Historical"
   },
   "reason_description": {
-    "filing_type": "filing_type",
-    "alteration": "alteration",
-    "amalgamation": "amalgamation",
-    "amalgamationApplication": "amalgamationApplication",
-    "amendedAGM": "amendedAGM",
-    "amendedAnnualReport": "amendedAnnualReport",
-    "amendedChangeOfDirectors": "amendedChangeOfDirectors",
-    "annualReport": "annualReport",
-    "changeOfAddress": "changeOfAddress",
-    "changeOfDirectors": "changeOfDirectors",
-    "changeOfName": "changeOfName",
-    "changeOfRegistration": "changeOfRegistration",
-    "conversion": "conversion",
-    "correction": "correction",
-    "courtOrder": "courtOrder",
-    "dissolution": "dissolution",
-    "dissolved": "dissolved",
-    "F.18": "F.18",
-    "incorporationApplication": "incorporationApplication",
-    "Involuntary Dissolution": "Involuntary Dissolution",
-    "lear_epoch": "lear_epoch",
-    "putBackOn": "putBackOn",
-    "registrarsNotation": "registrarsNotation",
-    "registrarsOrder": "registrarsOrder",
-    "registration": "registration",
-    "restorationApplication": "restorationApplication",
-    "specialResolution": "specialResolution",
-    "transition": "transition",
-    "voluntaryDissolution": "voluntaryDissolution",
-    "voluntaryLiquidation": "voluntaryLiquidation",
+    "affidavit": {
+      "title": "Affidavit",
+      "displayName": "Affidavit"
+    },
+    "alteration": {
+      "title": "Notice of Alteration Filing",
+      "displayName": "Alteration"
+    },
+    "annualReport": {
+      "title": "Annual Report Filing",
+      "displayName": "Annual Report"
+    },
+    "changeOfAddress": {
+      "title": "Change of Address Filing",
+      "displayName": "Address Change"
+    },
+    "changeOfDirectors": {
+      "title": "Change of Directors Filing",
+      "displayName": "Director Change"
+    },
+    "changeOfName": {
+      "title": "Change of Name Filing",
+      "displayName": "Legal Name Change"
+    },
+    "conversion": {
+      "title": "Conversion Ledger",
+      "displayName": {
+        "BEN": "Conversion",
+        "SP": "Record Conversion",
+        "GP": "Record Conversion"
+      }
+    },
+    "correction": {
+      "title": "Correction",
+      "displayName": {
+        "BEN": "Correction",
+        "CP": "Correction",
+        "SP": "Register Correction Application",
+        "GP": "Register Correction Application"
+      }
+    },
+    "courtOrder": {
+      "title": "Court Order",
+      "displayName": "Court Order"
+    },
+    "dissolution": {
+      "title": "Voluntary Dissolution",
+      "displayName": {
+        "CP": "Voluntary Dissolution",
+        "BC": "Voluntary Dissolution",
+        "BEN": "Voluntary Dissolution",
+        "ULC": "Voluntary Dissolution",
+        "CC": "Voluntary Dissolution",
+        "LLC": "Voluntary Dissolution",
+        "SP": "Statement of Dissolution",
+        "GP": "Statement of Dissolution"
+      }
+    },
+    "incorporationApplication": {
+      "title": "Incorporation Application",
+      "displayName": {
+        "BC": "Incorporation Application",
+        "BEN": "BC Benefit Company Incorporation Application",
+        "CP": "Incorporation Application"
+      }
+    },
+    "registrarsNotation": {
+      "title": "Registrars Notation",
+      "displayName": "Registrar's Notation"
+    },
+    "registrarsOrder": {
+      "title": "Registrars Order",
+      "displayName": "Registrar's Order"
+    },
+    "registration": {
+      "title": "Registration",
+      "displayName": {
+        "SP": "BC Sole Proprietorship Registration",
+        "GP": "BC General Partnership Registration"
+      }
+    },
+    "specialResolution": {
+      "title": "Special Resolution",
+      "displayName": "Special Resolution"
+    },
+    "transition": {
+      "title": "Transition",
+      "displayName": "Transition Application"
+    },
+    "changeOfRegistration": {
+      "title": "Change of Registration",
+      "displayName": {
+        "SP": "Change of Registration Application",
+        "GP": "Change of Registration Application"
+      }
+    },
+    "putBackOn": {
+      "title": "Put Back On",
+      "displayName": "Correction - Put Back On"
+    },
     "Event:ADCOMM": "Administer Comments",
     "Event:ADCORP": "Administer Corporation",
     "Event:ADDLEDGR": "Update Ledger",

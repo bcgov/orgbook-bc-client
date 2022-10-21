@@ -56,6 +56,7 @@
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
         filterField="registration_type"
+        :entityType="entityType"
         :fields="getRegistrationTypes"
       >
         <template v-slot:title>
@@ -231,7 +232,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
@@ -272,6 +273,7 @@ interface Data {
   },
 })
 export default class EntityFilterFacetPanels extends Vue {
+  @Prop({ default: "" }) entityType!: string;
   getAuthorities!: Array<IEntityFacetField>;
   getCredentialTypes!: Array<IEntityFacetField>;
   getRegistrationTypes!: Array<IEntityFacetField>;

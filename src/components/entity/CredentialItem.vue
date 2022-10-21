@@ -17,7 +17,13 @@
           <v-col v-if="credTitle" cols="12" sm="12" class="pa-0">
             <p class="mb-1">
               {{ credTitle["key"] }}:
-              {{ translateValue(credTitle["accessor"], credTitle["value"]) }}
+              {{
+                translateValue(
+                  credTitle["accessor"],
+                  credTitle["value"],
+                  entityType
+                )
+              }}
             </p>
           </v-col>
         </div>
@@ -51,7 +57,7 @@
           >
             <div class="font-weight-bold">{{ attr["key"] }}</div>
             <div>
-              {{ translateValue(attr["accessor"], attr["value"]) }}
+              {{ translateValue(attr["accessor"], attr["value"], entityType) }}
             </div>
           </v-col>
         </v-row>
@@ -87,11 +93,12 @@ import { mapGetters } from "vuex";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
 import i18n from "@/i18n/index";
+import { $translate } from "@/i18n/translate";
 import { dateFilter } from "@/filters/date.filter";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { TranslateResult } from "vue-i18n";
-import { isExpired } from "@/utils/entity";
+import { isExpired, toTranslationFormat } from "@/utils/entity";
 
 @Component({
   computed: {
@@ -106,6 +113,7 @@ import { isExpired } from "@/utils/entity";
 export default class CredentialItem extends Vue {
   @Prop({}) cred!: ICredentialDisplayType;
 
+  @Prop({ default: "" }) entityType!: string;
   @Prop({ default: "" }) authority!: string;
   @Prop({ default: "" }) authorityLink!: string;
   @Prop({ default: "" }) effectiveDate!: string;
@@ -120,6 +128,8 @@ export default class CredentialItem extends Vue {
   credentialTypes!: ICredentialType[];
 
   isExpired = isExpired;
+  toTranslationFormate = toTranslationFormat;
+  $translate = $translate;
 
   get getAuthorityLink(): string | URL {
     return this.cred ? this.cred.authorityLink : this.authorityLink;
@@ -175,9 +185,16 @@ export default class CredentialItem extends Vue {
     }
   }
 
-  translateValue(accessor: string, val: string): string | TranslateResult {
-    const res = this.$t(accessor + "." + val);
-    if (res != accessor + "." + val) {
+  translateValue(
+    accessor: string,
+    val: string,
+    entityType: string
+  ): string | TranslateResult {
+    // need entity type to properly translate due to LEAR entries
+    const res = $translate(
+      toTranslationFormat(accessor + "." + val, entityType)
+    );
+    if (res != toTranslationFormat(accessor + "." + val, entityType)) {
       return res;
     }
     return val;

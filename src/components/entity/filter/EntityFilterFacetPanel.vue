@@ -4,7 +4,7 @@
       <slot name="title">{{ title }}</slot>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <EntityFilterFacets :filterField="filterField" :fields="fields" />
+      <EntityFilterFacets :entityType="entityType" :filterField="filterField" :fields="fields" />
       <template v-if="more.length">
         <span
           class="flex-row flex-align-items-center justify-center fake-link"
@@ -32,6 +32,7 @@ interface Data {
   },
 })
 export default class EntityFilterFacetPanel extends Vue {
+  @Prop({ default: "" }) entityType!: string;
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
   @Prop({ default: () => [] }) more!: IEntityFacetField[];
