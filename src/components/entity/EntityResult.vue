@@ -38,6 +38,7 @@
     <EntityCard ref="registration" :expanded="credentialsExpanded">
       <template #expansionPanels>
         <CredentialItem
+          :entityType="entityJurisdiction"
           :authority="entityRegistrationIssuer"
           :authorityLink="entityRegistrationIssuerUrl"
           :effectiveDate="entityEffectiveDate"
@@ -125,6 +126,7 @@
             itemsDisplayed
           )"
           :key="i"
+          :entityType="entityJurisdiction"
           :expired="
             businessAsRelationship[i + relationshipStartIndex].credential
               .revoked
@@ -284,6 +286,7 @@
         <CredentialItem
           v-for="(_, i) in ownedByRelationship"
           :key="i"
+          :entityType="entityJurisdiction"
           :cred="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)"
           :disableDefaultHeader="true"
           :effectiveDate="ownedByRelationship[i].credential.effective_date"
@@ -354,7 +357,7 @@
             md="4"
             class="pa-0"
           >
-            <EntityFilterFacetPanels />
+            <EntityFilterFacetPanels :entityType="entityJurisdiction" />
           </v-col>
           <v-col cols="12" md="8" class="pa-5 pl-3 pt-0">
             <EntityFilterChips class="pb-2" />
@@ -384,13 +387,22 @@
                     class="pl-0 timeline-cred"
                   >
                     <template #expansionPanels>
-                      <CredentialItem :cred="cred" :timeline="true">
+                      <CredentialItem
+                        :cred="cred"
+                        :entityType="entityJurisdiction"
+                        :timeline="true"
+                      >
                         <template #header>
                           <div class="text-body-2">
                             <div
                               v-if="cred.registration_reason"
                               class="font-weight-bold"
-                              v-t="cred.registration_reason"
+                              v-translate="
+                                toTranslationFormat(
+                                  cred.registration_reason,
+                                  entityJurisdiction
+                                )
+                              "
                             ></div>
                             <div
                               v-else-if="
@@ -439,6 +451,7 @@ import {
   credOrRelationshipToDisplay,
   isExpired,
   getCredentialLabel,
+  toTranslationFormat,
 } from "@/utils/entity";
 import BackTo from "@/components/shared/BackTo.vue";
 import CredentialItem from "@/components/entity/CredentialItem.vue";
@@ -452,6 +465,7 @@ import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 import { ITopicName } from "@/interfaces/api/v2/topic.interface";
 import Dialog from "@/components/shared/Dialog.vue";
 import { IEntityDesc } from "@/interfaces/entity-desc";
+import { translate } from "@/i18n/translate";
 
 interface Data {
   currentTab: string;
@@ -505,6 +519,9 @@ interface Data {
       "fetchRelationships",
     ]),
   },
+  directives: {
+    translate,
+  },
 })
 export default class EntityResult extends Vue {
   setLoading!: (loading: boolean) => void;
@@ -552,6 +569,7 @@ export default class EntityResult extends Vue {
   ];
   getRelationshipName = getRelationshipName;
   getCredentialLabel = getCredentialLabel;
+  toTranslationFormat = toTranslationFormat;
   isExpired = isExpired;
 
   data(): Data {

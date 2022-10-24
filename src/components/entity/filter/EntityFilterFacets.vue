@@ -29,7 +29,7 @@
               class="checkbox"
             ></v-simple-checkbox>
           </v-list-item-action>
-          <v-list-item-content class="pt-1 pb-1" v-t="field.value">
+          <v-list-item-content class="pt-1 pb-1" v-translate="toTranslationFormat(field.value, entityType)">
           </v-list-item-content>
           <v-list-item-action class="d-flex justify-end mt-1 mb-1">
             <div>{{ field.count }}</div>
@@ -47,7 +47,8 @@ import {
   IEntityFacetField,
   IEntityFilter,
 } from "@/interfaces/entity-filter.interface";
-import { isEntityFilterActive } from "@/utils/entity";
+import { translate } from "@/i18n/translate";
+import { isEntityFilterActive, toTranslationFormat } from "@/utils/entity";
 
 @Component({
   computed: {
@@ -56,11 +57,16 @@ import { isEntityFilterActive } from "@/utils/entity";
   methods: {
     ...mapActions(["toggleEntityFilter"]),
   },
+  directives: {
+    translate,
+  },
 })
 export default class EntityFilterFacets extends Vue {
+  @Prop({ default: "" }) entityType!: string;
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
   getEntityFilters!: IEntityFilter;
+  toTranslationFormat = toTranslationFormat;
   isEntityFilterActive: (
     filterField: string,
     getEntityFilters: IEntityFilter,

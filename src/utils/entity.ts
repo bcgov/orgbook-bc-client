@@ -14,6 +14,18 @@ export function isCredential(item: ICredential | IRelationship): boolean {
   return (item as ICredential)?.credential_type !== undefined;
 }
 
+// Used to append entity_type to the suffix of the string. This is needed to work with 
+// entries from the LEAR database
+export function toTranslationFormat(base: string, entityType?: string): string {
+  if (entityType) {
+    const entityTypeSplit = entityType.split('.')
+    if (entityTypeSplit.length >= 2) {
+      return base + "." + entityTypeSplit[1]
+    }
+  }
+  return base
+}
+
 export function getHighlightedAttributes(
   item: ICredential | IRelationship,
   title: string | undefined,
