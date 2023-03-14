@@ -815,12 +815,14 @@ export default class EntityResult extends Vue {
     return selectFirstAttrItem(
       { key: "type", value: "business_number" },
       // find the latest business number
-      this.entityCredentials?.filter(cred => cred.latest)?.map((cred) => {
-        return {
-          type: cred.type,
-          text: cred.value,
-        };
-      })
+      this.entityCredentials
+        ?.filter((cred) => cred.latest)
+        ?.map((cred) => {
+          return {
+            type: cred.type,
+            text: cred.value,
+          };
+        })
     )?.text as string;
   }
 
