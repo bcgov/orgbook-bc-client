@@ -42,6 +42,7 @@ export interface ICredentialDisplayType {
   id: number;
   credential_type: string;
   rel_id?: string;
+  latest?: boolean;
   type: string;
   authority: string;
   authorityLink: string | URL;
