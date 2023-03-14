@@ -29,7 +29,10 @@
               class="checkbox"
             ></v-simple-checkbox>
           </v-list-item-action>
-          <v-list-item-content class="pt-1 pb-1" v-translate="toTranslationFormat(field.value, entityType)">
+          <v-list-item-content
+            class="pt-1 pb-1"
+            v-translate="toTranslationFormat(field.value, entityType)"
+          >
           </v-list-item-content>
           <v-list-item-action class="d-flex justify-end mt-1 mb-1">
             <div>{{ field.count }}</div>

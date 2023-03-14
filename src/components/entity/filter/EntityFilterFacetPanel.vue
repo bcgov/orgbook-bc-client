@@ -4,7 +4,11 @@
       <slot name="title">{{ title }}</slot>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <EntityFilterFacets :entityType="entityType" :filterField="filterField" :fields="fields" />
+      <EntityFilterFacets
+        :entityType="entityType"
+        :filterField="filterField"
+        :fields="fields"
+      />
       <template v-if="more.length">
         <span
           class="flex-row flex-align-items-center justify-center fake-link"

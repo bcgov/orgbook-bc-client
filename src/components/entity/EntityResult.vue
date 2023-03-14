@@ -814,12 +814,15 @@ export default class EntityResult extends Vue {
   get entityBusinessNumber(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "business_number" },
-      this.entityCredentials?.map((cred) => {
-        return {
-          type: cred.type,
-          text: cred.value,
-        };
-      })
+      // find the latest business number
+      this.entityCredentials
+        ?.filter((cred) => cred.latest)
+        ?.map((cred) => {
+          return {
+            type: cred.type,
+            text: cred.value,
+          };
+        })
     )?.text as string;
   }
 
@@ -858,7 +861,7 @@ export default class EntityResult extends Vue {
 
     var fullCredentials: ICredentialDisplayType[] = [];
     this.selectedTopicFullCredentialSet.forEach((credSet) => {
-      //filter out all the raltionship credentials
+      //filter out all the relationship credentials
       fullCredentials.push(
         ...credSet.credentials
           .filter((cred) => !this.isRelationshipCred(cred))
