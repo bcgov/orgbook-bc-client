@@ -1,4 +1,5 @@
 ARG build_image=node:fermium
+ARG caddy_builder_image=caddy:builder-alpine
 ARG runtime_image=caddy:alpine
 
 # build stage
@@ -9,9 +10,17 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# caddy build stage
+FROM ${caddy_builder_image} as caddy-build-stage
+
+# Install ratelimit/v0.2.0
+RUN xcaddy build \
+    --with github.com/RussellLuo/caddy-ext/ratelimit@3497b19617f19deca8a4a625a93d2b774bb0dd29
 
 # production stage
 FROM ${runtime_image} as production-stage
+
+COPY --from=caddy-build-stage /usr/bin/caddy /usr/bin/caddy
 COPY --from=build-stage /app/dist /srv
 
 # Fix permissions issue with Caddy image
