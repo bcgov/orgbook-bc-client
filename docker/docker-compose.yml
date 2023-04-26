@@ -1,5 +1,5 @@
 version: "3"
-services:  
+services:
   orgbook-web:
     image: orgbook-web:latest
     environment:
@@ -8,6 +8,10 @@ services:
       WEB_HOST_TLS: ${PUBLIC_WEB_HOST_TLS}
       API_HOST: ${PUBLIC_API_HOST}
       API_PORT: ${PUBLIC_API_PORT}
+
+      RATE_LIMIT_ORDERING: ${RATE_LIMIT_ORDERING}
+      DEFAULT_RATE_LIMIT: ${DEFAULT_RATE_LIMIT}
+      API_RATE_LIMIT: ${API_RATE_LIMIT}
     volumes:
       - ./config/Caddyfile:/etc/caddy/Caddyfile
     ports:

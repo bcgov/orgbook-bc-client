@@ -64,6 +64,10 @@ configureEnvironment() {
   export PUBLIC_WEB_HOST_TLS=${PUBLIC_WEB_HOST_TLS:-off}
   export PUBLIC_API_HOST=${PUBLIC_API_HOST:-https://orgbook.gov.bc.ca}
   export PUBLIC_API_PORT=${PUBLIC_API_PORT:-443}
+
+  export RATE_LIMIT_ORDERING=${RATE_LIMIT_ORDERING:-'order rate_limit before basicauth'}
+  export DEFAULT_RATE_LIMIT=${DEFAULT_RATE_LIMIT:-'rate_limit {remote_host} 50r/s'}
+  export API_RATE_LIMIT=${API_RATE_LIMIT:-'rate_limit {remote_host} 25r/s'}
 }
 
 cleanUpEnvironment() {
