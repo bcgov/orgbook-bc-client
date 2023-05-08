@@ -682,6 +682,14 @@
     "Filing:ZZINP": "Create Company Information",
     "Filing:ZZRCP": "Request company password",
     "Filing:ZZRRI": "Request your customer profile ID",
-    "Filing:ZZRRP": "Request your customer profile password"
+    "Filing:ZZRRP": "Request your customer profile password",
+    "Filing:SNRKF": "Notice of Record Keeper",
+    "Filing:SNRKC": "Correction - Notice of Record Keeper",
+    "Filing:SCRSF": "Convert a Limited Restoration to Full Restoration",
+    "Filing:SCRSC": "Correction - Convert a Limited Restoration to Full Restoration",
+    "Filing:SRLQF": "Report Payments Made By Liquidator",
+    "Filing:SRLQC": "Correction - Report Payments Made By Liquidator",
+    "Filing:SCRKC": "Correction - Record Keeper Notice of Change",
+    "Filing:SCRKF": "Record Keeper Notice of Change"
   }
 }
