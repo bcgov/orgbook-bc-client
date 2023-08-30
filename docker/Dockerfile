@@ -13,9 +13,9 @@ RUN npm run build
 # caddy build stage
 FROM ${caddy_builder_image} as caddy-build-stage
 
-# Install ratelimit/v0.2.0
+# Install ratelimit/v0.3.0
 RUN xcaddy build \
-    --with github.com/RussellLuo/caddy-ext/ratelimit@3497b19617f19deca8a4a625a93d2b774bb0dd29
+    --with github.com/RussellLuo/caddy-ext/ratelimit@ab1e18cfe426012af351a68463937ae2e934a2a1
 
 # production stage
 FROM ${runtime_image} as production-stage
