@@ -1,4 +1,4 @@
-ARG build_image=node:fermium
+ARG build_image=node:gallium
 ARG caddy_builder_image=caddy:builder-alpine
 ARG runtime_image=caddy:alpine
 
