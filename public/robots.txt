@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /api/
 Disallow: /hooks/
+Disallow: /entity/
+Disallow: /organization/
 
 User-agent: Baiduspider
 User-agent: 360Spider
