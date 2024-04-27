@@ -1,10 +1,4 @@
 module.exports = {
-  chainWebpack: (config) => {
-    config.plugin("html").tap((args) => {
-      args[0].title = "OrgBook BC";
-      return args;
-    });
-  },
   transpileDependencies: ["vuetify"],
   pluginOptions: {
     i18n: {
