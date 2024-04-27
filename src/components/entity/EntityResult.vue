@@ -41,7 +41,7 @@
           :entityType="entityJurisdiction"
           :authority="entityRegistrationIssuer"
           :authorityLink="entityRegistrationIssuerUrl"
-          :effectiveDate="entityEffectiveDate"
+          :effectiveDate="entityStatusEffectiveDate"
           :credId="entityNameCredId"
         >
           <template #header>
@@ -76,7 +76,8 @@
             </div>
             <div>Registered on: {{ entityRegistrationDate | formatDate }}</div>
             <div>
-              Business name effective: {{ entityEffectiveDate | formatDate }}
+              Business name effective:
+              {{ entityNameEffectiveDate | formatDate }}
             </div>
           </div>
         </div>
@@ -913,7 +914,14 @@ export default class EntityResult extends Vue {
     )?.value;
   }
 
-  get entityEffectiveDate(): string | undefined {
+  get entityNameEffectiveDate(): string | undefined {
+    return selectFirstAttrItem(
+      { key: "type", value: "entity_name_effective" },
+      this.selectedTopic?.attributes
+    )?.value;
+  }
+
+  get entityStatusEffectiveDate(): string | undefined {
     return selectFirstAttrItem(
       { key: "type", value: "entity_status_effective" },
       this.selectedTopic?.attributes
