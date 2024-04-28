@@ -43,7 +43,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
-import { trackStructEvent } from "@snowplow/browser-tracker";
 
 interface Data {
   reason: string;

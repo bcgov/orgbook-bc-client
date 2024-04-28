@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div>
     <p class="pt-4 text-h5 font-weight-bold">About this site</p>

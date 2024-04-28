@@ -987,6 +987,7 @@ export default class EntityResult extends Vue {
   }
 
   @Watch("$route.params")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async onRouteParamsChanged(params: any): Promise<void> {
     if (params.sourceId) {
       this.reload();
