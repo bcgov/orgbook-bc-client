@@ -28,8 +28,10 @@
           </p>
           <p>
             Issued: {{ currCredIssuedDate | formatDate }} • Effective:
-            {{ currCredEffDate | formatDate
-            }}<span> - {{ credRevokedDate | formatDate }}</span>
+            {{ currCredEffDate | formatDate }}
+            <span v-if="credRevokedDate" span>
+              - {{ credRevokedDate | formatDate }}</span
+            >
           </p>
           <p v-if="!credRevoked">
             The following verifications were successfully completed:
