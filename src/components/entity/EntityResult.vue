@@ -758,8 +758,8 @@ export default class EntityResult extends Vue {
 
   get hasAnyRelationships(): boolean {
     return (
-      this.businessAsRelationship.length > 0 ||
-      this.ownedByRelationship !== undefined
+      this.businessAsRelationship?.length > 0 ||
+      this.ownedByRelationship?.length > 0
     );
   }
 
