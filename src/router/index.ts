@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Search from "@/views/Search.vue";
@@ -40,7 +42,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  base: import.meta.env.BASE_URL,
   routes,
   scrollBehavior() {
     return {
