@@ -4,7 +4,7 @@ export default abstract class ApiResource {
 
   protected formatEndpointUrl(path?: string): string {
     let url = "/api";
-    if (this.baseVersion === "v2") {
+    if (this.baseVersion === "v4") {
       url += `/${this.basePath}`;
     } else {
       url += `/${this.baseVersion}/${this.basePath}`;
