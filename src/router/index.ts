@@ -1,12 +1,9 @@
 /// <reference types="vite/client" />
 
-import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 import Search from "@/views/Search.vue";
 
-Vue.use(VueRouter);
-
-const routes: Array<RouteConfig> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/search",
     name: "Search",
@@ -31,18 +28,17 @@ const routes: Array<RouteConfig> = [
     component: () =>
       import(/* webpackChunkName: "contact" */ "@/views/Contact.vue"),
   },
-  {
-    path: "*",
-    name: "Not Found",
-    beforeEnter: (to, from, next) => {
-      next({ name: "Search" });
-    },
-  },
+  // {
+  //   path: "*",
+  //   name: "Not Found",
+  //   beforeEnter: (to, from, next) => {
+  //     next({ name: "Search" });
+  //   },
+  // },
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: import.meta.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes,
   scrollBehavior() {
     return {

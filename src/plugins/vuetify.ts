@@ -1,13 +1,15 @@
-import Vue from "vue";
-import Vuetify from "vuetify/lib/framework";
+import { createVuetify } from "vuetify/lib/framework.mjs";
+import "vuetify/styles";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
 
-Vue.use(Vuetify);
-
-export default new Vuetify({
-  theme: {
-    disable: true,
-  },
-  icons: {
-    iconfont: "mdiSvg",
-  },
+export default createVuetify({
+  components,
+  directives,
+  // theme: {
+  //   disable: true,
+  // },
+  // icons: {
+  //   iconfont: "mdiSvg",
+  // },
 });

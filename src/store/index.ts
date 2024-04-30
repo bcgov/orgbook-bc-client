@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
+
 import app, { State as AppState } from "./modules/app";
 import contact, { State as ContactState } from "./modules/contact";
 import credentialDetail, {
@@ -13,12 +13,10 @@ import entity, { State as EntityState } from "./modules/entity";
 import entityDesc, { State as EntityDescState } from "./modules/entity-desc";
 import feedback from "./modules/feedback";
 import icon, { State as IconState } from "./modules/icon";
+import like, { State as LikeState } from "./modules/like";
 import search, { State as SearchState } from "./modules/search";
 import stats, { State as StatsState } from "./modules/statistics";
 import topic, { State as TopicState } from "./modules/topic";
-import like, { State as LikeState } from "./modules/like";
-
-Vue.use(Vuex);
 
 export interface State {
   app: AppState;
@@ -35,7 +33,7 @@ export interface State {
   like: LikeState;
 }
 
-export default new Vuex.Store({
+export default createStore({
   modules: {
     app,
     contact,

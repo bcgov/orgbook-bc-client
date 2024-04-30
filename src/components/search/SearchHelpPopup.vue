@@ -1,11 +1,11 @@
 <template>
   <Dialog>
     <template #activator>
-      <span @click.stop><slot name="title"></slot> </span
-      ><v-icon small :class="{ 'search-help': light }" class="fake-link mx-1">{{
+      <span @click.stop><slot name="title"></slot> </span>
+      <!-- <v-icon small :class="{ 'search-help': light }" class="fake-link mx-1">{{
           mdiHelpCircleOutline,
 
-      }}</v-icon>
+      }}</v-icon> -->
     </template>
     <template #content>
       <p>

@@ -16,11 +16,11 @@
               class="pt-4"
               v-if="$vuetify.breakpoint.mdAndUp"
             />
-            <SearchHelp v-if="$vuetify.breakpoint.smAndDown">
+            <!-- <SearchHelp v-if="$vuetify.breakpoint.smAndDown">
               <template v-slot:content>
                 <SearchDescription />
               </template>
-            </SearchHelp>
+            </SearchHelp> -->
           </v-col>
         </v-row>
       </v-container>
