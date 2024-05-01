@@ -2,10 +2,12 @@
   <Dialog>
     <template #activator>
       <span @click.stop><slot name="title"></slot> </span>
-      <!-- <v-icon small :class="{ 'search-help': light }" class="fake-link mx-1">{{
-          mdiHelpCircleOutline,
-
-      }}</v-icon> -->
+      <v-icon
+        size="small"
+        :class="{ 'search-help': light }"
+        class="fake-link mx-1"
+        >{{ mdiHelpCircleOutline }}</v-icon
+      >
     </template>
     <template #content>
       <p>
@@ -48,21 +50,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import Dialog from "@/components/shared/Dialog.vue";
+import { defineComponent } from "vue";
 
-@Component({
+export default defineComponent({
   components: {
     Dialog,
   },
   computed: {
     ...mapGetters(["mdiHelpCircleOutline"]),
   },
-})
-export default class SearchHelpPopup extends Vue {
-  @Prop({ default: false }) light!: boolean;
-}
+  props: {
+    light: { default: false, type: Boolean },
+  },
+});
 </script>
 <style lang="scss" scoped>
 .search-help {

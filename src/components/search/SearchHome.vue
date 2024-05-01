@@ -6,7 +6,7 @@
         md="5"
         :class="{
           'pl-0 pr-0': true,
-          'pr-4': $vuetify.breakpoint.mdAndUp,
+          'pr-4': $vuetify.display.mdAndUp,
         }"
       >
         <p class="text-h5 font-weight-bold">OrgBook BC</p>
@@ -24,7 +24,7 @@
           </li>
         </ul>
         <div>
-          <v-icon class="icon-dense" dense color="black">{{
+          <v-icon class="icon-dense" size="small" color="black">{{
             mdiShieldCheckOutline
           }}</v-icon>
           <router-link class="vertical-align-middle" to="/about/digital-trust"
@@ -33,7 +33,7 @@
         </div>
       </v-col>
       <v-col
-        v-if="$vuetify.breakpoint.mdAndUp"
+        v-if="$vuetify.display.mdAndUp"
         id="searchHomeGrapic"
         cols="12"
         md="4"
@@ -47,7 +47,7 @@
         md="3"
         :class="{
           'pl-0 pr-0': true,
-          'pl-4': $vuetify.breakpoint.mdAndUp,
+          'pl-4': $vuetify.display.mdAndUp,
         }"
       >
         <p class="text-h5 font-weight-bold">Current Statistics</p>
@@ -79,12 +79,12 @@
             <p></p>
           </div>
         </div>
-        <v-skeleton-loader
+        <!-- <v-skeleton-loader
           v-else
           v-for="i in [1, 2, 3]"
           :key="i"
           type="table-cell"
-        ></v-skeleton-loader>
+        ></v-skeleton-loader> -->
       </v-col>
     </v-row>
     <ShowcaseLinks v-if="showcaseLinks.length" class="ml-n2 mr-n2" />
@@ -92,15 +92,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
+import { defineComponent } from "vue";
 
 interface Data {
   descriptions: string[];
 }
 
-@Component({
+export default defineComponent({
   components: {
     ShowcaseLinks,
   },
@@ -115,10 +115,6 @@ interface Data {
   methods: {
     ...mapActions(["fetchStatistics"]),
   },
-})
-export default class SearchHome extends Vue {
-  fetchStatistics!: () => Promise<void>;
-
   data(): Data {
     return {
       descriptions: [
@@ -129,12 +125,11 @@ export default class SearchHome extends Vue {
         "Some addresses",
       ],
     };
-  }
-
+  },
   created(): void {
     this.fetchStatistics();
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>

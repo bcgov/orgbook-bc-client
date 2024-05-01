@@ -1,51 +1,49 @@
 <template>
   <v-expansion-panels flat>
     <v-expansion-panel>
-      <v-expansion-panel-header
+      <v-expansion-panel-title
         class="pa-0 d-flex justify-end search-help-button"
         hide-actions
       >
-        <template v-slot:default="{ open }">
+        <template v-slot:default="{ expanded }">
           <span class="flex-grow-1 search-help-text"> How to search? </span>
-          <v-icon class="flex-grow-0" color="white" v-if="open">{{
+          <v-icon class="flex-grow-0" color="white" v-if="expanded">{{
             mdiClose
           }}</v-icon>
         </template>
-      </v-expansion-panel-header>
-      <v-expansion-panel-content class="ml-n6 search-help-content">
+      </v-expansion-panel-title>
+      <v-expansion-panel-text class="ml-n6 search-help-content">
         <slot name="content"></slot>
         <SearchHelpPopup :light="true">
           <template #title> Not finding what you're looking for </template>
         </SearchHelpPopup>
-      </v-expansion-panel-content>
+      </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchHelpPopup from "./SearchHelpPopup.vue";
+import { defineComponent } from "vue";
 
 interface Data {
-  open: boolean;
+  expanded: boolean;
 }
 
-@Component({
+export default defineComponent({
   components: {
     SearchHelpPopup,
   },
   computed: {
     ...mapGetters(["mdiClose"]),
   },
-})
-export default class SearchHelp extends Vue {
   data(): Data {
     return {
-      open: true,
+      expanded: true,
     };
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>

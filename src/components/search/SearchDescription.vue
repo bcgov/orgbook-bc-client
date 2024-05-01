@@ -7,7 +7,7 @@
         v-for="description of descriptions"
         :key="description"
       >
-        <v-icon dense color="white">{{ mdiCheckBold }}</v-icon>
+        <v-icon size="small" color="white">{{ mdiCheckBold }}</v-icon>
         <span class="pl-2 text-body-2"> {{ description }}</span>
       </li>
     </ul>
@@ -15,19 +15,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
 interface Data {
   descriptions: string[];
 }
 
-@Component({
+export default defineComponent({
   computed: {
     ...mapGetters(["mdiCheckBold"]),
   },
-})
-export default class SearchDescription extends Vue {
   data(): Data {
     return {
       descriptions: [
@@ -36,8 +34,8 @@ export default class SearchDescription extends Vue {
         "BC Registries ID",
       ],
     };
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>

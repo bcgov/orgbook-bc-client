@@ -4,8 +4,8 @@
       <v-chip
         v-for="field of activeSearchFilters"
         :key="field.key"
-        outlined
-        close
+        variant="outlined"
+        closable
         :close-icon="mdiClose"
         class="ma-1"
         @click:close="toggleSearchFilter(field)"
@@ -20,25 +20,20 @@
 <script lang="ts">
 import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { isFilterActive } from "@/utils/search";
-import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
-@Component({
+export default defineComponent({
   computed: {
     ...mapGetters(["extendedSearchFilterFields", "searchFilters", "mdiClose"]),
+    activeSearchFilters(): ISearchFilter[] {
+      return this.extendedSearchFilterFields.filter((field: ISearchFilter) =>
+        isFilterActive(this.searchFilters, field)
+      );
+    },
   },
   methods: {
     ...mapActions(["toggleSearchFilter"]),
   },
-})
-export default class SearchFilterChips extends Vue {
-  extendedSearchFilterFields!: ISearchFilter[];
-  searchFilters!: ISearchFilter[];
-
-  get activeSearchFilters(): ISearchFilter[] {
-    return this.extendedSearchFilterFields.filter((field) =>
-      isFilterActive(this.searchFilters, field)
-    );
-  }
-}
+});
 </script>

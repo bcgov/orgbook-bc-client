@@ -1,32 +1,32 @@
 <template>
   <div class="search-facet-panels">
-    <v-expansion-panels multiple flat accordion v-model="panels">
+    <v-expansion-panels multiple flat variant="accordion" v-model="panels">
       <SearchFilterFacetPanel :fields="entityStatusFilters">
-        <template v-slot:title> Organization Status </template>
+        <template v-slot:title>Organization Status</template>
       </SearchFilterFacetPanel>
       <SearchFilterFacetPanel
         :fields="topEntityTypeFilters"
         :more="moreEntityTypeFilters"
       >
-        <template v-slot:title> Organization Type </template>
+        <template v-slot:title>Organization Type</template>
       </SearchFilterFacetPanel>
       <SearchFilterFacetPanel :fields="credentialTypeFilters">
-        <template v-slot:title> Credential </template>
+        <template v-slot:title>Credential</template>
       </SearchFilterFacetPanel>
     </v-expansion-panels>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterFacetPanel from "@/components/search/filter/SearchFilterFacetPanel.vue";
+import { defineComponent } from "vue";
 
 interface Data {
   panels: number[];
 }
 
-@Component({
+export default defineComponent({
   components: {
     SearchFilterFacetPanel,
   },
@@ -38,14 +38,12 @@ interface Data {
       "credentialTypeFilters",
     ]),
   },
-})
-export default class SearchFilterFacetPanels extends Vue {
   data(): Data {
     return {
       panels: [0, 1, 2],
     };
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>

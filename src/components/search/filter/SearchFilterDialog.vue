@@ -2,10 +2,10 @@
   <v-dialog
     v-model="dialog"
     fullscreen
-    hide-overlay
+    :scrim="false"
     transition="dialog-bottom-transition"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template v-slot:activator="{ props }">
       <div
         @click="dialog = true"
         :class="{ disabled: loading || !pagedSearchTopics.total }"
@@ -13,9 +13,8 @@
       >
         <v-icon
           class="icon-dense"
-          dense
-          v-bind="attrs"
-          v-on="on"
+          size="small"
+          v-bind="props"
           :color="loading || !pagedSearchTopics.total ? 'gray' : 'black'"
           >{{ mdiFilterOutline }}</v-icon
         >
@@ -44,15 +43,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import SearchFilterFacetPanels from "./SearchFilterFacetPanels.vue";
+import { defineComponent } from "vue";
 
 interface Data {
   dialog: boolean;
 }
 
-@Component({
+export default defineComponent({
   components: {
     SearchFilterFacetPanels,
   },
@@ -64,14 +63,12 @@ interface Data {
       "mdiFilterOutline",
     ]),
   },
-})
-export default class SearchFilterDialog extends Vue {
   data(): Data {
     return {
       dialog: false,
     };
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>
