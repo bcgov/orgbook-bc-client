@@ -2,6 +2,7 @@ import { createVuetify } from "vuetify/lib/framework.mjs";
 import "vuetify/styles";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import { mdi, aliases } from "vuetify/iconsets/mdi-svg";
 
 export default createVuetify({
   components,
@@ -9,7 +10,11 @@ export default createVuetify({
   // theme: {
   //   disable: true,
   // },
-  // icons: {
-  //   iconfont: "mdiSvg",
-  // },
+  icons: {
+    defaultSet: "mdiSvg",
+    aliases,
+    sets: {
+      mdiSvg: mdi,
+    },
+  },
 });
