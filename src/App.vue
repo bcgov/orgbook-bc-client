@@ -10,13 +10,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
 import Loading from "@/components/shared/Loading.vue";
 import { mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
-@Component({
+export default defineComponent({
   components: {
     Header,
     Footer,
@@ -25,8 +25,7 @@ import { mapGetters } from "vuex";
   computed: {
     ...mapGetters(["loading"]),
   },
-})
-export default class App extends Vue {}
+});
 </script>
 
 <style lang="scss">

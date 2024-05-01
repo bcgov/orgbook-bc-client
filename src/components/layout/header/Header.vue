@@ -1,12 +1,13 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div>
-    <v-app-bar app flat class="app-bar">
-      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
+    <v-app-bar flat class="app-bar">
+      <v-container :fluid="$vuetify.display.smAndDown" class="pa-0">
         <v-row class="d-flex align-center">
           <v-col
             :class="{
-              'pl-1': $vuetify.breakpoint.smAndDown,
-              'pl-5': $vuetify.breakpoint.mdAndUp,
+              'pl-1': $vuetify.display.smAndDown,
+              'pl-5': $vuetify.display.mdAndUp,
               'd-flex align-center': true,
             }"
           >
@@ -14,7 +15,7 @@
               <router-link to="/search">
                 <img
                   class="logo"
-                  v-if="$vuetify.breakpoint.smAndDown"
+                  v-if="$vuetify.display.smAndDown"
                   src="@/assets/img/logo.svg"
                   alt="British Columbia"
                   width="48px"
@@ -22,7 +23,7 @@
                 />
                 <img
                   class="logo"
-                  v-if="$vuetify.breakpoint.mdAndUp"
+                  v-if="$vuetify.display.mdAndUp"
                   src="@/assets/img/logo-banner.svg"
                   alt="British Columbia"
                   width="172px"
@@ -32,8 +33,8 @@
               <span
                 :class="{
                   'font-weight-black d-inline-flex align-middle': true,
-                  'pl-4': $vuetify.breakpoint.smAndDown,
-                  'pl-8': $vuetify.breakpoint.mdAndUp,
+                  'pl-4': $vuetify.display.smAndDown,
+                  'pl-8': $vuetify.display.mdAndUp,
                 }"
               >
                 <span>OrgBook BC</span>
@@ -41,12 +42,11 @@
             </v-toolbar-title>
           </v-col>
           <v-col class="pa-0 d-flex justify-end align-center">
-            <div v-if="$vuetify.breakpoint.mdAndUp">
+            <div v-if="$vuetify.display.mdAndUp">
               <v-btn
                 v-for="link in links"
                 :key="link.path"
-                plain
-                text
+                variant="plain"
                 color="white"
                 :to="{ name: link.name }"
                 :ripple="false"
@@ -55,7 +55,7 @@
               >
             </div>
             <v-app-bar-nav-icon
-              v-if="$vuetify.breakpoint.smAndDown"
+              v-if="$vuetify.display.smAndDown"
               class="mr-n2 app-bar-nav-icon"
               @click="drawer = true"
               color="white"
@@ -65,7 +65,7 @@
         </v-row>
       </v-container>
     </v-app-bar>
-    <v-navigation-drawer app v-model="drawer" temporary>
+    <v-navigation-drawer v-model="drawer" temporary>
       <v-list nav>
         <v-list-item v-for="link in links" :key="link.path" :to="link.path">{{
           link.label
@@ -76,24 +76,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { INavLink } from "@/interfaces/nav-link.interface";
 import { headerLinks } from "@/data/nav";
+import { defineComponent } from "vue";
 
 interface Data {
   drawer: boolean;
   links: INavLink[];
 }
 
-@Component
-export default class Header extends Vue {
+export default defineComponent({
   data(): Data {
     return {
       drawer: false,
       links: headerLinks || [],
     };
-  }
-}
+  },
+});
 </script>
 
 <style lang="scss" scoped>
