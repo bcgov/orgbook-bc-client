@@ -30,10 +30,8 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    sourcemap: true,
-  },
   server: {
+    sourcemap: true,
     proxy: {
       "/api": {
         target: "https://orgbook.gov.bc.ca",
