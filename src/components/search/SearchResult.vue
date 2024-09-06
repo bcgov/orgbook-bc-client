@@ -21,7 +21,7 @@
         }"
       >
         <template v-if="pagedSearchTopics">
-          <SearchFilter class="flex-grow-0" />
+          <SearchFilterResultCount class="flex-grow-0" />
         </template>
         <template v-if="activeSearchFilters.length">
           <SearchFilterChips class="flex-grow-0" />
@@ -39,7 +39,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import SearchTopicPage from "./page/SearchTopicPage.vue";
 import SearchTopicPageNavigation from "./page/SearchTopicPageNavigation.vue";
-import SearchFilter from "./filter/SearchFilter.vue";
+import SearchFilterResultCount from "./filter/SearchFilterResultCount.vue";
 import SearchFilterChips from "./filter/SearchFilterChips.vue";
 import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
 import { mapGetters } from "vuex";
@@ -50,7 +50,7 @@ import { isFilterActive } from "@/utils/search";
   components: {
     SearchTopicPage,
     SearchTopicPageNavigation,
-    SearchFilter,
+    SearchFilterResultCount,
     SearchFilterChips,
     SearchFilterFacetPanels,
   },

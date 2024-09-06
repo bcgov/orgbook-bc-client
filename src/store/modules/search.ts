@@ -115,20 +115,19 @@ const getters = {
       keySelector: (filter?: ISearchFilter) => filter?.text || "",
       valueSelector: (filter?: ISearchFilter) => filter?.value || "",
       labelFormatter: (filter?: ISearchFilter) => {
-        const credDesc = store.getters.credentialTypes.find(
+        const credentialType = store.getters.credentialTypes.find(
           (type: ICredentialType) => type.id.toString() === filter?.value
         );
-        let retVal = credDesc.description || "";
-        // TODO: remove unwrapTranslations after backend update
-        if (unwrapTranslations(credDesc.schema_label)?.[i18n.locale]?.label) {
-          retVal = (
-            unwrapTranslations(credDesc.schema_label) as Record<
-              string,
-              { label: string; description: string }
-            >
-          )[i18n.locale].label;
+        if (credentialType?.format === "vc_di") {
+          // TODO: Eventually, this should be a translation from OCA
+          return credentialType?.schema?.name;
         }
-        return retVal;
+        return (
+          unwrapTranslations(credentialType.schema_label)?.[i18n.locale]
+            ?.label ??
+          credentialType.description ??
+          ""
+        );
       },
     };
     return (
