@@ -12,7 +12,7 @@ const routes: Array<RouteConfig> = [
   },
 
   {
-    path: "/entity/:sourceId",
+    path: "/entity/:sourceId/type/:type",
     name: "Entity",
     component: () =>
       import(/* webpackChunkName: "entity" */ "@/views/Entity.vue"),

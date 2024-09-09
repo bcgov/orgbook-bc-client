@@ -4,7 +4,7 @@
     rounded="sm"
     class="card mb-5"
     :ripple="false"
-    @click="$router.push({ path: `/entity/${sourceId}` })"
+    @click="$router.push({ path: `/entity/${sourceId}/type/${topicType}` })"
   >
     <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
       <v-icon class="ma-1" small color="white">{{ mdiAlertOutline }}</v-icon>
@@ -47,6 +47,10 @@ export default class SearchTopic extends Vue {
 
   get sourceId(): string {
     return this?.topic?.source_id || "";
+  }
+
+  get topicType(): string {
+    return this?.topic?.credential_type?.schema?.name || "";
   }
 
   get legalName(): string {

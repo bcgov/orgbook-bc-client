@@ -115,9 +115,10 @@ const getters = {
       keySelector: (filter?: ISearchFilter) => filter?.text || "",
       valueSelector: (filter?: ISearchFilter) => filter?.value || "",
       labelFormatter: (filter?: ISearchFilter) => {
-        const credentialType = store.getters.credentialTypes.find(
-          (type: ICredentialType) => type.id.toString() === filter?.value
-        );
+        const credentialType: ICredentialType =
+          store.getters.credentialTypes.find(
+            (type: ICredentialType) => type.id.toString() === filter?.value
+          );
         if (credentialType?.format === "vc_di") {
           // TODO: Eventually, this should be a translation from OCA
           return credentialType?.schema?.name;

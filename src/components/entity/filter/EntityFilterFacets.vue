@@ -31,7 +31,9 @@
           </v-list-item-action>
           <v-list-item-content
             class="pt-1 pb-1"
-            v-translate="toTranslationFormat(field.value, entityType)"
+            v-translate="
+              field.value ? toTranslationFormat(field.value, entityType) : ''
+            "
           >
           </v-list-item-content>
           <v-list-item-action class="d-flex justify-end mt-1 mb-1">
@@ -68,6 +70,7 @@ export default class EntityFilterFacets extends Vue {
   @Prop({ default: "" }) entityType!: string;
   @Prop({ default: () => [] }) filterField!: string;
   @Prop({ default: () => [] }) fields!: IEntityFacetField[];
+
   getEntityFilters!: IEntityFilter;
   toTranslationFormat = toTranslationFormat;
   isEntityFilterActive: (

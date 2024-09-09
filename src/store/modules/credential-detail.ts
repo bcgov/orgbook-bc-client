@@ -50,7 +50,7 @@ const actions = {
       const res = await credVerificationService.credentialVerify(id);
       commit("setPresId", res.data.presentation_exchange_id);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   },
   async fetchPresEx(
@@ -64,7 +64,7 @@ const actions = {
       );
       commit("setPresEX", res.data);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   },
 };
