@@ -5,31 +5,30 @@ import {
   ICredentialTypeByIssuer,
 } from "@/interfaces/api/v2/credential-type.interface";
 import CredentialType from "@/services/api/v4/credential-type.service";
-import SchemaType from "@/services/api/v4/schema.service";
+import Schema from "@/services/api/v4/schema.service";
 
 const credentialTypeSerivice = new CredentialType();
-const schemaTypeService = new SchemaType();
+const schemaService = new Schema();
 
 export interface State {
-  schemaTypes: Record<string, ICredentialType[]>;
-  types: ICredentialType[];
+  schemas: Record<string, ICredentialType[]>;
+  credentialTypes: ICredentialType[];
   selected: ICredentialType | null;
 }
 
 const state: State = {
-  schemaTypes: {},
-  types: [],
+  schemas: {},
+  credentialTypes: [],
   selected: null,
 };
 
 const getters = {
   credentialType: (state: State): ICredentialType | null => state.selected,
-  credentialTypes: (state: State): ICredentialType[] => state.types,
-  schemaTypes: (state: State): Record<string, ICredentialType[]> =>
-    state.schemaTypes,
+  credentialTypes: (state: State): ICredentialType[] => state.credentialTypes,
+  schemas: (state: State): Record<string, ICredentialType[]> => state.schemas,
   credentialTypesByIssuer: (state: State): ICredentialTypeByIssuer[] =>
     Object.values(
-      state.types.reduce(
+      state.credentialTypes.reduce(
         (
           acc: Record<number | string, ICredentialTypeByIssuer>,
           type: ICredentialType
@@ -56,31 +55,31 @@ const actions = {
   ): Promise<void> {
     try {
       const res = await credentialTypeSerivice.getCredentialTypes(paging);
-      commit("setTypes", res.data);
+      commit("setCredentialTypes", res.data);
     } catch (e) {
       console.error(e);
-      commit("setTypes", []);
+      commit("setCredentialTypes", []);
     }
   },
-  async fetchSchemaTypes({
+  async fetchSchemas({
     commit,
   }: ActionContext<State, RootState>): Promise<void> {
     try {
-      const res = await schemaTypeService.getSchemaTypes();
-      commit("setSchemaTypes", res.data);
+      const res = await schemaService.getSchemas();
+      commit("setSchemas", res.data);
     } catch (e) {
       console.error(e);
-      commit("setSchemaTypes", {});
+      commit("setSchemas", {});
     }
   },
 };
 
 const mutations = {
-  setSchemaTypes(state: State, types: Record<string, ICredentialType[]>): void {
-    state.schemaTypes = { ...types };
+  setSchemas(state: State, schemas: Record<string, ICredentialType[]>): void {
+    state.schemas = { ...schemas };
   },
-  setTypes(state: State, types: ICredentialType[]): void {
-    state.types = [...types];
+  setCredentialTypes(state: State, credentialTypes: ICredentialType[]): void {
+    state.credentialTypes = [...credentialTypes];
   },
 };
 

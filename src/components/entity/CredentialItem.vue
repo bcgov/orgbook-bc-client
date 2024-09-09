@@ -69,7 +69,7 @@
           <router-link
             :to="{
               name: 'Credential',
-              params: { sourceId, credentialId: getCredId },
+              params: { sourceId, type: topicType, credentialId: getCredId },
             }"
             class="vertical-align-middle"
             >Credential<span v-if="!getCredRevoked"> verified</span
@@ -152,6 +152,11 @@ export default class CredentialItem extends Vue {
   get sourceId(): string {
     const { sourceId } = this.$route.params;
     return sourceId;
+  }
+
+  get topicType(): string {
+    const { type } = this.$route.params;
+    return type;
   }
 
   get topicName(): string | undefined {

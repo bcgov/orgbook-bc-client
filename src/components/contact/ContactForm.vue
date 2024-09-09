@@ -184,17 +184,14 @@ export default class ContactForm extends Vue {
   }
 
   get formattedCredentialTypes(): Array<{ text: string; value: number }> {
-    return this.credentialTypes.map((type) => ({
+    return this.credentialTypes.map((credentialType) => ({
       // TODO: remove unwrap translations functions after backend update
-      text: unwrapTranslations(type.schema_label)?.[this.$i18n.locale]?.label
-        ? (
-            unwrapTranslations(type.schema_label) as Record<
-              string,
-              { label: string; description: string }
-            >
-          )[this.$i18n.locale].label
-        : type.description,
-      value: type.id,
+      text:
+        unwrapTranslations(credentialType.schema_label)?.[this.$i18n.locale]
+          ?.label ??
+        credentialType.description ??
+        "",
+      value: credentialType.id,
     }));
   }
 
