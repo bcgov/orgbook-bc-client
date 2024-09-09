@@ -13,9 +13,11 @@
       >
     </div>
     <v-card-text :class="{ 'pt-2': entityStatus === 'HIS' }">
-      <router-link class="font-weight-bold" :to="'/entity/' + sourceId">{{
-        legalName
-      }}</router-link>
+      <router-link
+        class="font-weight-bold"
+        :to="`/entity/${sourceId}/type/${topicType}`"
+        >{{ legalName }}</router-link
+      >
       <div>{{ $t(`entity_type.${entityType}`) }}</div>
       <div v-if="craBusinessNumber" class="text--primary">
         <span>Business number</span>
@@ -44,6 +46,10 @@ import { mapGetters } from "vuex";
 })
 export default class SearchTopic extends Vue {
   @Prop({ default: null }) topic!: ISearchTopic;
+
+  // get routerLink(): string {
+  //   return `/entity/${this.sourceId}/type/${this.topicType}`;
+  // }
 
   get sourceId(): string {
     return this?.topic?.source_id || "";
