@@ -51,7 +51,7 @@
     rewrite @spa_router {http.matchers.file.relative}
 
 
-    # Proxy GET requests to Aries VCR VC Service
+    # Proxy GET requests to VCR VC Service
     @get_entities {
         method GET
         path /api/entities/*
@@ -60,13 +60,13 @@
     route @get_entities {
         {$API_RATE_LIMIT}
         uri strip_prefix /api/entities
-        reverse_proxy {$ARIES_VCR_VC_SERVICE_HOST}:{$ARIES_VCR_VC_SERVICE_PORT} {
+        reverse_proxy {$VC_SERVICE_HOST}:{$VC_SERVICE_PORT} {
             header_up Host {upstream_hostport}
             header_up X-Forwarded-Host {host}
         }
     }
 
-    # Proxy POST requests to Aries VCR VC Service
+    # Proxy POST requests to VCR VC Service
     @post_entities {
         method POST
         path /api/entities/*
@@ -75,7 +75,7 @@
     route @post_entities {
         {$API_RATE_LIMIT}
         uri strip_prefix /api/entities
-        reverse_proxy {$ARIES_VCR_VC_SERVICE_HOST}:{$ARIES_VCR_VC_SERVICE_PORT} {
+        reverse_proxy {$VC_SERVICE_HOST}:{$VC_SERVICE_PORT} {
             header_up Host {upstream_hostport}
             header_up X-Forwarded-Host {host}
         }
