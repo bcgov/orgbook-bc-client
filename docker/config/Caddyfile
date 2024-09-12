@@ -51,28 +51,8 @@
     rewrite @spa_router {http.matchers.file.relative}
 
 
-    # Proxy GET requests to VCR VC Service
-    @get_entities {
-        method GET
-        path /api/entities/*
-    }
-
-    route @get_entities {
-        {$API_RATE_LIMIT}
-        uri strip_prefix /api/entities
-        reverse_proxy {$VC_SERVICE_HOST}:{$VC_SERVICE_PORT} {
-            header_up Host {upstream_hostport}
-            header_up X-Forwarded-Host {host}
-        }
-    }
-
-    # Proxy POST requests to VCR VC Service
-    @post_entities {
-        method POST
-        path /api/entities/*
-    }
-
-    route @post_entities {
+    # Proxy requests to VCR VC Service
+    route /api/entities/* {
         {$API_RATE_LIMIT}
         uri strip_prefix /api/entities
         reverse_proxy {$VC_SERVICE_HOST}:{$VC_SERVICE_PORT} {
