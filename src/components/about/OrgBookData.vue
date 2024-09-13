@@ -61,8 +61,11 @@ import { mapGetters } from "vuex";
 })
 export default class OrgBookData extends Vue {
   formattedDescription(type: ICredentialType): string {
+    if (type?.format === "vc_di") {
+      // TODO: Eventually, this should be a translation from OCA
+      return type?.schema?.name;
+    }
     return (
-      // TODO: change to type.schema_label?.[i18n.locale]?.description after update to backend
       unwrapTranslations(type.schema_label)?.[i18n.locale]?.description ||
       type?.description ||
       ""

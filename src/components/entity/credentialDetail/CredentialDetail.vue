@@ -243,19 +243,16 @@ export default class CredentialDetail extends Vue {
     if (!this.getSelectedCredential) {
       return undefined;
     }
-    let credDesc = this.getSelectedCredential.credential_type.description;
-    if (
-      unwrapTranslations(
-        this.getSelectedCredential.credential_type.schema_label
-      )?.[i18n.locale]?.label
-    ) {
-      credDesc = (
-        unwrapTranslations(
-          this.getSelectedCredential.credential_type.schema_label
-        ) as Record<string, { label: string; description: string }>
-      )[i18n.locale].label;
+    const credentialType = this.getSelectedCredential.credential_type;
+    if (credentialType?.format === "vc_di") {
+      // TODO: Eventually, this should be a translation from OCA
+      return credentialType?.schema?.name;
     }
-    return credDesc;
+    return (
+      unwrapTranslations(credentialType.schema_label)?.[i18n.locale]?.label ??
+      credentialType.description ??
+      ""
+    );
   }
 
   get credRevoked(): boolean | undefined {
@@ -323,7 +320,7 @@ export default class CredentialDetail extends Vue {
   // FIXME: Need to fix timing issue in the API first
   async created(): Promise<void> {
     this.setLoading(true);
-    const { sourceId, credentialId } = this.$route.params;
+    const { sourceId, type, credentialId } = this.$route.params;
     this.sourceId = sourceId;
     if (sourceId && credentialId) {
       await Promise.all([
@@ -331,15 +328,19 @@ export default class CredentialDetail extends Vue {
         this.fetchPresId(credentialId),
         this.fetchFormattedIdentifiedTopic({
           sourceId,
-          type: "registration.registries.ca",
+          type,
         }),
       ]);
-      //need a small timeout because the credential isn't always verified after fetchPresId returns
+
+      // DEPRECATED: need a small timeout because the credential isn't always verified after fetchPresId returns
       await new Promise((r) => setTimeout(r, 1000));
-      await this.fetchPresEx({
-        id: credentialId,
-        presId: this.getPresentationId,
-      });
+
+      if (this.getPresentationId) {
+        await this.fetchPresEx({
+          id: credentialId,
+          presId: this.getPresentationId,
+        });
+      }
     } else {
       router.push("/search");
     }

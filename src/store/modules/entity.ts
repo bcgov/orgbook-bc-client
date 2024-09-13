@@ -84,8 +84,7 @@ const actions = {
   setScrollY({ commit }: ActionContext<State, RootState>, top: number): void {
     commit("setScrollY", top);
   },
-
-  //entity filter actions
+  //issuer filters
   setIssuers(
     { commit }: ActionContext<State, RootState>,
     creds: Array<ICredentialDisplayType>
@@ -108,6 +107,7 @@ const actions = {
     });
     commit("setIssuers", filterFields);
   },
+  // credential type filters
   setCredentialType(
     { commit }: ActionContext<State, RootState>,
     creds: Array<ICredentialDisplayType>
@@ -122,6 +122,7 @@ const actions = {
       if (idx >= 0) {
         (filterFields[idx].count as number) += 1;
       } else {
+        // The text and value fields are backwards here
         filterFields.push({
           text: cred.credential_type,
           value: credDesc,
@@ -131,7 +132,7 @@ const actions = {
     });
     commit("setCredTypes", filterFields);
   },
-
+  // registration type filters
   setRegistrationType(
     { commit }: ActionContext<State, RootState>,
     creds: Array<ICredentialDisplayType>

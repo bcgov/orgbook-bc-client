@@ -8,6 +8,7 @@
       class="on-bottom"
     >
       <EntityFilterFacetPanel
+        v-if="getAuthorities?.length"
         filterField="authorities"
         :fields="getAuthorities"
       >
@@ -31,6 +32,7 @@
         </template>
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
+        v-if="getCredentialTypes?.length"
         filterField="credential_type"
         :fields="getCredentialTypes"
       >
@@ -55,6 +57,7 @@
         </template>
       </EntityFilterFacetPanel>
       <EntityFilterFacetPanel
+        v-if="getRegistrationTypes?.length"
         filterField="registration_type"
         :entityType="entityType"
         :fields="getRegistrationTypes"
@@ -234,14 +237,17 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
-import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
+
 import {
   IEntityFacetField,
   IEntityFilter,
 } from "@/interfaces/entity-filter.interface";
+
 import { isEntityFilterActive } from "@/utils/entity";
+
 import Dialog from "@/components/shared/Dialog.vue";
+import CustomFilterFacetPanel from "@/components/entity/filter/CustomFilterFacetPanel.vue";
+import EntityFilterFacetPanel from "@/components/entity/filter/EntityFilterFacetPanel.vue";
 
 interface Data {
   menuFrom: boolean;

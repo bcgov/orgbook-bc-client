@@ -19,6 +19,7 @@ export interface ICredentialType extends IApiResource {
     | ISchemaLabel
     | Record<string, { label: string; description: string }>;
   claim_labels?: Record<string, Record<string, string>>;
+  format?: string;
 }
 
 export interface ICredentialTypeByIssuer {

@@ -439,13 +439,22 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
+import moment from "moment";
+
 import {
   ICredential,
   ICredentialDisplayType,
 } from "@/interfaces/api/v4/credential.interface";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
-import { IFormattedTopic, ITopic } from "@/interfaces/api/v2/topic.interface";
+import {
+  IFormattedTopic,
+  ITopic,
+  ITopicName,
+} from "@/interfaces/api/v2/topic.interface";
 import { IRelationship } from "@/interfaces/api/v2/relationship.interface";
+import { IEntityFilter } from "@/interfaces/entity-filter.interface";
+import { IEntityDesc } from "@/interfaces/entity-desc";
+
 import { selectFirstAttrItem } from "@/utils/attribute";
 import {
   getRelationshipName,
@@ -454,18 +463,16 @@ import {
   getCredentialLabel,
   toTranslationFormat,
 } from "@/utils/entity";
+
 import BackTo from "@/components/shared/BackTo.vue";
+import Dialog from "@/components/shared/Dialog.vue";
 import CredentialItem from "@/components/entity/CredentialItem.vue";
 import EntityCard from "@/components/entity/EntityCard.vue";
 import EntityHeader from "@/components/entity/EntityHeader.vue";
 import EntityFilterChips from "@/components/entity/filter/EntityFilterChips.vue";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 import EntityFilterDialog from "@/components/entity/filter/EntityFilterDialog.vue";
-import moment from "moment";
-import { IEntityFilter } from "@/interfaces/entity-filter.interface";
-import { ITopicName } from "@/interfaces/api/v2/topic.interface";
-import Dialog from "@/components/shared/Dialog.vue";
-import { IEntityDesc } from "@/interfaces/entity-desc";
+
 import { translate } from "@/i18n/translate";
 
 interface Data {
@@ -961,12 +968,12 @@ export default class EntityResult extends Vue {
 
   async reload(): Promise<void> {
     this.setLoading(true);
-    const { sourceId } = this.$route.params;
+    const { sourceId, type } = this.$route.params;
 
-    if (sourceId) {
+    if (sourceId && type) {
       await this.fetchFormattedIdentifiedTopic({
         sourceId,
-        type: "registration.registries.ca",
+        type,
       });
       if (!this.selectedTopic) {
         //sourceid is invalid, go back to search

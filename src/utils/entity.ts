@@ -84,6 +84,8 @@ export function unwrapTranslations(
     | undefined;
 }
 
+// TODO: This needs to be refactored.
+// There's too much going on and it's confusing.
 export function credOrRelationshipToDisplay(
   item: ICredential | IRelationship,
   credSet?: ICredential[]
@@ -106,7 +108,12 @@ export function credOrRelationshipToDisplay(
     display.authority = credItem.credential_type.issuer.name;
     display.authorityLink = credItem.credential_type.issuer.url;
     display.type = credItem.names[0]?.type;
-    display.credential_type = credItem.credential_type.description;
+
+    if (credItem.credential_type.format === "vc_di") {
+      display.credential_type = credItem.credential_type.schema.name;
+    } else {
+      display.credential_type = credItem.credential_type.description;
+    }
     display.date_effective = credItem.effective_date;
     const registration_reason = selectFirstAttrItem(
       { key: "type", value: "reason_description" },
@@ -145,7 +152,11 @@ export function credOrRelationshipToDisplay(
       }
     }
 
-    display.credential_type = relItem.credential.credential_type.description;
+    if (relItem.credential.credential_type.format === "vc_di") {
+      display.credential_type = relItem.credential.credential_type.schema.name;
+    } else {
+      display.credential_type = relItem.credential.credential_type.description;
+    }
     //display.type = relItem.related_topic.names[0]?.type
     display.type = "entity_name";
     display.date_effective = relItem.credential.effective_date;

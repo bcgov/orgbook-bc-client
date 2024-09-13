@@ -8,6 +8,7 @@
       <span v-t="jurisdiction"></span>
     </div>
     <div
+      v-if="state === 'entity_status.ACT' || state === 'entity_status.HIS'"
       :class="{
         'pt-1 pb-1 pl-2 pr-2 d-inline-flex text-uppercase text-caption font-weight-bold': true,
         'good-standing': state === 'entity_status.ACT',

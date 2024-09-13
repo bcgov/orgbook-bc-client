@@ -60,10 +60,14 @@ configureEnvironment() {
   # Defaults
   # orgbook-web
   export PUBLIC_WEB_HOST_NAME=${PUBLIC_WEB_HOST_NAME:-http://localhost}
-  export PUBLIC_WEB_HOST_PORT=${PUBLIC_WEB_HOST_PORT:-8082}
+  export PUBLIC_WEB_HOST_PORT=${PUBLIC_WEB_HOST_PORT:-8081}
   export PUBLIC_WEB_HOST_TLS=${PUBLIC_WEB_HOST_TLS:-off}
-  export PUBLIC_API_HOST=${PUBLIC_API_HOST:-https://orgbook.gov.bc.ca}
-  export PUBLIC_API_PORT=${PUBLIC_API_PORT:-443}
+  # vcr-api
+  export PUBLIC_API_HOST=${PUBLIC_API_HOST:-http://vcr-api}
+  export PUBLIC_API_PORT=${PUBLIC_API_PORT:-8080}
+  # vcr-vc-service
+  export PUBLIC_VC_SERVICE_HOST=${PUBLIC_VC_SERVICE_HOST:-http://vcr-vc-service}
+  export PUBLIC_VC_SERVICE_PORT=${PUBLIC_VC_SERVICE_PORT:-8080}
 
   export RATE_LIMIT_ORDERING=${RATE_LIMIT_ORDERING:-'order rate_limit before basicauth'}
   export DEFAULT_RATE_LIMIT=${DEFAULT_RATE_LIMIT:-'rate_limit {remote_host} 50r/s'}
@@ -134,7 +138,7 @@ usage() {
   Usage: $0 [command] [options]
 
   Examples:
-  $0 start PUBLIC_API_HOST=https://orgbook.gov.bc.ca PUBLIC_API_PORT=443
+  $0 start API_HOST=https://orgbook.gov.bc.ca API_PORT=443
     - Connect the local instance of OrgBook BC Client to the production OrgBook's API.
 
   Commands:

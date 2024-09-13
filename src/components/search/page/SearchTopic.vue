@@ -4,7 +4,7 @@
     rounded="sm"
     class="card mb-5"
     :ripple="false"
-    @click="$router.push({ path: `/entity/${sourceId}` })"
+    @click="$router.push({ path: `/entity/${sourceId}/type/${topicType}` })"
   >
     <div class="historical d-inline-flex" v-if="entityStatus === 'HIS'">
       <v-icon class="ma-1" small color="white">{{ mdiAlertOutline }}</v-icon>
@@ -13,9 +13,11 @@
       >
     </div>
     <v-card-text :class="{ 'pt-2': entityStatus === 'HIS' }">
-      <router-link class="font-weight-bold" :to="'/entity/' + sourceId">{{
-        legalName
-      }}</router-link>
+      <router-link
+        class="font-weight-bold"
+        :to="`/entity/${sourceId}/type/${topicType}`"
+        >{{ legalName }}</router-link
+      >
       <div>{{ $t(`entity_type.${entityType}`) }}</div>
       <div v-if="craBusinessNumber" class="text--primary">
         <span>Business number</span>
@@ -45,8 +47,16 @@ import { mapGetters } from "vuex";
 export default class SearchTopic extends Vue {
   @Prop({ default: null }) topic!: ISearchTopic;
 
+  // get routerLink(): string {
+  //   return `/entity/${this.sourceId}/type/${this.topicType}`;
+  // }
+
   get sourceId(): string {
     return this?.topic?.source_id || "";
+  }
+
+  get topicType(): string {
+    return this?.topic?.credential_type?.schema?.name || "";
   }
 
   get legalName(): string {

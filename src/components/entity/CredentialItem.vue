@@ -69,7 +69,7 @@
           <router-link
             :to="{
               name: 'Credential',
-              params: { sourceId, credentialId: getCredId },
+              params: { sourceId, type: topicType, credentialId: getCredId },
             }"
             class="vertical-align-middle"
             >Credential<span v-if="!getCredRevoked"> verified</span
@@ -154,6 +154,11 @@ export default class CredentialItem extends Vue {
     return sourceId;
   }
 
+  get topicType(): string {
+    const { type } = this.$route.params;
+    return type;
+  }
+
   get topicName(): string | undefined {
     if (!this.cred) {
       return undefined;
@@ -167,21 +172,17 @@ export default class CredentialItem extends Vue {
 
   getClaimLabel(
     id: number,
-    claim_label: string | undefined
+    claimLabel: string | undefined
   ): string | undefined {
-    const credType = selectFirstAttrItem(
+    const credentialType = selectFirstAttrItem(
       { key: "id", value: id },
       this.credentialTypes
     );
-    if (
-      credType !== undefined &&
-      claim_label !== undefined &&
-      credType.claim_labels !== undefined &&
-      credType.claim_labels[claim_label]
-    ) {
-      return credType.claim_labels[claim_label][i18n.locale];
-    } else {
-      return undefined;
+    // TODO: Eventually this should be a translation from OCA
+    if (credentialType?.format === "vc_di") {
+      return claimLabel;
+    } else if (credentialType && claimLabel) {
+      return credentialType?.claim_labels?.[claimLabel]?.[i18n.locale];
     }
   }
 

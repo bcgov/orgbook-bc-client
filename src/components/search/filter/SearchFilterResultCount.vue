@@ -35,5 +35,5 @@ import SearchHelpPopup from "@/components/search/SearchHelpPopup.vue";
     ...mapGetters(["searchQuery", "pagedSearchTopics"]),
   },
 })
-export default class SearchFilter extends Vue {}
+export default class SearchFilterResultCount extends Vue {}
 </script>
