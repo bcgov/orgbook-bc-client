@@ -52,9 +52,9 @@
 
 
     # Proxy requests to VCR VC Service
-    route /api/entities/* {
+    route /api/vc/* {
         {$API_RATE_LIMIT}
-        uri strip_prefix /api/entities
+        uri strip_prefix /api/vc
         reverse_proxy {$VC_SERVICE_HOST}:{$VC_SERVICE_PORT} {
             header_up Host {upstream_hostport}
             header_up X-Forwarded-Host {host}
