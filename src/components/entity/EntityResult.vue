@@ -389,7 +389,7 @@
                   >
                     <template #expansionPanels>
                       <CredentialItem
-                        :cred="cred"
+                        :credential="cred"
                         :entityType="entityJurisdiction"
                         :timeline="true"
                       >

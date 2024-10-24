@@ -137,6 +137,7 @@ export function credOrRelationshipToDisplay(
     display.credential_title = credItem.credential_type.credential_title;
     display.attributes = credItem.attributes;
     display.credential_type_id = credItem.credential_type.id;
+    display.raw_data = credItem.raw_data;
   } else {
     const relItem = item as IRelationship;
 
