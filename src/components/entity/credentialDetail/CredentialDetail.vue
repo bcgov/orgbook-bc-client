@@ -1,11 +1,11 @@
 <template>
   <div v-if="!loading">
-    <BackTo :to="`/entity/${entitySourceID}`" :label="entityName" />
-    <div v-if="credRevoked">
+    <BackTo :to="`/entity/${topicSourceId}`" :label="topicName" />
+    <div v-if="revoked">
       <v-alert prominent type="error" class="red">
         <v-row align="center">
           <v-col class="grow">
-            {{ errorWording }}
+            {{ errorMessage }}
           </v-col>
         </v-row>
       </v-alert>
@@ -14,26 +14,25 @@
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5 pb-0">
           <p class="text-h6 font-weight-bold wrap">
-            <v-icon class="validated pb-1" v-if="!credRevoked">{{
+            <v-icon class="validated pb-1" v-if="!revoked">{{
               mdiShieldCheckOutline
             }}</v-icon>
-            <span>{{ `${currCredTypeDesc} credential` }}</span
-            ><span v-if="!credRevoked"> verified</span
-            ><span v-else> claims</span>
+            <span>{{ `${credentialTypeDescription} credential` }}</span
+            ><span v-if="!revoked"> verified</span><span v-else> claims</span>
           </p>
         </v-card-title>
         <v-card-text class="pa-5 pt-0">
-          <p v-if="!credRevoked" class="text-body-1 verification-time">
-            {{ `Cryptographically verified ${currDate}` }}
+          <p v-if="!revoked" class="text-body-1 verification-time">
+            {{ `Cryptographically verified ${now}` }}
           </p>
           <p>
-            Issued: {{ currCredIssuedDate | formatDate }} • Effective:
-            {{ currCredEffDate | formatDate }}
-            <span v-if="credRevokedDate" span>
-              - {{ credRevokedDate | formatDate }}</span
+            Issued: {{ issuedDate | formatDate }} • Effective:
+            {{ effectiveDate | formatDate }}
+            <span v-if="revokedDate" span>
+              - {{ revokedDate | formatDate }}</span
             >
           </p>
-          <p v-if="!credRevoked">
+          <p v-if="!revoked">
             The following verifications were successfully completed:
           </p>
           <p v-else>The following claims were successfully found:</p>
@@ -43,10 +42,10 @@
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined && !credRevoked"
+                  v-if="issuer !== undefined && !revoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
-                <span>Credential issuer is {{ currCredIssuer }}</span>
+                <span>Credential issuer is {{ issuer }}</span>
               </div>
             </li>
             <li>
@@ -54,10 +53,10 @@
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined && !credRevoked"
+                  v-if="issuer !== undefined && !revoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
-                <span>Credential is held by {{ entityName }}</span>
+                <span>Credential is held by {{ topicName }}</span>
               </div>
             </li>
             <li>
@@ -65,21 +64,21 @@
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined && !credRevoked"
+                  v-if="issuer !== undefined && !revoked"
                   >{{ mdiCheckBold }}</v-icon
                 >
                 <span
-                  >Credential is <span v-if="!credRevoked">valid</span
+                  >Credential is <span v-if="!revoked">valid</span
                   ><span v-else>expired</span></span
                 >
               </div>
             </li>
             <li>
-              <div v-if="!credRevoked" class="d-flex pb-1">
+              <div v-if="!revoked" class="d-flex pb-1">
                 <v-icon
                   dense
                   class="icon-dense validated mr-1"
-                  v-if="currCredIssuer !== undefined"
+                  v-if="issuer !== undefined"
                   >{{ mdiCheckBold }}</v-icon
                 >
                 <span>Credential is tamper-free</span>
@@ -89,13 +88,16 @@
         </v-card-text>
       </v-card>
 
-      <v-card rounded="sm" class="card mb-5">
+      <v-card rounded="sm" class="card mb-5" v-if="proofValues || rawData">
         <v-expansion-panels flat>
           <v-expansion-panel>
             <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              <p>Claims <span v-if="!credRevoked"> proven</span></p>
+              <p>Claims <span v-if="!revoked"> proven</span></p>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-5 pt-0">
+              <div v-if="rawData" class="raw">
+                <pre>{{ rawData }}</pre>
+              </div>
               <v-data-table
                 dense
                 :headers="headers"
@@ -103,11 +105,12 @@
                 hide-default-header
                 hide-default-footer
                 disable-pagination
+                v-else
               >
                 <template v-slot:[`item.attr_name`]="{ item }">
                   <div class="d-flex">
                     <v-icon
-                      :class="{ invisible: !item.attr_val || credRevoked }"
+                      :class="{ invisible: !item.attr_val || revoked }"
                       class="validated mr-1"
                       >{{ mdiCheckBold }}</v-icon
                     >
@@ -120,14 +123,18 @@
         </v-expansion-panels>
       </v-card>
 
-      <v-card rounded="sm" class="card mb-5">
+      <v-card
+        rounded="sm"
+        class="card mb-5"
+        v-if="credentialType?.format !== 'vc_di'"
+      >
         <v-expansion-panels flat>
           <v-expansion-panel>
             <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
               <p>Proof Details</p>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-5 pt-0">
-              <div class="proof-raw">
+              <div class="raw">
                 <pre>{{ proofRaw }}</pre>
               </div>
             </v-expansion-panel-content>
@@ -144,15 +151,13 @@ import { mapActions, mapGetters } from "vuex";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
-import {
-  ICredential,
-  ICredentialFormatted,
-} from "@/interfaces/api/v4/credential.interface";
+import { ICredentialFormatted } from "@/interfaces/api/v4/credential.interface";
 import i18n from "@/i18n/index";
 import router from "@/router";
 import moment from "moment";
 import BackTo from "@/components/shared/BackTo.vue";
 import { unwrapTranslations, isExpired } from "@/utils/entity";
+import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 
 interface Data {
   headers: Record<string, string>[];
@@ -215,69 +220,76 @@ export default class CredentialDetail extends Vue {
     };
   }
 
-  get currDate(): string {
+  get selectedCredential(): ICredentialFormatted | undefined {
+    return this.getSelectedCredential;
+  }
+
+  get now(): string {
     return moment(new Date()).format("MMM, DD YYYY [at] hh:mm a");
   }
 
-  get entityName(): string | undefined {
-    return this.selectedTopic.names[0]?.text;
-  }
-
-  get entitySourceID(): string | undefined {
+  get topicSourceId(): string | undefined {
     return this.sourceId;
   }
 
-  get currCredEffDate(): Date | undefined {
-    return this.getSelectedCredential?.effective_date;
+  get topicName(): string | undefined {
+    return this.selectedTopic.names[0]?.text;
   }
 
-  get currCredIssuedDate(): Date | undefined {
-    return this.getSelectedCredential?.create_timestamp;
+  get issuer(): string | undefined {
+    return this.selectedCredential?.credential_type?.issuer?.name;
   }
 
-  get currCredIssuer(): string | undefined {
-    return this.getSelectedCredential?.credential_type?.issuer?.name;
+  get credentialType(): ICredentialType | undefined {
+    return this.selectedCredential?.credential_type;
   }
 
-  get currCredTypeDesc(): string | undefined {
-    if (!this.getSelectedCredential) {
+  get credentialTypeDescription(): string | undefined {
+    if (!this.selectedCredential) {
       return undefined;
     }
-    const credentialType = this.getSelectedCredential.credential_type;
-    if (credentialType?.format === "vc_di") {
+    if (this.credentialType?.format === "vc_di") {
       // TODO: Eventually, this should be a translation from OCA
-      return credentialType?.schema?.name;
+      return this.credentialType?.schema?.name;
     }
     return (
-      unwrapTranslations(credentialType.schema_label)?.[i18n.locale]?.label ??
-      credentialType.description ??
+      unwrapTranslations(this.credentialType?.schema_label)?.[i18n.locale]
+        ?.label ??
+      this.credentialType?.description ??
       ""
     );
   }
-
-  get credRevoked(): boolean | undefined {
+  get revoked(): boolean | undefined {
     return (
-      this.getSelectedCredential?.revoked ||
-      !!this.isExpired(this.getSelectedCredential?.attributes)
+      this.selectedCredential?.revoked ||
+      !!this.isExpired(this.selectedCredential?.attributes)
     );
   }
 
-  get credRevokedDate(): Date | string | undefined {
+  get effectiveDate(): Date | undefined {
+    return this.selectedCredential?.effective_date;
+  }
+
+  get issuedDate(): Date | undefined {
+    return this.selectedCredential?.create_timestamp;
+  }
+
+  get revokedDate(): Date | string | undefined {
     return (
-      this.getSelectedCredential?.revoked_date ||
-      this.isExpired(this.getSelectedCredential?.attributes)
+      this.selectedCredential?.revoked_date ||
+      this.isExpired(this.selectedCredential?.attributes)
     );
   }
 
-  get errorWording(): string {
-    if (!this.credRevoked) {
+  get errorMessage(): string {
+    if (!this.revoked) {
       return "";
     }
     // Credential is expired and has been replaced. It can no longer be verified. (replaced and expired)
     // Credential is expired. It can no longer be verified. (expired)
     // Credential has been replaced. It can no longer be verified. (replaced)
-    const replaced = !!this.getSelectedCredential?.revoked;
-    const expired = !!this.isExpired(this.getSelectedCredential?.attributes);
+    const replaced = !!this.selectedCredential?.revoked;
+    const expired = !!this.isExpired(this.selectedCredential?.attributes);
     let base = "Credential ";
     if (expired) {
       base += "is expired";
@@ -293,6 +305,14 @@ export default class CredentialDetail extends Vue {
     return base + " It can no longer be verified";
   }
 
+  get proofRaw(): string | undefined {
+    const rawVals = this.getPresentationEX;
+    if (rawVals === undefined) {
+      return rawVals;
+    }
+    return JSON.stringify(rawVals?.result, null, 2);
+  }
+
   get proofValues(): Record<string, string>[] | undefined {
     const rawVals =
       this.getPresentationEX?.result?.presentation?.requested_proof
@@ -305,16 +325,11 @@ export default class CredentialDetail extends Vue {
     });
   }
 
-  get proofRaw(): string | undefined {
-    const rawVals = this.getPresentationEX;
-    if (rawVals === undefined) {
-      return rawVals;
+  get rawData(): unknown {
+    if (this.credentialType?.format === "vc_di") {
+      return JSON.stringify(this.selectedCredential?.raw_data || {}, null, 2);
     }
-    return JSON.stringify(rawVals?.result, null, 2);
-  }
-
-  isRelationshipCred(cred: ICredential): boolean {
-    return cred.credential_type.description === "relationship.registries.ca";
+    return null;
   }
 
   // FIXME: Need to fix timing issue in the API first
@@ -344,7 +359,7 @@ export default class CredentialDetail extends Vue {
     } else {
       router.push("/search");
     }
-    if (!this.getSelectedCredential || !this.selectedTopic) {
+    if (!this.selectedCredential || !this.selectedTopic) {
       // cred or source id invalid, failed to load credential
       console.error(
         "Invalid credential or source Id. Credential detail not retrieved"
@@ -360,22 +375,28 @@ export default class CredentialDetail extends Vue {
 .card {
   @include card-raised;
 }
+
 .wrap {
   word-break: break-word;
 }
+
 .verification-time {
   color: $gray;
 }
+
 .validated {
   color: $success-color !important;
 }
+
 .invisible {
   visibility: hidden;
 }
+
 .progress {
   color: $secondary-color;
 }
-.proof-raw {
+
+.raw {
   overflow: scroll;
 }
 </style>

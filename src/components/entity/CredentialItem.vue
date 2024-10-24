@@ -14,13 +14,13 @@
           <v-col v-if="topicName" cols="12" sm="12" class="pa-0">
             <p class="mb-0">{{ topicName }}</p>
           </v-col>
-          <v-col v-if="credTitle" cols="12" sm="12" class="pa-0">
+          <v-col v-if="getCredentialTitle" cols="12" sm="12" class="pa-0">
             <p class="mb-1">
-              {{ credTitle["key"] }}:
+              {{ getCredentialTitle["key"] }}:
               {{
                 translateValue(
-                  credTitle["accessor"],
-                  credTitle["value"],
+                  getCredentialTitle["accessor"],
+                  getCredentialTitle["value"],
                   entityType
                 )
               }}
@@ -36,10 +36,10 @@
       }"
     >
       <div class="ma-n1 py-1 text-body-2 text--secondary">
-        <div :class="{ 'pb-3': timeline && !highlightedAttr.length }">
+        <div :class="{ 'pb-3': timeline && !highlightedAttributes.length }">
           <div class="font-weight-bold">Authority</div>
           <div>
-            <a v-if="getAuthorityLink" :href="getAuthorityLink">
+            <a v-if="getAuthorityLink" :href="authorityLink">
               <span>{{ getAuthority }}</span>
               <v-icon small class="fake-link">{{ mdiOpenInNew }}</v-icon>
             </a>
@@ -50,7 +50,7 @@
         <v-row>
           <v-col
             class="pl-0"
-            v-for="(attr, i) in highlightedAttr"
+            v-for="(attr, i) in highlightedAttributes"
             :key="i"
             cols="12"
             sm="12"
@@ -63,18 +63,28 @@
         </v-row>
 
         <div>
-          <v-icon small v-if="!getCredRevoked">{{
+          <v-icon small v-if="!getCredentialRevoked">{{
             mdiShieldCheckOutline
           }}</v-icon>
           <router-link
             :to="{
               name: 'Credential',
-              params: { sourceId, type: topicType, credentialId: getCredId },
+              params: {
+                sourceId: topicSourceId,
+                type: topicType,
+                credentialId: getCredentialId,
+              },
             }"
             class="vertical-align-middle"
-            >Credential<span v-if="!getCredRevoked"> verified</span
-            ><span v-else> claims</span></router-link
-          >
+            >Credential<span v-if="!getCredentialRevoked"> verified</span
+            ><span v-else> claims</span>
+          </router-link>
+        </div>
+        <div v-if="credential?.raw_data?.id">
+          <v-icon small>{{ mdiOpenInNew }}</v-icon>
+          <a :href="credential?.raw_data.id" class="vertical-align-middle">
+            Credential link
+          </a>
         </div>
         <div v-if="effectiveDate">
           <span>Effective:&nbsp;</span>
@@ -111,14 +121,15 @@ import { isExpired, toTranslationFormat } from "@/utils/entity";
   },
 })
 export default class CredentialItem extends Vue {
-  @Prop({}) cred!: ICredentialDisplayType;
+  @Prop({}) credential!: ICredentialDisplayType;
 
   @Prop({ default: "" }) entityType!: string;
   @Prop({ default: "" }) authority!: string;
   @Prop({ default: "" }) authorityLink!: string;
   @Prop({ default: "" }) effectiveDate!: string;
+  @Prop({ default: "" }) credentialId!: number;
   @Prop({ default: false }) expired!: boolean;
-  @Prop({ default: "" }) credId!: number;
+  @Prop({ default: false }) revoked!: boolean;
   @Prop({ default: false }) disableDefaultHeader!: boolean;
 
   @Prop({ default: false }) timeline!: boolean;
@@ -131,25 +142,15 @@ export default class CredentialItem extends Vue {
   toTranslationFormate = toTranslationFormat;
   $translate = $translate;
 
-  get getAuthorityLink(): string | URL {
-    return this.cred ? this.cred.authorityLink : this.authorityLink;
-  }
-
   get getAuthority(): string {
-    return this.cred ? this.cred.authority : this.authority;
+    return this.credential ? this.credential.authority : this.authority;
   }
 
-  get getCredRevoked(): boolean {
-    return this.cred
-      ? this.cred.revoked || !!this.isExpired(this.cred.attributes)
-      : this.expired;
+  get getAuthorityLink(): string | URL {
+    return this.credential ? this.credential.authorityLink : this.authorityLink;
   }
 
-  get getCredId(): number {
-    return this.cred ? this.cred.id : this.credId;
-  }
-
-  get sourceId(): string {
+  get topicSourceId(): string {
     const { sourceId } = this.$route.params;
     return sourceId;
   }
@@ -160,17 +161,104 @@ export default class CredentialItem extends Vue {
   }
 
   get topicName(): string | undefined {
-    if (!this.cred) {
+    if (!this.credential) {
       return undefined;
     }
-    let ret = this.cred.value as string | undefined;
-    if (this.cred.type !== "entity_name") {
+    let ret = this.credential.value as string | undefined;
+    if (this.credential.type !== "entity_name") {
       ret = this.selectedTopic.names[0]?.text;
     }
     return ret;
   }
 
-  getClaimLabel(
+  get getCredentialId(): number {
+    return this.credential ? this.credential.id : this.credentialId;
+  }
+
+  get getCredentialRevoked(): boolean {
+    return this.credential
+      ? this.credential.revoked || !!this.isExpired(this.credential.attributes)
+      : this.expired;
+  }
+
+  get getCredentialTitle(): Record<string, string> | undefined {
+    if (!this.credential) {
+      return undefined;
+    }
+    let retval: { [index: string]: string | undefined } = {};
+    const claimLabel = this.claimLabelFromId(
+      this.credential.credential_type_id,
+      this.credential.credential_title
+    );
+
+    const default_title = this.credential.rel_id
+      ? { "Relationship description": this.credential.rel_id as string }
+      : { "Registration number": this.topicSourceId };
+
+    if (claimLabel === undefined) {
+      retval = default_title;
+    } else {
+      let value = selectFirstAttrItem(
+        { key: "type", value: this.credential.credential_title },
+        this.credential.attributes
+      );
+      if (value?.format === "datetime") {
+        value.value = value.value as string;
+      }
+
+      if (value?.value) {
+        retval[claimLabel] = value.value as string;
+      } else {
+        retval = default_title;
+      }
+    }
+    let accessor = this.credential.credential_title
+      ? this.credential.credential_title
+      : "";
+    return {
+      key: Object.keys(retval)[0],
+      value: retval[Object.keys(retval)[0]] as string,
+      accessor: accessor,
+    };
+  }
+
+  get highlightedAttributes(): Record<string, string>[] | undefined {
+    if (!this.credential) {
+      return undefined;
+    }
+    let retval: Record<string, string>[] = [];
+    if (this.credential.highlighted_attributes) {
+      this.credential.highlighted_attributes.forEach((accessor) => {
+        const attrLabel = this.claimLabelFromId(
+          this.credential.credential_type_id,
+          accessor
+        );
+        let attrValue = "";
+        if (attrLabel) {
+          const match = selectFirstAttrItem(
+            { key: "type", value: accessor },
+            this.credential.attributes
+          );
+          if (match?.format === "datetime") {
+            attrValue = dateFilter(match.value as string) as string;
+          } else {
+            attrValue = match?.value as string;
+          }
+
+          if (attrValue) {
+            retval.push({
+              key: attrLabel,
+              value: attrValue,
+              accessor: accessor,
+            });
+          }
+        }
+      });
+    }
+    return retval;
+  }
+
+  claimLabelFromId(
     id: number,
     claimLabel: string | undefined
   ): string | undefined {
@@ -199,81 +287,6 @@ export default class CredentialItem extends Vue {
       return res;
     }
     return val;
-  }
-
-  get credTitle(): Record<string, string> | undefined {
-    if (!this.cred) {
-      return undefined;
-    }
-    let retval: { [index: string]: string | undefined } = {};
-    const claimLabel = this.getClaimLabel(
-      this.cred.credential_type_id,
-      this.cred.credential_title
-    );
-
-    const default_title = this.cred.rel_id
-      ? { "Relationship description": this.cred.rel_id as string }
-      : { "Registration number": this.sourceId };
-
-    if (claimLabel === undefined) {
-      retval = default_title;
-    } else {
-      let value = selectFirstAttrItem(
-        { key: "type", value: this.cred.credential_title },
-        this.cred.attributes
-      );
-      if (value?.format === "datetime") {
-        value.value = value.value as string;
-      }
-
-      if (value?.value) {
-        retval[claimLabel] = value.value as string;
-      } else {
-        retval = default_title;
-      }
-    }
-    let accessor = this.cred.credential_title ? this.cred.credential_title : "";
-    return {
-      key: Object.keys(retval)[0],
-      value: retval[Object.keys(retval)[0]] as string,
-      accessor: accessor,
-    };
-  }
-
-  get highlightedAttr(): Record<string, string>[] | undefined {
-    if (!this.cred) {
-      return undefined;
-    }
-    let retval: Record<string, string>[] = [];
-    if (this.cred.highlighted_attributes) {
-      this.cred.highlighted_attributes.forEach((accessor) => {
-        const attrLabel = this.getClaimLabel(
-          this.cred.credential_type_id,
-          accessor
-        );
-        let attrValue = "";
-        if (attrLabel) {
-          const match = selectFirstAttrItem(
-            { key: "type", value: accessor },
-            this.cred.attributes
-          );
-          if (match?.format === "datetime") {
-            attrValue = dateFilter(match.value as string) as string;
-          } else {
-            attrValue = match?.value as string;
-          }
-
-          if (attrValue) {
-            retval.push({
-              key: attrLabel,
-              value: attrValue,
-              accessor: accessor,
-            });
-          }
-        }
-      });
-    }
-    return retval;
   }
 }
 </script>

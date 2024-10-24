@@ -36,6 +36,7 @@ export interface ICredential extends IApiResource {
   names: ICredentialName[];
   credential_type: ICredentialType;
   attributes: ICredentialAttribute[];
+  raw_data?: unknown;
 }
 
 export interface ICredentialDisplayType {
@@ -57,6 +58,7 @@ export interface ICredentialDisplayType {
   schema_label?: Record<string, { label: string; description: string }>;
   attributes?: ICredentialAttribute[];
   credential_type_id: number;
+  raw_data?: unknown;
 }
 
 export interface ICredentialFormatted {
@@ -74,6 +76,7 @@ export interface ICredentialFormatted {
   topic: IFormattedTopic;
   related_topics: ITopic[];
   credential_set: ICredentialSet;
+  raw_data?: unknown;
 }
 
 export interface ICredentialDetailView {
