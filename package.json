@@ -13,7 +13,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/i18n/**/*.json\""
   },
   "dependencies": {
-    "@snowplow/browser-tracker": "^3.24.4",
+    "@snowplow/browser-tracker": "^3.24.6",
     "axios": "^0.21.4",
     "core-js": "^3.38.1",
     "lodash-es": "^4.17.21",
