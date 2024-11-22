@@ -4,20 +4,20 @@ import VueI18n, { LocaleMessages } from "vue-i18n";
 Vue.use(VueI18n);
 
 function loadLocaleMessages(): LocaleMessages {
-  const locales = require.context("./", true, /[A-Za-z0-9-_,\s]+\.json$/i);
+  const locales = import.meta.glob("./[A-Za-z0-9-_,\s]+\.json");
   const messages: LocaleMessages = {};
-  locales.keys().forEach((key) => {
+  for (const key in locales) {
     const matched = key.match(/([A-Za-z0-9-_]+)\./i);
     if (matched && matched.length > 1) {
       const locale = matched[1];
-      messages[locale] = locales(key);
+      messages[locale] = locales[key];
     }
-  });
+  }
   return messages;
 }
 
 export default new VueI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || "en",
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
+  locale: import.meta.env.VUE_APP_I18N_LOCALE || "en",
+  fallbackLocale: import.meta.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
   messages: loadLocaleMessages(),
 });
