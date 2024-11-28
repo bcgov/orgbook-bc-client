@@ -8,43 +8,23 @@ import { VuetifyResolver } from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
 
 const proxyObject = {
-	target: "http://localhost:8080",
-	ws: true,
-	changeOrigin: true,
+  target: "http://localhost:8080",
+  ws: true,
+  changeOrigin: true,
 };
-
-// const vueI18nPlugin = {
-// 	name: "vue-i18n",
-// 	transform(code, id) {
-// 		if (!/vue&type=i18n/.test(id)) {
-// 			return;
-// 		}
-// 		if (/\.ya?ml$/.test(id)) {
-// 			code = JSON.stringify(require("js-yaml").load(code.trim()));
-// 		}
-// 		return `export default Comp => {
-//       Comp.i18n = ${code}
-//     }`;
-// 	},
-// };
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    // vueI18nPlugin, // ({
-    // 	include: path.resolve(__dirname, "./src/i18n/**"),
-    // 	strictMessage: false,
-    // })
     Components({
       resolvers: [
-	// Vuetify
-	VuetifyResolver(),
+        // Vuetify
+        VuetifyResolver(),
       ],
     }),
   ],
   resolve: {
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
@@ -52,7 +32,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-	additionalData: `
+        additionalData: `
         @import "@/styles/style.scss";
         `,
       },
@@ -61,10 +41,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-	target: "https://dev.orgbook.gov.bc.ca",
-	// Uncomment below to point to a local API
-	// target: 'http://host.docker.internal:8080',
-	changeOrigin: true,
+        // target: "https://dev.orgbook.gov.bc.ca",
+        target: "http://host.docker.internal:8080",
+        changeOrigin: true,
       },
     },
   },
