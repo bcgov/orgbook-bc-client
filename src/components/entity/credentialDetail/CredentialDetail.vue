@@ -14,17 +14,11 @@
       <v-card rounded="sm" class="mb-5 card">
         <v-card-title class="pa-5 pb-0">
           <p class="text-h6 font-weight-bold wrap">
-            <v-icon class="validated pb-1" v-if="!revoked">{{
-              mdiShieldCheckOutline
-            }}</v-icon>
             <span>{{ `${credentialTypeDescription} credential` }}</span
-            ><span v-if="!revoked"> verified</span><span v-else> claims</span>
+            ><span> claims</span>
           </p>
         </v-card-title>
         <v-card-text class="pa-5 pt-0">
-          <p v-if="!revoked" class="text-body-1 verification-time">
-            {{ `Cryptographically verified ${now}` }}
-          </p>
           <p>
             Issued: {{ issuedDate | formatDate }} • Effective:
             {{ effectiveDate | formatDate }}
@@ -87,60 +81,6 @@
           </ul>
         </v-card-text>
       </v-card>
-
-      <v-card rounded="sm" class="card mb-5" v-if="proofValues || rawData">
-        <v-expansion-panels flat>
-          <v-expansion-panel>
-            <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              <p>Claims <span v-if="!revoked"> proven</span></p>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="pa-5 pt-0">
-              <div v-if="rawData" class="raw">
-                <pre>{{ rawData }}</pre>
-              </div>
-              <v-data-table
-                dense
-                :headers="headers"
-                :items="proofValues"
-                hide-default-header
-                hide-default-footer
-                disable-pagination
-                v-else
-              >
-                <template v-slot:[`item.attr_name`]="{ item }">
-                  <div class="d-flex">
-                    <v-icon
-                      :class="{ invisible: !item.attr_val || revoked }"
-                      class="validated mr-1"
-                      >{{ mdiCheckBold }}</v-icon
-                    >
-                    <span>{{ item.attr_name | formatClaim }}</span>
-                  </div>
-                </template>
-              </v-data-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card>
-
-      <v-card
-        rounded="sm"
-        class="card mb-5"
-        v-if="credentialType?.format !== 'vc_di'"
-      >
-        <v-expansion-panels flat>
-          <v-expansion-panel>
-            <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
-              <p>Proof Details</p>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="pa-5 pt-0">
-              <div class="raw">
-                <pre>{{ proofRaw }}</pre>
-              </div>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card>
     </div>
   </div>
 </template>
@@ -175,8 +115,6 @@ interface Data {
       "selectedTopic",
       "selectedTopicFullCredentialSet",
       "getSelectedCredential",
-      "getPresentationId",
-      "getPresentationEX",
       "loading",
     ]),
   },
@@ -184,8 +122,6 @@ interface Data {
     ...mapActions([
       "fetchSelectedCredential",
       "setLoading",
-      "fetchPresId",
-      "fetchPresEx",
       "fetchFormattedIdentifiedTopic",
     ]),
   },
@@ -195,13 +131,9 @@ export default class CredentialDetail extends Vue {
   selectedTopicFullCredentialSet!: Array<ICredentialSet>;
   getSelectedCredential!: ICredentialFormatted | undefined;
   loading!: boolean;
-  getPresentationId!: string;
-  getPresentationEX!: ICredentialProof;
   sourceId!: string;
   isExpired = isExpired;
   fetchSelectedCredential!: (id: string) => Promise<void>;
-  fetchPresId!: (id: string) => Promise<void>;
-  fetchPresEx!: (params: { id: string; presId: string }) => Promise<void>;
   fetchFormattedIdentifiedTopic!: ({
     sourceId,
     type,
@@ -302,27 +234,7 @@ export default class CredentialDetail extends Vue {
     if (replaced) {
       base += "has been replaced.";
     }
-    return base + " It can no longer be verified";
-  }
-
-  get proofRaw(): string | undefined {
-    const rawVals = this.getPresentationEX;
-    if (rawVals === undefined) {
-      return rawVals;
-    }
-    return JSON.stringify(rawVals?.result, null, 2);
-  }
-
-  get proofValues(): Record<string, string>[] | undefined {
-    const rawVals =
-      this.getPresentationEX?.result?.presentation?.requested_proof
-        ?.revealed_attr_groups?.["self-verify-proof"]?.values;
-    if (rawVals === undefined) {
-      return rawVals;
-    }
-    return Object.keys(rawVals).map((key) => {
-      return { attr_name: key, attr_val: rawVals[key].raw };
-    });
+    return base
   }
 
   get rawData(): unknown {
@@ -340,22 +252,11 @@ export default class CredentialDetail extends Vue {
     if (sourceId && credentialId) {
       await Promise.all([
         this.fetchSelectedCredential(credentialId),
-        this.fetchPresId(credentialId),
         this.fetchFormattedIdentifiedTopic({
           sourceId,
           type,
         }),
       ]);
-
-      // DEPRECATED: need a small timeout because the credential isn't always verified after fetchPresId returns
-      await new Promise((r) => setTimeout(r, 1000));
-
-      if (this.getPresentationId) {
-        await this.fetchPresEx({
-          id: credentialId,
-          presId: this.getPresentationId,
-        });
-      }
     } else {
       router.push("/search");
     }
