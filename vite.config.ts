@@ -24,10 +24,9 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias:
+      // when we switch to vue 3 { "@": path.resolve(__dirname, "./src"), },
+      [{ find: "@", replacement: path.resolve(__dirname, "./src") }],
   },
   css: {
     preprocessorOptions: {
