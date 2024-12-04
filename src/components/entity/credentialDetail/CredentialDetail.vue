@@ -81,6 +81,39 @@
           </ul>
         </v-card-text>
       </v-card>
+      <v-card rounded="sm" class="card mb-5" v-if="rawData">
+        <v-expansion-panels flat>
+          <v-expansion-panel>
+            <v-expansion-panel-header class="text-h6 font-weight-bold pa-5">
+              <p>Claims <span v-if="!revoked"> proven</span></p>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content class="pa-5 pt-0">
+              <div v-if="rawData" class="raw">
+                <pre>{{ rawData }}</pre>
+              </div>
+              <v-data-table
+                dense
+                :headers="headers"
+                hide-default-header
+                hide-default-footer
+                disable-pagination
+                v-else
+              >
+                <template v-slot:[`item.attr_name`]="{ item }">
+                  <div class="d-flex">
+                    <v-icon
+                      :class="{ invisible: !item.attr_val || revoked }"
+                      class="validated mr-1"
+                      >{{ mdiCheckBold }}</v-icon
+                    >
+                    <span>{{ item.attr_name | formatClaim }}</span>
+                  </div>
+                </template>
+              </v-data-table>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-card>
     </div>
   </div>
 </template>
