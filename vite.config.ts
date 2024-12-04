@@ -25,6 +25,7 @@ export default defineConfig({
   ],
   resolve: {
     alias:
+      // Issue caused by https://github.com/vitejs/vite-plugin-vue2/issues/55
       // when we switch to vue 3 { "@": path.resolve(__dirname, "./src"), },
       [{ find: "@", replacement: path.resolve(__dirname, "./src") }],
   },
