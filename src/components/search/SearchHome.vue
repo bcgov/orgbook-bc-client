@@ -39,7 +39,7 @@
         md="4"
         class="pl-0 pr-0"
       >
-        <img src="graphic" alt="" srcset="" height="300px" />
+        <img :src="graphic" alt="" srcset="" height="300px" />
       </v-col>
       <v-col
         id="searchHomeStats"
