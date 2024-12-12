@@ -25,9 +25,6 @@ const state: State = {
 const getters = {
   getSelectedCredential: (state: State): ICredentialFormatted | undefined =>
     state.selectedCredential,
-  getPresentationId: (state: State): string => state.presentationId,
-  getPresentationEX: (state: State): ICredentialProof | undefined =>
-    state.presentationEX,
 };
 
 const actions = {
@@ -38,31 +35,6 @@ const actions = {
     try {
       const res = await credentialService.getFormattedCredential(id);
       commit("setSelectedCredential", res.data);
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  async fetchPresId(
-    { commit }: ActionContext<State, RootState>,
-    id: string
-  ): Promise<void> {
-    try {
-      const res = await credVerificationService.credentialVerify(id);
-      commit("setPresId", res.data.presentation_exchange_id);
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  async fetchPresEx(
-    { commit }: ActionContext<State, RootState>,
-    params: { id: string; presId: string }
-  ): Promise<void> {
-    try {
-      const res = await credVerificationService.credentialVerifyPresEx(
-        params.id,
-        params.presId
-      );
-      commit("setPresEX", res.data);
     } catch (e) {
       console.error(e);
     }

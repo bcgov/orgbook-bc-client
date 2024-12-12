@@ -9,14 +9,6 @@ export default class CredentialVerifier extends ApiResource {
   baseVersion = "v3";
   basePath = "credential";
 
-  async credentialVerify(
-    id: string
-  ): Promise<HttpResponse<ICredentialPresExchange>> {
-    return await Http.get<ICredentialPresExchange>(
-      this.formatEndpointUrl(`${id}/verify`)
-    );
-  }
-
   async credentialVerifyPresEx(
     id: string,
     exId: string
