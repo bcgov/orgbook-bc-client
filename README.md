@@ -28,7 +28,7 @@ followed by
 The Orgbook BC project sits on top of verifiable credential technology facilitated by Aries VCR. A locally running instance of Aries VCR is not required to run the Orgbook BC web application on your own machine. By default Orgbook BC forwards API calls to the publicly running instance of the Orgbook API [here](https://orgbook.gov.bc.ca/api/). The Orgbook API is simply an Aries VCR instance containing credential information about BC Business entities. You can change your local instance of Orgbook to point to any running instance of an Aries VCR agent by editing the `vue.config.js` file outlined in this section [here](#proxy-configuration). If you would like to setup a locally running instance of Aries VCR to test with Orgbook, then follow the instructions [here](https://github.com/bcgov/aries-vcr/tree/master/docs). To run Orgbook in development mode look at the project setup section [here](#project-setup)
 
 ### Proxy Configuration
-The `vue.config.js` file contains configuration information for the Orgbook BC project, including the URL of the Aries VCR API that Orgbook will send requests to.
+The `vite.config.js` file contains configuration information for the Orgbook BC project, including the URL of the Aries VCR API that Orgbook will send requests to.
 ~~~ typescript
   configureWebpack: {
     devtool: "source-map",

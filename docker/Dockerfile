@@ -1,4 +1,4 @@
-ARG build_image=node:gallium
+ARG build_image=node:22-alpine3.19
 ARG caddy_builder_image=caddy:builder-alpine
 ARG runtime_image=caddy:alpine
 
