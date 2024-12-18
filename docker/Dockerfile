@@ -3,7 +3,7 @@ ARG caddy_builder_image=caddy:builder-alpine
 ARG runtime_image=caddy:alpine
 
 # build stage
-FROM ${build_image} as build-stage
+FROM ${build_image} AS build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -11,14 +11,14 @@ COPY . .
 RUN npm run build
 
 # caddy build stage
-FROM ${caddy_builder_image} as caddy-build-stage
+FROM ${caddy_builder_image} AS caddy-build-stage
 
 # Install ratelimit/v0.3.0
 RUN xcaddy build \
     --with github.com/RussellLuo/caddy-ext/ratelimit@ab1e18cfe426012af351a68463937ae2e934a2a1
 
 # production stage
-FROM ${runtime_image} as production-stage
+FROM ${runtime_image} AS production-stage
 
 COPY --from=caddy-build-stage /usr/bin/caddy /usr/bin/caddy
 COPY --from=build-stage /app/dist /srv

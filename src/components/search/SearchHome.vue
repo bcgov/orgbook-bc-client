@@ -39,7 +39,7 @@
         md="4"
         class="pl-0 pr-0"
       >
-        <img :src="graphic" alt="" srcset="" height="300px" />
+        <img src="@/assets/img/graphic.png" alt="stats-graphics" height="300px" />
       </v-col>
       <v-col
         id="searchHomeStats"
@@ -95,7 +95,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
-import graphic from "@/assets/img/graphic.png"
 
 interface Data {
   descriptions: string[];
