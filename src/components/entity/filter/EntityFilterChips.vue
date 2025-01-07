@@ -30,50 +30,52 @@ export interface EntityChips {
   filterString: string | boolean;
   filterField: string;
 }
-
-@Component({
-  computed: {
-    ...mapGetters(["getEntityFilters", "mdiClose"]),
-  },
-  methods: {
-    ...mapActions(["toggleEntityFilter"]),
-  },
-})
-export default class EntityFilterChips extends Vue {
-  getEntityFilters!: IEntityFilter;
-
-  get activeEntityFilters(): EntityChips[] {
-    var chips: EntityChips[] = [];
-    Object.keys(this.getEntityFilters).forEach((key) => {
-      if (Array.isArray(this.getEntityFilters[key])) {
-        chips.push(
-          ...(this.getEntityFilters[key] as string[]).map((item) => {
-            return { filterField: key, filterString: item };
-          })
-        );
-      } else if (
-        typeof this.getEntityFilters[key] === "string" &&
-        this.getEntityFilters[key] !== ""
-      ) {
-        let prefix = "";
-        if (key.startsWith("date")) {
-          prefix = key === "date_min" ? "From: " : "To: ";
-        }
-        chips.push({
-          filterField: key,
-          filterString: (prefix + this.getEntityFilters[key]) as string,
-        });
-      } else if (this.getEntityFilters[key]) {
-        chips.push({
-          filterField: key,
-          filterString:
+export default {
+        computed: {
+                ...mapGetters({
+                        getEntityFilters: "getEntityFilters",
+                        mdiClose: "mdiClose"
+                }),
+                activeEntityFilters: {
+                        get(): EntityChips[] {
+                                var chips: EntityChips[] = [];
+                                Object.keys(this.getEntityFilters).forEach((key) => {
+                                        if (Array.isArray(this.getEntityFilters[key])) {
+                                                chips.push(
+                                                        ...(this.getEntityFilters[key] as string[]).map((item) => {
+                                                                return { filterField: key, filterString: item };
+                                                        })
+                                                );
+                                        } else if (
+                                                typeof this.getEntityFilters[key] === "string" &&
+                                                        this.getEntityFilters[key] !== ""
+                                        ) {
+                                                let prefix = "";
+                                                if (key.startsWith("date")) {
+                                                        prefix = key === "date_min" ? "From: " : "To: ";
+                                                }
+                                                chips.push({
+                                                        filterField: key,
+                                                        filterString: (prefix + this.getEntityFilters[key]) as string,
+                                                });
+                                        } else if (this.getEntityFilters[key]) {
+                                                chips.push({
+                                                        filterField: key,
+                                                        filterString:
             key === "show_expired"
-              ? "Show Inactive Credentials"
-              : (key as string),
-        });
-      }
-    });
-    return chips;
-  }
+                    ? "Show Inactive Credentials"
+                    : (key as string),
+                                                });
+                                        }
+                                });
+                                return chips;
+                        }
+                },
+        },
+        methods: {
+                ...mapActions({
+                        toggleEntityFilter: "toggleEntityFilter"
+                }),
+        }
 }
 </script>

@@ -39,28 +39,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
 
 interface Data {
   dialog: boolean;
 }
-
-@Component({
-  components: {
-    EntityFilterFacetPanels,
-  },
-  computed: {
-    ...mapGetters(["loading", "mdiFilterOutline", "mdiClose"]),
-  },
-})
-export default class EntityFilterDialog extends Vue {
-  data(): Data {
-    return {
-      dialog: false,
-    };
-  }
+export default {
+        data(): Data {
+                return {
+                        dialog: false,
+                };
+        },
+        computed: {
+                ...mapGetters(["loading", "mdiFilterOutline", "mdiClose"]),
+        }
 }
 </script>
 

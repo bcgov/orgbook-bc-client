@@ -22,8 +22,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-
 import { IEntityFacetField } from "@/interfaces/entity-filter.interface";
 
 import EntityFilterFacets from "@/components/entity/filter/EntityFilterFacets.vue";
@@ -32,21 +30,32 @@ interface Data {
   show: boolean;
 }
 
-@Component({
-  components: {
-    EntityFilterFacets,
-  },
-})
-export default class EntityFilterFacetPanel extends Vue {
-  @Prop({ default: "" }) entityType!: string;
-  @Prop({ default: () => [] }) filterField!: string;
-  @Prop({ default: () => [] }) fields!: IEntityFacetField[];
-  @Prop({ default: () => [] }) more!: IEntityFacetField[];
-
-  data(): Data {
-    return {
-      show: false,
-    };
-  }
+export default {
+        data(): Data {
+                return {
+                        show: false,
+                }
+        },
+        components: {
+                EntityFilterFacets,
+        },
+        props: {
+                entityType: {
+                        type: String,
+                        default: "",
+                },
+                filterField: {
+                        type: String,
+                        default: () => [],
+                },
+                fields: {
+                        type:  Array<IEntityFacetField>,
+                        default: () => [],
+                },
+                more: {
+                        type: Array<IEntityFacetField>,
+                        default: () => [],
+                }
+        }
 }
 </script>
