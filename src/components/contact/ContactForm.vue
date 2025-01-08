@@ -135,27 +135,9 @@ interface Data {
   alwaysRequired: Array<boolean | string | ((v: string) => string | boolean)>;
   condRequired: Array<boolean | string | ((v: string) => string | boolean)>;
 }
+const emailRegexp = RegExp(/.+@.+/)
 
-@Component({
-  computed: {
-    ...mapGetters(["loading", "credentialTypes", "getLikeStatus"]),
-  },
-  methods: {
-    ...mapActions(["setLoading", "sendContact"]),
-  },
-})
-export default class ContactForm extends Vue {
-  formData!: IContactRequest;
-  credentialTypes!: ICredentialType[];
-  additionalHelp!: boolean;
-  getLikeStatus!: "like" | "dislike" | "";
-  emailRules!: Array<boolean | string | ((v: string) => string | boolean)>;
-
-  setLoading!: (loading: boolean) => void;
-  sendContact!: (feedback: IContactRequest) => Promise<void>;
-  // eslint-disable-next-line
-  emailRegexp = RegExp(/.+@.+/);
-
+export default {
   data(): Data {
     return {
       formData: {
@@ -167,66 +149,74 @@ export default class ContactForm extends Vue {
       additionalHelp: false,
       emailRules: [
         // eslint-disable-next-line
-        (v: string) => this.emailRegexp.test(v) || "E-mail must be valid",
+        (v: string) => emailRegexp.test(v) || "E-mail must be valid",
       ],
       alwaysRequired: [(v: string) => !!v || "This field is required"],
       condRequired: [
         (v: string) => !!v || this.incorrectHidden || "This field is required",
       ],
     };
-  }
-
-  get requestTypes(): Array<{ text: string; value: string }> {
-    return Object.keys(contactReason).map((key) => ({
-      text: contactReason[key],
-      value: key,
-    }));
-  }
-
-  get formattedCredentialTypes(): Array<{ text: string; value: number }> {
-    return this.credentialTypes.map((credentialType) => ({
-      // TODO: remove unwrap translations functions after backend update
-      text:
-        unwrapTranslations(credentialType.schema_label)?.[this.$i18n.locale]
-          ?.label ??
-        credentialType.description ??
-        "",
-      value: credentialType.id,
-    }));
-  }
-
-  get incorrectHidden(): boolean {
-    return this.formData.reason !== "INCORRECT_INFO";
-  }
-
-  get labelMessage(): string {
-    return this.formData.reason === "INCORRECT_INFO"
-      ? "Describe the problem"
-      : "Message";
-  }
-
-  async submit(e: Event): Promise<void> {
-    e.preventDefault();
-    const isFormValid = (
-      this.$refs.form as Vue & { validate: () => boolean }
-    ).validate();
-    if (isFormValid) {
-      this.setLoading(true);
-      if (this.getLikeStatus !== "") {
-        this.formData.comments = `${this.getLikeStatus}:\n${this.formData.comments}`;
+  },
+  methods: {
+    ...mapActions({
+      setLoading: "setLoading",
+      sendContact: "sendContact"
+    }),
+    async submit(e: Event): Promise<void> {
+      e.preventDefault();
+      const isFormValid = (
+        this.$refs.form as Vue & { validate: () => boolean }
+      ).validate();
+      if (isFormValid) {
+        this.setLoading(true);
+        if (this.getLikeStatus !== "") {
+          this.formData.comments = `${this.getLikeStatus}:\n${this.formData.comments}`;
+        }
+        const data = { ...this.formData };
+        data.reason = contactReason[this.formData.reason];
+        if (this.formData.error !== undefined) {
+          data.error = this.formattedCredentialTypes.filter(
+            (type) => String(type.value) === this.formData.error
+          )[0]?.text;
+        }
+        await this.sendContact(data);
+        this.setLoading(false);
+        router.push({ name: "Search" });
       }
-      const data = { ...this.formData };
-      data.reason = contactReason[this.formData.reason];
-      if (this.formData.error !== undefined) {
-        data.error = this.formattedCredentialTypes.filter(
-          (type) => String(type.value) === this.formData.error
-        )[0]?.text;
-      }
-      await this.sendContact(data);
-      this.setLoading(false);
-      router.push({ name: "Search" });
     }
-  }
+
+  },
+  computed: {
+    ...mapGetters({
+      loading: "loading",
+      credentialTypes: "credentialTypes",
+      getLikeStatus: "getLikeStatus"
+    }),
+    requestTypes: function(): Array<{ text: string; value: string }> {
+      return Object.keys(contactReason).map((key) => ({
+        text: contactReason[key],
+        value: key,
+      }));
+    },
+    formattedCredentialTypes: function(): Array<{ text: string; value: number }> {
+      return this.credentialTypes.map((credentialType) => ({
+        // TODO: remove unwrap translations functions after backend update
+        text: unwrapTranslations(credentialType.schema_label)?.[this.$i18n.locale]
+          ?.label ??
+          credentialType.description ??
+          "",
+        value: credentialType.id,
+      }));
+    },
+    incorrectHidden: function(): boolean {
+      return this.formData.reason !== "INCORRECT_INFO";
+    },
+    labelMessage: function(): string {
+      return this.formData.reason === "INCORRECT_INFO"
+        ? "Describe the problem"
+        : "Message";
+    },
+  },
 }
 </script>
 

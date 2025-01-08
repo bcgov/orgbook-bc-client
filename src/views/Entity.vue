@@ -12,18 +12,10 @@ import { mapActions } from "vuex";
 
 Component.registerHooks(["beforeRouteLeave"]);
 
-@Component({
-  components: {
-    EntityResult,
-  },
+export default {
   methods: {
-    ...mapActions(["clearFilter", "setScrollY"]),
+    ...mapActions({ clearFilter: "clearFilter", setScrollY: "setScrollY"}),
   },
-})
-export default class Entity extends Vue {
-  clearFilter!: () => Promise<void>;
-  setScrollY!: (top: number) => void;
-
   async beforeRouteLeave(
     to: Route,
     from: Route,

@@ -52,17 +52,11 @@ interface Data {
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
 
-@Component({
-  components: {
-    SearchBar,
-    SearchDescription,
-    SearchHelp,
-    SearchHome,
-    SearchLoading,
-    SearchResult: () =>
-      import(
-        /* webpackChunkName: "search-result" */ "@/components/search/SearchResult.vue"
-      ),
+export default {
+  data(): Data {
+    return {
+      q: null,
+    };
   },
   computed: {
     ...mapGetters(["loading", "searchQuery", "pagedSearchTopics"]),
@@ -74,22 +68,22 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"]);
       "fetchSearchFacetedTopics",
       "resetSearch",
     ]),
+    async extractQueryAndDispatchSearch(query: ISearchQuery): Promise<void> {
+      this.q = query?.q || null;
+      const newQuery = { ...defaultQuery, ...query };
+      store.dispatch("setSearchQuery", newQuery);
+      store.dispatch("setSearchFilters", newQuery);
+      await this.search();
+    },
+    async search(): Promise<void> {
+      this.setLoading(true);
+      await Promise.all([
+        this.fetchCredentialTypes(false),
+        this.fetchSearchFacetedTopics(),
+      ]);
+      this.setLoading(false);
+    },
   },
-})
-export default class Search extends Vue {
-  q!: unknown;
-
-  setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: (paged: boolean) => Promise<void>;
-  fetchSearchFacetedTopics!: () => Promise<void>;
-  resetSearch!: () => void;
-
-  data(): Data {
-    return {
-      q: null,
-    };
-  }
-
   async created(): Promise<void> {
     const query = this.$route.query as unknown as ISearchQuery;
     if (query?.q || query?.credential_type_id) {
@@ -97,8 +91,7 @@ export default class Search extends Vue {
     } else {
       this.resetSearch();
     }
-  }
-
+  },
   /**
    * This is executed when a filter is (de)selected. The state managed search query and filters
    * are updated in the store, which in turn active an in-place route change. The route change is
@@ -117,24 +110,7 @@ export default class Search extends Vue {
     } else {
       this.resetSearch();
     }
-  }
-
-  async extractQueryAndDispatchSearch(query: ISearchQuery): Promise<void> {
-    this.q = query?.q || null;
-    const newQuery = { ...defaultQuery, ...query };
-    store.dispatch("setSearchQuery", newQuery);
-    store.dispatch("setSearchFilters", newQuery);
-    await this.search();
-  }
-
-  async search(): Promise<void> {
-    this.setLoading(true);
-    await Promise.all([
-      this.fetchCredentialTypes(false),
-      this.fetchSearchFacetedTopics(),
-    ]);
-    this.setLoading(false);
-  }
+  },
 }
 </script>
 
