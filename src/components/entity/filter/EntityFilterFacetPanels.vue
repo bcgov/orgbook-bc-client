@@ -235,7 +235,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 import {
@@ -257,73 +256,65 @@ interface Data {
   panels: number[];
 }
 
-@Component({
-  components: {
-    Dialog,
-    EntityFilterFacetPanel,
-    CustomFilterFacetPanel,
-  },
-  computed: {
-    ...mapGetters([
-      "searchTopicFacets",
-      "getAuthorities",
-      "getCredentialTypes",
-      "getRegistrationTypes",
-      "getEntityFilters",
-      "mdiCalendar",
-      "mdiInformationOutline",
-    ]),
-  },
-  methods: {
-    ...mapActions(["setFilter"]),
-  },
-})
-export default class EntityFilterFacetPanels extends Vue {
-  @Prop({ default: "" }) entityType!: string;
-  getAuthorities!: Array<IEntityFacetField>;
-  getCredentialTypes!: Array<IEntityFacetField>;
-  getRegistrationTypes!: Array<IEntityFacetField>;
-  getEntityFilters!: IEntityFilter;
-  setFilter!: (filter: IEntityFilter) => void;
-  isEntityFilterActive: (
-    filterField: string,
-    getEntityFilters: IEntityFilter,
-    filterString?: string
-  ) => boolean = isEntityFilterActive;
-  data(): Data {
-    return {
-      menuFrom: false,
-      menuTo: false,
-      fromDate: "",
-      toDate: "",
-      panels: [0, 1, 2, 4],
-    };
-  }
-  toggleShowExpired(newVal: boolean): void {
-    var currFilters = { ...this.getEntityFilters };
-    currFilters.show_expired = !newVal;
-    this.setFilter(currFilters);
-  }
-  resetMinDate(): void {
-    var currFilters = { ...this.getEntityFilters };
-    currFilters.date_min = "";
-    this.setFilter(currFilters);
-  }
-  resetMaxDate(): void {
-    var currFilters = { ...this.getEntityFilters };
-    currFilters.date_max = "";
-    this.setFilter(currFilters);
-  }
-  handleMinDateChange(newVal: string): void {
-    var currFilters = { ...this.getEntityFilters };
-    currFilters.date_min = newVal;
-    this.setFilter(currFilters);
-  }
-  handleMaxDateChange(newVal: string): void {
-    var currFilters = { ...this.getEntityFilters };
-    currFilters.date_max = newVal;
-    this.setFilter(currFilters);
-  }
+export default {
+        props: {
+                entityType: {
+                        type: String,
+                        default: ""
+                }
+        },
+        data(): Data {
+                return {
+                        menuFrom: false,
+                        menuTo: false,
+                        fromDate: "",
+                        toDate: "",
+                        panels: [0, 1, 2, 4],
+                };
+        },
+        computed: {
+                ...mapGetters({
+                        searchTopicFacets: "searchTopicFacets",
+                        getAuthorities: "getAuthorities",
+                        getCredentialTypes: "getCredentialTypes",
+                        getRegistrationTypes: "getRegistrationTypes",
+                        getEntityFilters: "getEntityFilters",
+                        mdiCalendar: "mdiCalendar",
+                        mdiInformationOutline: "mdiInformationOutline",
+                }),
+        },
+        methods: {
+                isEntityFilterActive,
+                ...mapActions({
+                        setFilter: "setFilter"
+                }),
+                toggleShowExpired(newVal: boolean): void {
+                        var currFilters = { ...this.getEntityFilters };
+                        currFilters.show_expired = !newVal;
+                        this.setFilter(currFilters);
+                },
+                resetMinDate(): void {
+                        var currFilters = { ...this.getEntityFilters };
+                        currFilters.date_min = "";
+                        this.setFilter(currFilters);
+                },
+                resetMaxDate(): void {
+                        var currFilters = { ...this.getEntityFilters };
+                        currFilters.date_max = "";
+                        this.setFilter(currFilters);
+                },
+                handleMinDateChange(newVal: string): void {
+                        var currFilters = { ...this.getEntityFilters };
+                        currFilters.date_min = newVal;
+                        this.setFilter(currFilters);
+                },
+                handleMaxDateChange(newVal: string): void {
+                        var currFilters = { ...this.getEntityFilters };
+                        currFilters.date_max = newVal;
+                        this.setFilter(currFilters);
+                }
+
+        }
 }
 </script>
 

@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import BackTo from "@/components/shared/BackTo.vue";
 import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
@@ -24,38 +23,29 @@ import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
 import { mapActions, mapGetters } from "vuex";
 import { IDocRoute, IDocRouteData } from "@/interfaces/doc.interface";
 
-@Component({
-  components: {
-    BackTo,
-    OrgBookData,
-    SubHeader,
-    ShowcaseLinks,
-  },
+export default {
   computed: {
-    ...mapGetters(["docLinks", "docRoute", "showcaseLinks"]),
+    ...mapGetters({
+      docLinks: "docLinks",
+      docRoute: "docRoute",
+      showcaseLinks: "showcaseLinks"
+    }),
+    docRouteInfo: function(): IDocRoute {
+        return this.docRoute(this.$route.name || "");
+    },
+    docRouteData: function(): IDocRouteData | undefined {
+        return this.docRouteInfo?.data;
+    },
+    html: function(): string {
+        return this.docRouteData?.html || "";
+    },
   },
   methods: {
-    ...mapActions(["setLoading", "fetchCredentialTypes"]),
+    ...mapActions({
+      setLoading: "setLoading",
+      fetchCredentialTypes:  "fetchCredentialTypes"
+    })
   },
-})
-export default class About extends Vue {
-  docRoute!: (name: string) => IDocRoute;
-
-  setLoading!: (loading: boolean) => Promise<void>;
-  fetchCredentialTypes!: (paged: boolean) => Promise<void>;
-
-  get docRouteInfo(): IDocRoute {
-    return this.docRoute(this.$route.name || "");
-  }
-
-  get docRouteData(): IDocRouteData | undefined {
-    return this.docRouteInfo?.data;
-  }
-
-  get html(): string {
-    return this.docRouteData?.html || "";
-  }
-
   async created(): Promise<void> {
     this.setLoading(true);
     this.fetchCredentialTypes(false);

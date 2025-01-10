@@ -14,24 +14,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import BackTo from "@/components/shared/BackTo.vue";
 import ContactForm from "@/components/contact/ContactForm.vue";
 import { mapActions } from "vuex";
 
-@Component({
-  components: {
-    BackTo,
-    ContactForm,
-  },
+export default {
   methods: {
-    ...mapActions(["setLoading", "fetchCredentialTypes"]),
+    ...mapActions({ setLoading: "setLoading", fetchCredentialTypes: "fetchCredentialTypes"}),
   },
-})
-export default class Contact extends Vue {
-  setLoading!: (loading: boolean) => void;
-  fetchCredentialTypes!: (paged: boolean) => Promise<void>;
-
   async created(): Promise<void> {
     this.setLoading(true);
     this.fetchCredentialTypes(false);

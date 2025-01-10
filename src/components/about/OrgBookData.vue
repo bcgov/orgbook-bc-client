@@ -51,26 +51,25 @@
 import i18n from "@/i18n";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { unwrapTranslations } from "@/utils/entity";
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
-@Component({
-  computed: {
-    ...mapGetters(["credentialTypesByIssuer"]),
-  },
-})
-export default class OrgBookData extends Vue {
-  formattedDescription(type: ICredentialType): string {
-    if (type?.format === "vc_di") {
-      // TODO: Eventually, this should be a translation from OCA
-      return type?.schema?.name;
-    }
-    return (
-      unwrapTranslations(type.schema_label)?.[i18n.locale]?.description ||
-      type?.description ||
-      ""
-    );
-  }
+export default {
+        computed: {
+                ...mapGetters(["credentialTypesByIssuer"]),
+        },
+        methods: {
+                formattedDescription(type: ICredentialType): string {
+                        if (type?.format === "vc_di") {
+                                // TODO: Eventually, this should be a translation from OCA
+                                return type?.schema?.name;
+                        }
+                        return (
+                                unwrapTranslations(type.schema_label)?.[i18n.locale]?.description ||
+                                        type?.description ||
+                                        ""
+                        );
+                }
+        }
 }
 </script>
 

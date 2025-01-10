@@ -26,15 +26,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
-@Component({
-  computed: {
-    ...mapGetters(["showcaseLinks"]),
-  },
-})
-export default class ShowcaseLinks extends Vue {}
+export default {
+        computed: {
+                ...mapGetters(["showcaseLinks"]),
+        }
+}
 </script>
 
 <style lang="scss" scoped>

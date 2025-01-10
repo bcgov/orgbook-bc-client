@@ -46,7 +46,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters, mapActions } from "vuex";
 import {
   IEntityFacetField,
@@ -55,29 +54,32 @@ import {
 import { translate } from "@/i18n/translate";
 import { isEntityFilterActive, toTranslationFormat } from "@/utils/entity";
 
-@Component({
-  computed: {
-    ...mapGetters(["getEntityFilters"]),
-  },
-  methods: {
-    ...mapActions(["toggleEntityFilter"]),
-  },
-  directives: {
-    translate,
-  },
-})
-export default class EntityFilterFacets extends Vue {
-  @Prop({ default: "" }) entityType!: string;
-  @Prop({ default: () => [] }) filterField!: string;
-  @Prop({ default: () => [] }) fields!: IEntityFacetField[];
-
-  getEntityFilters!: IEntityFilter;
-  toTranslationFormat = toTranslationFormat;
-  isEntityFilterActive: (
-    filterField: string,
-    getEntityFilters: IEntityFilter,
-    filterString?: string
-  ) => boolean = isEntityFilterActive;
+export default {
+        computed: {
+                ...mapGetters(["getEntityFilters"]),
+        },
+        methods: {
+                ...mapActions(["toggleEntityFilter"]),
+                isEntityFilterActive,
+                toTranslationFormat
+        },
+        directives: {
+                translate,
+        },
+        props: {
+                entityType: {
+                        type:  String,
+                        default: ""
+                },
+                filterField: {
+                        type:  String,
+                        default: () => []
+                },
+                fields: {
+                        type:  Array<IEntityFacetField>,
+                        default: () => []
+                },
+        }
 }
 </script>
 
