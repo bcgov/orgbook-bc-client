@@ -10,6 +10,10 @@ import { claimFormat } from "@/filters/claim.filter";
 import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 import { newTracker, trackPageView } from "@snowplow/browser-tracker";
+import { createPinia, PiniaVuePlugin } from "pinia";
+
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
 
 Vue.config.productionTip = false;
 Vue.filter("formatDate", dateFilter);
@@ -30,6 +34,7 @@ async function init() {
       store.dispatch("setDocRoutes", docRoutes);
     },
     render: (h) => h(App),
+    pinia,
   }).$mount("#app");
 
   // Snowplow tracking

@@ -100,6 +100,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import "@/filters/date.filter";
 import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useTopicState } from "@/stores";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
 import i18n from "@/i18n/index";
@@ -115,9 +117,9 @@ import { isExpired, toTranslationFormat } from "@/utils/entity";
     ...mapGetters([
       "mdiOpenInNew",
       "mdiShieldCheckOutline",
-      "selectedTopic",
       "credentialTypes",
     ]),
+    ...mapState(useTopicState, ["selectedTopic"])
   },
 })
 export default class CredentialItem extends Vue {

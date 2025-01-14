@@ -122,10 +122,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { useAppState, useContactState } from "@/stores"
+import { mapActions as pmapActions, mapState } from "pinia";
+
 import router from "@/router";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { IContactRequest } from "@/interfaces/api/v4/contact.interface";
-import { contactReason } from "@/store/modules/contact";
+import { contactReason } from "@/stores/contact";
 import { unwrapTranslations } from "@/utils/entity";
 
 interface Data {
@@ -158,10 +161,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions({
-      setLoading: "setLoading",
-      sendContact: "sendContact"
-    }),
+    ...pmapActions(useAppState, ["setLoading"]),
+    ...pmapActions(useContactState, ["sendContact"]),
     async submit(e: Event): Promise<void> {
       e.preventDefault();
       const isFormValid = (
@@ -188,10 +189,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loading: "loading",
       credentialTypes: "credentialTypes",
       getLikeStatus: "getLikeStatus"
     }),
+    ...mapState(useAppState, {loading: "getLoading"}),
     requestTypes: function(): Array<{ text: string; value: string }> {
       return Object.keys(contactReason).map((key) => ({
         text: contactReason[key],

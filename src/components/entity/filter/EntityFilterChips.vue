@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
@@ -36,8 +35,8 @@ export default {
       getEntityFilters: "getEntityFilters",
       mdiClose: "mdiClose"
     }),
-    get activeEntityFilters(): EntityChips[] {
-      var chips: EntityChips[] = [];
+    activeEntityFilters(): EntityChips[] {
+      let chips: EntityChips[] = [];
       Object.keys(this.getEntityFilters).forEach((key) => {
         if (Array.isArray(this.getEntityFilters[key])) {
           chips.push(

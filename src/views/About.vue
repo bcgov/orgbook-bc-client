@@ -21,6 +21,8 @@ import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
 import { mapActions, mapGetters } from "vuex";
+import { useAppState } from "@/stores/app"
+import { mapActions as pmapActions } from "pinia";
 import { IDocRoute, IDocRouteData } from "@/interfaces/doc.interface";
 
 export default {
@@ -42,9 +44,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      setLoading: "setLoading",
       fetchCredentialTypes:  "fetchCredentialTypes"
-    })
+    }),
+    ...pmapActions(useAppState, ["setLoading"])
   },
   async created(): Promise<void> {
     this.setLoading(true);

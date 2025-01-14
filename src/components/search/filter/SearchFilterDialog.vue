@@ -46,6 +46,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useAppState } from "@/stores";
 import SearchFilterFacetPanels from "./SearchFilterFacetPanels.vue";
 
 interface Data {
@@ -58,11 +60,11 @@ interface Data {
   },
   computed: {
     ...mapGetters([
-      "loading",
       "pagedSearchTopics",
       "mdiClose",
       "mdiFilterOutline",
     ]),
+    ...mapState(useAppState, { loading: "getLoading" })
   },
 })
 export default class SearchFilterDialog extends Vue {
