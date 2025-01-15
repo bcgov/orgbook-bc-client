@@ -510,9 +510,11 @@ export default {
       mdiChevronRight: "mdiChevronRight",
       mdiCircleMedium: "mdiCircleMedium",
       mdiInformationOutline: "mdiInformationOutline",
+      selectedTopic: "selectedTopic",
+      selectedTopicFullCredentialSet: "selectedTopicFullCredentialSet"
     }),
     ...mapState(useAppState, { loading: "getLoading" }),
-    ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    // ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
     hasAnyRelationships: function (): boolean {
       return (
         this.businessAsRelationship?.length > 0 ||
@@ -582,7 +584,7 @@ export default {
     entityIncorporationNumber: function (): string | undefined {
       return this.selectedTopic?.source_id;
     },
-    filteredEntityCredentials: function (): Array<ICraedentialDisplayType> | undefined {
+    filteredEntityCredentials: function (): Array<ICredentialDisplayType> | undefined {
       var filteredCreds = this.entityCredentialsSorted;
       if (filteredCreds === undefined) {
         return undefined;
@@ -725,9 +727,11 @@ export default {
       setRegistrationType: "setRegistrationType",
       setIssuers: "setIssuers",
       fetchRelationships: "fetchRelationships",
+      fetchFormattedIdentifiedTopic: "fetchFormattedIdentifiedTopic",
+      fetchTopicFullCredentialSet: "fetchTopicFullCredentialSet",
     }),
     ...pmapActions(useAppState, ["setLoading"]),
-    ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
+    // ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
     credOrRelationshipToDisplay,
     getRelationshipName,
     getCredentialLabel,
