@@ -52,6 +52,7 @@ export const useTopicState = defineStore("topicState", {
 		async fetchTopicCredentialSet(id: number): Promise<void> {
 			try {
 				const res = await topicService.getTopicCredentialSet(id);
+				console.log("fetch topic credential set", res.data);
 				this.setSelectedCredentialSet(res.data);
 			} catch (e) {
 				console.error(e);
@@ -62,6 +63,7 @@ export const useTopicState = defineStore("topicState", {
 		async fetchTopicFullCredentialSet(id: number): Promise<void> {
 			try {
 				const res = await v4topicService.getTopicCredentialSet(id);
+				console.log("fetch topic full credential set", res.data);
 				this.setSelectedCredentialSet(res.data);
 			} catch (e) {
 				console.error(e);

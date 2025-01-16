@@ -11,6 +11,7 @@ import docs from "@/assets/docs.json";
 import { defaultDoc, processDocRoute } from "./utils/doc";
 import { newTracker, trackPageView } from "@snowplow/browser-tracker";
 import { createPinia, PiniaVuePlugin } from "pinia";
+import { useDocState } from "@/stores";
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
@@ -31,7 +32,10 @@ async function init() {
     store,
     vuetify,
     created: () => {
-      store.dispatch("setDocRoutes", docRoutes);
+      console.log("routes are ", docRoutes);
+      const docStore = useDocState();
+
+      docStore.setDocRoutes(docRoutes);
     },
     render: (h) => h(App),
     pinia,

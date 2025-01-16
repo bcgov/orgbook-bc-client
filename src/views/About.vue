@@ -21,17 +21,12 @@ import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
 import { mapActions, mapGetters } from "vuex";
-import { useAppState } from "@/stores/app"
-import { mapActions as pmapActions } from "pinia";
+import { useAppState, useCredentialTypeState, useDocState } from "@/stores"
+import { mapActions as pmapActions, mapState } from "pinia";
 import { IDocRoute, IDocRouteData } from "@/interfaces/doc.interface";
 
 export default {
   computed: {
-    ...mapGetters({
-      docLinks: "docLinks",
-      docRoute: "docRoute",
-      showcaseLinks: "showcaseLinks"
-    }),
     docRouteInfo: function(): IDocRoute {
         return this.docRoute(this.$route.name || "");
     },
@@ -41,12 +36,11 @@ export default {
     html: function(): string {
         return this.docRouteData?.html || "";
     },
+    ...mapState(useDocState, {docLinks: "docLinks", docRoute: "getDocRoute", showcaseLinks: "showcaseLinks"})
   },
   methods: {
-    ...mapActions({
-      fetchCredentialTypes:  "fetchCredentialTypes"
-    }),
-    ...pmapActions(useAppState, ["setLoading"])
+    ...pmapActions(useAppState, ["setLoading"]),
+    ...pmapActions(useCredentialTypeState, ["fetchCredentialTypes"]),
   },
   async created(): Promise<void> {
     this.setLoading(true);

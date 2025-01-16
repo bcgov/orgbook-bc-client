@@ -27,10 +27,12 @@
 
 <script lang="ts">
 import { mapGetters } from "vuex";
+import { useDocState } from "@/stores";
+import { mapState } from "pinia";
 
 export default {
         computed: {
-                ...mapGetters(["showcaseLinks"]),
+          ...mapState(useDocState, ["showcaseLinks"]),
         }
 }
 </script>

@@ -95,6 +95,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
+import { useStatisticsState, useDocState } from "@/stores";
+import { mapActions as pmapActions, mapState } from "pinia";
 
 interface Data {
   descriptions: string[];
@@ -106,14 +108,14 @@ interface Data {
   },
   computed: {
     ...mapGetters([
-      "statistics",
-      "showcaseLinks",
       "mdiCheckBold",
       "mdiShieldCheckOutline",
     ]),
+    ...mapState(useStatisticsState, { statistics: "getStatistics"}),
+    ...mapState(useDocState, ["showcaseLinks"]),
   },
   methods: {
-    ...mapActions(["fetchStatistics"]),
+    ...pmapActions(useStatisticsState, ["fetchStatistics"]),
   },
 })
 export default class SearchHome extends Vue {
