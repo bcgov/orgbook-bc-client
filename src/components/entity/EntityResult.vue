@@ -510,11 +510,9 @@ export default {
       mdiChevronRight: "mdiChevronRight",
       mdiCircleMedium: "mdiCircleMedium",
       mdiInformationOutline: "mdiInformationOutline",
-      selectedTopic: "selectedTopic",
-      selectedTopicFullCredentialSet: "selectedTopicFullCredentialSet"
     }),
     ...mapState(useAppState, { loading: "getLoading" }),
-    // ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
     hasAnyRelationships: function (): boolean {
       return (
         this.businessAsRelationship?.length > 0 ||
@@ -727,11 +725,9 @@ export default {
       setRegistrationType: "setRegistrationType",
       setIssuers: "setIssuers",
       fetchRelationships: "fetchRelationships",
-      fetchFormattedIdentifiedTopic: "fetchFormattedIdentifiedTopic",
-      fetchTopicFullCredentialSet: "fetchTopicFullCredentialSet",
     }),
     ...pmapActions(useAppState, ["setLoading"]),
-    // ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
+    ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
     credOrRelationshipToDisplay,
     getRelationshipName,
     getCredentialLabel,
@@ -917,7 +913,7 @@ export default {
           console.error("Failed to fetch topic. Invalid source id");
           this.$router.push("/");
         }
-        const topic: ITopic = this.$store.getters.selectedTopic;
+        const topic: ITopic | null = this.selectedTopic;
         if (topic?.id) {
           console.log("relationships")
           await Promise.all([
