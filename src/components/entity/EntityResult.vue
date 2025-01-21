@@ -440,7 +440,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useAppState, useTopicState } from "@/stores";
+import { useAppState, useTopicState, useEntityState } from "@/stores";
 import moment from "moment";
 
 import {
@@ -499,9 +499,6 @@ export default {
     ...mapGetters({
       credentialTypes: "credentialTypes",
       entityDesc: "entityDesc",
-      getEntityFilters: "getEntityFilters",
-      getRelationships: "getRelationships",
-      getScrollY: "getScrollY",
       mdiArrowUp: "mdiArrowUp",
       mdiArrowDown: "mdiArrowDown",
       mdiArrowLeft: "mdiArrowLeft",
@@ -513,6 +510,7 @@ export default {
     }),
     ...mapState(useAppState, { loading: "getLoading" }),
     ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    ...mapState(useEntityState, ["getScrollY","getRelationships", "getEntityFilters"]),
     hasAnyRelationships: function (): boolean {
       return (
         this.businessAsRelationship?.length > 0 ||
@@ -720,14 +718,11 @@ export default {
   methods: {
     ...mapActions({
       fetchCredentialTypes: "fetchCredentialTypes",
-      setCredentialType: "setCredentialType",
       setEntityDesc: "setEntityDesc",
-      setRegistrationType: "setRegistrationType",
-      setIssuers: "setIssuers",
-      fetchRelationships: "fetchRelationships",
     }),
     ...pmapActions(useAppState, ["setLoading"]),
     ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
+    ...pmapActions(useEntityState, ["fetchRelationships", "setIssuers", "setCredentialType", "setRegistrationType",]),
     credOrRelationshipToDisplay,
     getRelationshipName,
     getCredentialLabel,

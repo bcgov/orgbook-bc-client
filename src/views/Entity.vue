@@ -9,12 +9,14 @@ import { Component, Vue } from "vue-property-decorator";
 import EntityResult from "@/components/entity/EntityResult.vue";
 import { NavigationGuardNext, Route } from "vue-router";
 import { mapActions } from "vuex";
+import { mapActions as pmapActions } from "pinia";
+import { useEntityState } from "@/stores";
 
 Component.registerHooks(["beforeRouteLeave"]);
 
 export default {
   methods: {
-    ...mapActions({ clearFilter: "clearFilter", setScrollY: "setScrollY"}),
+    ...pmapActions(useEntityState, ["setScrollY", "clearFilter"]),
   },
   async beforeRouteLeave(
     to: Route,

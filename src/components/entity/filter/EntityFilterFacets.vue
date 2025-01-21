@@ -47,6 +47,8 @@
 
 <script lang="ts">
 import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions as pmapActions} from "pinia";
+import { useEntityState } from "@/stores";
 import {
   IEntityFacetField,
   IEntityFilter,
@@ -56,10 +58,10 @@ import { isEntityFilterActive, toTranslationFormat } from "@/utils/entity";
 
 export default {
         computed: {
-                ...mapGetters(["getEntityFilters"]),
+                ...mapState(useEntityState, ["getEntityFilters"]),
         },
         methods: {
-                ...mapActions(["toggleEntityFilter"]),
+                ...pmapActions(useEntityState, ["toggleEntityFilter"]),
                 isEntityFilterActive,
                 toTranslationFormat
         },

@@ -236,6 +236,8 @@
 
 <script lang="ts">
 import { mapActions, mapGetters } from "vuex";
+import { mapState, mapActions as pmapActions } from "pinia";
+import { useEntityState } from "@/stores";
 
 import {
   IEntityFacetField,
@@ -275,19 +277,19 @@ export default {
         computed: {
                 ...mapGetters({
                         searchTopicFacets: "searchTopicFacets",
-                        getAuthorities: "getAuthorities",
-                        getCredentialTypes: "getCredentialTypes",
-                        getRegistrationTypes: "getRegistrationTypes",
-                        getEntityFilters: "getEntityFilters",
                         mdiCalendar: "mdiCalendar",
                         mdiInformationOutline: "mdiInformationOutline",
                 }),
+                ...mapState(useEntityState, [
+                        "getAuthorities",
+                        "getCredentialTypes",
+                        "getRegistrationTypes",
+                        "getEntityFilters",
+                ])
         },
         methods: {
                 isEntityFilterActive,
-                ...mapActions({
-                        setFilter: "setFilter"
-                }),
+                ...pmapActions(useEntityState, ["setFilter"]),
                 toggleShowExpired(newVal: boolean): void {
                         var currFilters = { ...this.getEntityFilters };
                         currFilters.show_expired = !newVal;

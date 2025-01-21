@@ -23,6 +23,8 @@
 
 <script lang="ts">
 import { mapActions, mapGetters } from "vuex";
+import { mapState, mapActions as pmapActions } from "pinia";
+import { useEntityState } from "@/stores";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
 export interface EntityChips {
@@ -32,9 +34,9 @@ export interface EntityChips {
 export default {
   computed: {
     ...mapGetters({
-      getEntityFilters: "getEntityFilters",
       mdiClose: "mdiClose"
     }),
+    ...mapState(useEntityState, ["getEntityFilters"]),
     activeEntityFilters(): EntityChips[] {
       let chips: EntityChips[] = [];
       Object.keys(this.getEntityFilters).forEach((key) => {
@@ -70,9 +72,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions({
-      toggleEntityFilter: "toggleEntityFilter"
-    }),
+    ...pmapActions(useEntityState, ["toggleEntityFilter"]),
   }
 }
 </script>

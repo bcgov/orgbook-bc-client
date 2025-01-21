@@ -4,7 +4,6 @@ import credentialType, {
   State as CredentialTypeState,
 } from "./modules/credential-type";
 import doc, { State as DocState } from "./modules/doc";
-import entity, { State as EntityState } from "./modules/entity";
 import entityDesc, { State as EntityDescState } from "./modules/entity-desc";
 import feedback from "./modules/feedback";
 import icon, { State as IconState } from "./modules/icon";
@@ -18,7 +17,6 @@ Vue.use(Vuex);
 export interface State {
   credentialType: CredentialTypeState;
   doc: DocState;
-  entity: EntityState;
   entityDesc: EntityDescState;
   icon: IconState;
   search: SearchState;
@@ -31,7 +29,6 @@ export default new Vuex.Store({
   modules: {
     credentialType,
     doc,
-    entity,
     entityDesc,
     feedback,
     icon,
