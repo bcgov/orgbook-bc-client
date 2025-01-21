@@ -37,7 +37,7 @@ export default {
       mdiClose: "mdiClose"
     }),
     ...mapState(useEntityState, ["getEntityFilters"]),
-    activeEntityFilters(): EntityChips[] {
+    activeEntityFilters: function (): EntityChips[] {
       let chips: EntityChips[] = [];
       Object.keys(this.getEntityFilters).forEach((key) => {
         if (Array.isArray(this.getEntityFilters[key])) {
