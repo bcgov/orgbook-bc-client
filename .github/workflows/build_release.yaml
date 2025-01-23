@@ -35,8 +35,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=ref
-            type=sha
+            type=ref,event=tag
 
       - name: Build and push image
         id: builder
