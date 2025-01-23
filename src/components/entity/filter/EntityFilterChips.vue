@@ -36,8 +36,8 @@ export default {
       getEntityFilters: "getEntityFilters",
       mdiClose: "mdiClose"
     }),
-    get activeEntityFilters(): EntityChips[] {
-      var chips: EntityChips[] = [];
+    activeEntityFilters: function (): EntityChips[] {
+      let chips: EntityChips[] = [];
       Object.keys(this.getEntityFilters).forEach((key) => {
         if (Array.isArray(this.getEntityFilters[key])) {
           chips.push(

@@ -42,7 +42,7 @@
           :authority="entityRegistrationIssuer"
           :authorityLink="entityRegistrationIssuerUrl"
           :effectiveDate="entityStatusEffectiveDate"
-          :credId="entityNameCredId"
+          :credentialId="entityNameCredId"
         >
           <template #header>
             <div class="text-h6 font-weight-bold">Registration</div>
@@ -148,7 +148,7 @@
             businessAsRelationship[i + relationshipStartIndex].credential
               .effective_date
           "
-          :credId="
+          :credentialId="
             businessAsRelationship[i + relationshipStartIndex].credential.id
           "
         >
@@ -288,7 +288,7 @@
           v-for="(_, i) in ownedByRelationship"
           :key="i"
           :entityType="entityJurisdiction"
-          :cred="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)"
+          :credential="credOrRelationshipToDisplay(ownedByRelationship[i], credSet)"
           :disableDefaultHeader="true"
           :effectiveDate="ownedByRelationship[i].credential.effective_date"
         >
