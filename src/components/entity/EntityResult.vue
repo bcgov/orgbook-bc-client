@@ -440,7 +440,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useAppState, useTopicState, useEntityState, useEntityDescState, useIconState } from "@/stores";
+import { useAppState, useTopicState, useEntityState, useEntityDescState, useIconState, useCredentialTypeState } from "@/stores";
 import moment from "moment";
 
 import {
@@ -496,7 +496,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
+    ...mapState(useCredentialTypeState, {
       credentialTypes: "credentialTypes",
     }),
     ...mapState(useIconState, ["mdiArrowUp", "mdiArrowDown", "mdiArrowLeft", "mdiMapMarker", "mdiChevronLeft", "mdiChevronRight", "mdiCircleMedium", "mdiInformationOutline"]),
@@ -709,7 +709,7 @@ export default {
 
   },
   methods: {
-    ...mapActions({
+    ...pmapActions(useCredentialTypeState, {
       fetchCredentialTypes: "fetchCredentialTypes",
     }),
     ...pmapActions(useAppState, ["setLoading"]),

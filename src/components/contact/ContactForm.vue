@@ -122,7 +122,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { useAppState, useContactState, useLikeState } from "@/stores"
+import { useAppState, useContactState, useCredentialState, useCredentialTypeState, useLikeState } from "@/stores"
 import { mapActions as pmapActions, mapState } from "pinia";
 
 import router from "@/router";
@@ -188,9 +188,7 @@ export default {
 
   },
   computed: {
-    ...mapGetters({
-      credentialTypes: "credentialTypes",
-    }),
+    ...mapState(useCredentialTypeState, ["credentialTypes"]),
     ...mapState(useLikeState, ["getLikeStatus"]),
     ...mapState(useAppState, {loading: "getLoading"}),
     requestTypes: function(): Array<{ text: string; value: string }> {

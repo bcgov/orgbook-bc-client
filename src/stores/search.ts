@@ -112,7 +112,6 @@ export const useSearchState = defineStore("searchState", {
 				valueSelector: (filter?: ISearchFilter) => filter?.value || "",
 				labelFormatter: (filter?: ISearchFilter) => {
 					const credentialTypeStore = useCredentialTypeState();
-					// TODO: need to https://pinia.vuejs.org/core-concepts/
 					const credentialType: ICredentialType =
 						credentialTypeStore.getCredentialTypes.find(
 							(type: ICredentialType) => type.id.toString() === filter?.value
@@ -150,11 +149,9 @@ export const useSearchState = defineStore("searchState", {
 			this.setPage(defaultPageResult<ISearchTopic>());
 			this.setFacets(defaultFacetResult);
 		},
-		// TODO: replace the use of this via store.dispatch
 		setSearchQuery(query: ISearchQuery): void {
 			this.setQuery(query);
 		},
-		// TODO: replace the use of this via store.dispatch
 		setSearchFilters(query: ISearchQuery): void {
 			const filters = filterSpec.filter((filter) =>
 				objHasProp(query, filter.queryParameter)
