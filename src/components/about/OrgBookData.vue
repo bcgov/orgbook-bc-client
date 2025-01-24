@@ -51,11 +51,12 @@
 import i18n from "@/i18n";
 import { ICredentialType } from "@/interfaces/api/v2/credential-type.interface";
 import { unwrapTranslations } from "@/utils/entity";
-import { mapGetters } from "vuex";
+import { useCredentialTypeState } from "@/stores";
+import { mapState } from "pinia";
 
 export default {
         computed: {
-                ...mapGetters(["credentialTypesByIssuer"]),
+                ...mapState(useCredentialTypeState, ["credentialTypesByIssuer"]),
         },
         methods: {
                 formattedDescription(type: ICredentialType): string {
