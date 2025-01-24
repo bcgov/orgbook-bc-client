@@ -43,9 +43,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia"
-import { useAppState, useFeedbackState, useIconState } from "@/stores"
+import { useAppState, useFeedbackState, useIconState, useLikeState } from "@/stores"
 import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
 import { trackStructEvent } from "@snowplow/browser-tracker";
+import { useLikeState } from "@/stores/like";
 interface Data {
   reason: string;
   comments: string;
@@ -55,11 +56,11 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["getLikeStatus"]),
+    ...mapState(useLikeState, ["getLikeStatus"]),
     ...mapState(useIconState, [ "mdiThumbDown", "mdiThumbUp",] ),
   },
   methods: {
-    ...mapActions(["setLike"]),
+    ...pmapActions(useLikeState, ["setLike"]),
     ...pmapActions(useAppState, ["setLoading"]),
     ...pmapActions(useFeedbackState, ["sendFeedback"])
   },

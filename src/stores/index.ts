@@ -11,4 +11,4 @@ export { useIconState } from "./icon";
 export { useSearchState } from "./search";
 export { useStatisticsState } from "./statistics";
 export { useTopicState } from "./topic";
-// export { useLikeState } from "./like";
+export { useLikeState } from "./like";
