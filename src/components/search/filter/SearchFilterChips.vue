@@ -22,19 +22,23 @@ import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { isFilterActive } from "@/utils/search";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions, mapState } from "pinia";
+import { useIconState, useSearchState } from "@/stores";
 
 @Component({
   computed: {
-    ...mapGetters(["extendedSearchFilterFields", "searchFilters", "mdiClose"]),
+    ...mapState(useSearchState, ["extendedSearchFilterFields", "searchFilters"]),
+    ...mapState(useIconState, ["mdiClose"]),
   },
   methods: {
-    ...mapActions(["toggleSearchFilter"]),
+    ...pmapActions(useSearchState, ["toggleSearchFilter"]),
   },
 })
 export default class SearchFilterChips extends Vue {
   extendedSearchFilterFields!: ISearchFilter[];
   searchFilters!: ISearchFilter[];
 
+  
   get activeSearchFilters(): ISearchFilter[] {
     return this.extendedSearchFilterFields.filter((field) =>
       isFilterActive(this.searchFilters, field)

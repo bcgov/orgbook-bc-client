@@ -47,7 +47,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import { mapState } from "pinia";
-import { useAppState } from "@/stores";
+import { useAppState, useIconState, useSearchState} from "@/stores";
 import SearchFilterFacetPanels from "./SearchFilterFacetPanels.vue";
 
 interface Data {
@@ -59,11 +59,10 @@ interface Data {
     SearchFilterFacetPanels,
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useSearchState, [
       "pagedSearchTopics",
-      "mdiClose",
-      "mdiFilterOutline",
     ]),
+    ...mapState(useIconState, ["mdiClose","mdiFilterOutline"]),
     ...mapState(useAppState, { loading: "getLoading" })
   },
 })

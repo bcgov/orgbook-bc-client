@@ -101,7 +101,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import "@/filters/date.filter";
 import { mapGetters } from "vuex";
 import { mapState } from "pinia";
-import { useTopicState } from "@/stores";
+import { useTopicState, useIconState } from "@/stores";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";
 import { selectFirstAttrItem } from "@/utils/attribute";
 import i18n from "@/i18n/index";
@@ -115,10 +115,9 @@ import { isExpired, toTranslationFormat } from "@/utils/entity";
 @Component({
   computed: {
     ...mapGetters([
-      "mdiOpenInNew",
-      "mdiShieldCheckOutline",
       "credentialTypes",
     ]),
+    ...mapState(useIconState, ["mdiOpenInNew","mdiShieldCheckOutline"]),
     ...mapState(useTopicState, ["selectedTopic"])
   },
 })

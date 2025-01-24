@@ -23,6 +23,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useSearchState } from "@/stores";
 import SearchFilterDialog from "./SearchFilterDialog.vue";
 import SearchHelpPopup from "@/components/search/SearchHelpPopup.vue";
 
@@ -32,7 +34,7 @@ import SearchHelpPopup from "@/components/search/SearchHelpPopup.vue";
     SearchFilterDialog,
   },
   computed: {
-    ...mapGetters(["searchQuery", "pagedSearchTopics"]),
+    ...mapState(useSearchState, ["searchQuery", "pagedSearchTopics"]),
   },
 })
 export default class SearchFilterResultCount extends Vue {}

@@ -1,8 +1,8 @@
 import Vue from "vue";
+import store from "./store";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
-import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import { dateFilter } from "@/filters/date.filter";

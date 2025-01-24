@@ -37,11 +37,12 @@
 import { ISearchTopic } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { pluck } from "@/utils/resource";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useIconState } from "@/stores";
 
 @Component({
   computed: {
-    ...mapGetters(["mdiAlertOutline"]),
+    ...mapState(useIconState, ["mdiAlertOutline"]),
   },
 })
 export default class SearchTopic extends Vue {

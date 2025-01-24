@@ -24,7 +24,7 @@
 <script lang="ts">
 import { mapActions, mapGetters } from "vuex";
 import { mapState, mapActions as pmapActions } from "pinia";
-import { useEntityState } from "@/stores";
+import { useEntityState, useIconState } from "@/stores";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 
 export interface EntityChips {
@@ -33,9 +33,7 @@ export interface EntityChips {
 }
 export default {
   computed: {
-    ...mapGetters({
-      mdiClose: "mdiClose"
-    }),
+    ...mapState(useIconState, ["mdiClose"]),
     ...mapState(useEntityState, ["getEntityFilters"]),
     activeEntityFilters: function (): EntityChips[] {
       let chips: EntityChips[] = [];

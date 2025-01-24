@@ -235,9 +235,8 @@
 </template>
 
 <script lang="ts">
-import { mapActions, mapGetters } from "vuex";
 import { mapState, mapActions as pmapActions } from "pinia";
-import { useEntityState } from "@/stores";
+import { useEntityState, useIconState } from "@/stores";
 
 import {
   IEntityFacetField,
@@ -275,7 +274,7 @@ export default {
                 };
         },
         computed: {
-                ...mapGetters({
+                ...mapState(useIconState, {
                         mdiCalendar: "mdiCalendar",
                         mdiInformationOutline: "mdiInformationOutline",
                 }),

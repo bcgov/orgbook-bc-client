@@ -13,6 +13,8 @@ import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchTopic } from "@/interfaces/api/v4/search-topic.interface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useSearchState } from "@/stores";
 import SearchTopic from "./SearchTopic.vue";
 
 @Component({
@@ -20,7 +22,7 @@ import SearchTopic from "./SearchTopic.vue";
     SearchTopic,
   },
   computed: {
-    ...mapGetters(["pagedSearchTopics"]),
+    ...mapState(useSearchState, ["pagedSearchTopics"]),
   },
 })
 export default class SearchTopicPage extends Vue {

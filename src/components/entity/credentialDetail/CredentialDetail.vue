@@ -122,7 +122,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia"
-import { useCredentialState, useTopicState, useAppState } from "@/stores";
+import { useCredentialState, useTopicState, useAppState, useIconState } from "@/stores";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
@@ -143,7 +143,7 @@ interface Data {
     BackTo,
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useIconState, [
       "mdiArrowLeft",
       "mdiShieldCheckOutline",
       "mdiCheckBold",

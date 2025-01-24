@@ -8,10 +8,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useIconState } from "@/stores";
 
 @Component({
   computed: {
-    ...mapGetters(["mdiArrowLeft"]),
+    ...mapState(useIconState, ["mdiArrowLeft"]),
   },
 })
 export default class BackTo extends Vue {

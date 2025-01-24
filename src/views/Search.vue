@@ -37,7 +37,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useAppState } from "@/stores/app"
+import { useAppState, useSearchState, useCredentialTypeState } from "@/stores"
 import SearchBar from "@/components/search/SearchBar.vue";
 import SearchDescription from "@/components/search/SearchDescription.vue";
 import SearchHelp from "@/components/search/SearchHelp.vue";
@@ -61,12 +61,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["searchQuery", "pagedSearchTopics"]),
-    ...mapState(useAppState, {loading:  "getLoading"})
+    ...mapState(useSearchState, ["searchQuery", "pagedSearchTopics"]),
+    ...mapState(useAppState, { loading: "getLoading" })
+  },
+  setup() {
+    const searchState = useSearchState()
+    return { searchState }
   },
   methods: {
-    ...mapActions([
-      "fetchCredentialTypes",
+    ...pmapActions(useCredentialTypeState, ["fetchCredentialTypes"]),
+    ...pmapActions(useSearchState, [
       "fetchSearchFacetedTopics",
       "resetSearch",
     ]),
@@ -74,8 +78,9 @@ export default {
     async extractQueryAndDispatchSearch(query: ISearchQuery): Promise<void> {
       this.q = query?.q || null;
       const newQuery = { ...defaultQuery, ...query };
-      store.dispatch("setSearchQuery", newQuery);
-      store.dispatch("setSearchFilters", newQuery);
+      // TODO fix this
+      this.searchState.setSearchQuery(newQuery);
+      this.searchState.setSearchFilters(newQuery);
       await this.search();
     },
     async search(): Promise<void> {

@@ -95,7 +95,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useStatisticsState } from "@/stores";
+import { useStatisticsState } from "@/stores/statistics";
+import { useIconState } from "@/stores";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
 import { IStatistics } from "@/interfaces/api/v2/statistics.interface";
 
@@ -110,9 +111,8 @@ interface Data {
   computed: {
     ...mapGetters([
       "showcaseLinks",
-      "mdiCheckBold",
-      "mdiShieldCheckOutline",
     ]),
+    ...mapState(useIconState, ["mdiCheckBold","mdiShieldCheckOutline"]),
     ...mapState(useStatisticsState, { statistics: "getStatistics"})
   },
   methods: {
