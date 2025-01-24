@@ -276,7 +276,6 @@ export default {
         },
         computed: {
                 ...mapGetters({
-                        searchTopicFacets: "searchTopicFacets",
                         mdiCalendar: "mdiCalendar",
                         mdiInformationOutline: "mdiInformationOutline",
                 }),
