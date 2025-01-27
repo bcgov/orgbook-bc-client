@@ -177,7 +177,7 @@
                       .related_topic &&
                     businessAsRelationship[i + relationshipStartIndex]
                       .related_topic.source_id
-                  }/type/registration.registries.ca`"
+                  }`"
                   class="font-weight-bold"
                   >{{
                     getRelationshipName(
@@ -308,7 +308,7 @@
                 :to="`/entity/${
                   ownedByRelationship[i].related_topic &&
                   ownedByRelationship[i].related_topic.source_id
-                }/type/registration.registries.ca`"
+                }`"
                 class="font-weight-bold"
               >
                 {{ getRelationshipName(ownedByRelationship[i]) }}

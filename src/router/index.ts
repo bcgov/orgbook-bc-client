@@ -11,6 +11,10 @@ const routes: Array<RouteConfig> = [
     component: Search,
   },
   {
+    path: "/entity/:sourceId",
+    redirect: "/entity/:sourceId/type/registration.registries.ca",
+  },
+  {
     path: "/entity/:sourceId/type/:type",
     name: "Entity",
     component: () =>
