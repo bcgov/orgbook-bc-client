@@ -650,11 +650,10 @@ export default {
         this.selectedTopic?.attributes
       );
 
-      const ret = state?.type + "." + state?.value;
-      if (ret.includes("undefined")) {
-        return undefined;
-      }
-      return ret;
+      const maybeEntityStatus = state?.type + "." + state?.value;
+      console.log("maybeEntityStatus is ", maybeEntityStatus)
+      // if either state, state.type, or state.value are undefined return undefined
+      return maybeEntityStatus.includes("undefined") ? undefined : maybeEntityStatus 
     },
 
     entityRegistrationDate: function (): string | undefined {
