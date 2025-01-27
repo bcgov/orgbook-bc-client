@@ -99,7 +99,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import "@/filters/date.filter";
-import { mapGetters } from "vuex";
 import { mapState } from "pinia";
 import { useTopicState, useIconState, useCredentialTypeState } from "@/stores";
 import { ICredentialDisplayType } from "@/interfaces/api/v4/credential.interface";

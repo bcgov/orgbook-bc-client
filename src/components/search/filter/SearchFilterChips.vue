@@ -21,7 +21,6 @@
 import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { isFilterActive } from "@/utils/search";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
 import { useIconState, useSearchState } from "@/stores";
 

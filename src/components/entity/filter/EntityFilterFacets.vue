@@ -46,7 +46,6 @@
 </template>
 
 <script lang="ts">
-import { mapGetters, mapActions } from "vuex";
 import { mapState, mapActions as pmapActions} from "pinia";
 import { useEntityState } from "@/stores";
 import {

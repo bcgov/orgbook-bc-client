@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 import { mapState } from "pinia";
 import { useSearchState } from "@/stores";
 import SearchFilterDialog from "./SearchFilterDialog.vue";

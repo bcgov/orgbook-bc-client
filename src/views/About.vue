@@ -20,7 +20,7 @@ import BackTo from "@/components/shared/BackTo.vue";
 import OrgBookData from "@/components/about/OrgBookData.vue";
 import SubHeader from "@/components/layout/header/SubHeader.vue";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { useAppState, useCredentialTypeState } from "@/stores"
 import { mapActions as pmapActions } from "pinia";
 import { IDocRoute, IDocRouteData } from "@/interfaces/doc.interface";

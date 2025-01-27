@@ -121,7 +121,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import { useAppState, useContactState, useCredentialState, useCredentialTypeState, useLikeState } from "@/stores"
 import { mapActions as pmapActions, mapState } from "pinia";
 

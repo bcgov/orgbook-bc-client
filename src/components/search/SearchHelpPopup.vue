@@ -49,7 +49,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 import { mapState } from "pinia";
 import { useIconState } from "@/stores";
 import Dialog from "@/components/shared/Dialog.vue";

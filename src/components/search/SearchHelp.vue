@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 import SearchHelpPopup from "./SearchHelpPopup.vue";
 import { mapState } from "pinia";
 import { useIconState } from "@/stores";

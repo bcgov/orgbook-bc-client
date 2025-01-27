@@ -89,7 +89,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import _ from "lodash-es";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";

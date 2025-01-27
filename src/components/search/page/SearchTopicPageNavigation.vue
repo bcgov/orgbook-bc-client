@@ -20,7 +20,6 @@ import {
 } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/search";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
 import { useIconState } from "@/stores";
 import { useSearchState } from "@/stores/search";

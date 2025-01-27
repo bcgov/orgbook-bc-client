@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts">
-import { mapActions, mapGetters } from "vuex";
 import { mapState, mapActions as pmapActions } from "pinia";
 import { useEntityState, useIconState } from "@/stores";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";

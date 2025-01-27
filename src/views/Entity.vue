@@ -8,7 +8,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import EntityResult from "@/components/entity/EntityResult.vue";
 import { NavigationGuardNext, Route } from "vue-router";
-import { mapActions } from "vuex";
 import { mapActions as pmapActions } from "pinia";
 import { useEntityState } from "@/stores";
 

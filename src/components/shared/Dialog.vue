@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 import { useIconState } from "@/stores";
 import { mapState } from "pinia";
 

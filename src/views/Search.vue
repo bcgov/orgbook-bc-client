@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
 import { useAppState, useSearchState, useCredentialTypeState } from "@/stores"
 import SearchBar from "@/components/search/SearchBar.vue";
