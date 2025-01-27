@@ -74,9 +74,7 @@ const actions = {
     topic_id: number
   ): Promise<void> {
     try {
-      console.log("fetching relationships");
       const res = await relationshipService.getRelatedTo(topic_id);
-      console.log(res);
       commit("setRelationships", res.data);
     } catch (e) {
       console.error(e);
