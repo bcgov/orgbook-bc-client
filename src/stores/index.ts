@@ -1,3 +1,5 @@
+import Vue from "vue";
+import { createPinia, PiniaVuePlugin } from "pinia";
 export { useAppState } from "./app";
 export { useContactState } from "./contact";
 export { useCredentialState } from "./credential-detail";
@@ -12,3 +14,4 @@ export { useSearchState } from "./search";
 export { useStatisticsState } from "./statistics";
 export { useTopicState } from "./topic";
 export { useLikeState } from "./like";
+Vue.use(PiniaVuePlugin);

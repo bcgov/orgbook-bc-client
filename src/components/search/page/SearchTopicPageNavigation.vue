@@ -22,21 +22,24 @@ import { defaultQuery } from "@/utils/search";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useIconState, useSearchState } from "@/stores";
+import { useIconState } from "@/stores";
+import { useSearchState } from "@/stores/search";
 
 @Component({
   computed: {
-    ...mapState(useSearchState, ["pagedSearchTopics"]),
     ...mapState(useIconState, ["mdiChevronLeft", "mdiChevronRight"]),
-  },
-  methods: {
-    ...pmapActions(useSearchState, ["fetchSearch"]),
   },
 })
 export default class SearchTopicPageNavigation extends Vue {
   fetchSearch!: (query: ISearchQuery) => void;
   pagedSearchTopics!: IApiPagedResult<ISearchTopic>;
 
+  setup() {
+    const searchState = useSearchState();
+    const pagedSearchTopics = searchState.pagedSearchTopics
+    const fetchSearch = searchState.fetchSearch
+    return { pagedSearchTopics, fetchSearch }
+  }
   get first(): number {
     return this?.pagedSearchTopics?.first_index || 0;
   }
