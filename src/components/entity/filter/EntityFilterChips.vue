@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { IEntityFilter } from "@/interfaces/entity-filter.interface";
 

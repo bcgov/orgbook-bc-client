@@ -17,10 +17,13 @@
 import BackTo from "@/components/shared/BackTo.vue";
 import ContactForm from "@/components/contact/ContactForm.vue";
 import { mapActions } from "vuex";
+import { mapActions as pmapActions } from "pinia"
+import { useAppState } from "@/stores/app"
 
 export default {
   methods: {
-    ...mapActions({ setLoading: "setLoading", fetchCredentialTypes: "fetchCredentialTypes"}),
+    ...mapActions({ fetchCredentialTypes: "fetchCredentialTypes" }),
+    ...pmapActions(useAppState, ["setLoading"])
   },
   async created(): Promise<void> {
     this.setLoading(true);

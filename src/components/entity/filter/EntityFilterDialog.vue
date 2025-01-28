@@ -41,6 +41,8 @@
 <script lang="ts">
 import { mapGetters } from "vuex";
 import EntityFilterFacetPanels from "@/components/entity/filter/EntityFilterFacetPanels.vue";
+import { useAppState } from "@/stores/app"
+import { mapState } from "pinia";
 
 interface Data {
   dialog: boolean;
@@ -52,7 +54,8 @@ export default {
                 };
         },
         computed: {
-                ...mapGetters(["loading", "mdiFilterOutline", "mdiClose"]),
+                ...mapGetters(["mdiFilterOutline", "mdiClose"]),
+                ...mapState(useAppState, {loading: "getLoading"})
         }
 }
 </script>

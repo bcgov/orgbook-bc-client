@@ -121,6 +121,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions, mapState } from "pinia"
+import { useCredentialState, useTopicState, useAppState } from "@/stores";
 import { ICredentialSet } from "@/interfaces/api/v2/credential-set.interface";
 import { ICredentialProof } from "@/interfaces/api/v3/credential-verified.interface";
 import { IFormattedTopic } from "@/interfaces/api/v2/topic.interface";
@@ -145,16 +147,17 @@ interface Data {
       "mdiArrowLeft",
       "mdiShieldCheckOutline",
       "mdiCheckBold",
-      "selectedTopic",
-      "selectedTopicFullCredentialSet",
-      "getSelectedCredential",
-      "loading",
     ]),
+    ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    ...mapState(useCredentialState, ["getSelectedCredential"]),
+    ...mapState(useAppState, { loading: "getLoading"})
   },
   methods: {
-    ...mapActions([
+    ...pmapActions(useAppState, ["setLoading"]),
+    ...pmapActions(useCredentialState, [
       "fetchSelectedCredential",
-      "setLoading",
+    ]),
+    ...pmapActions(useTopicState, [
       "fetchFormattedIdentifiedTopic",
     ]),
   },

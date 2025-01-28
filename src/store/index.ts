@@ -1,10 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import app, { State as AppState } from "./modules/app";
-import contact, { State as ContactState } from "./modules/contact";
-import credentialDetail, {
-  State as CredentialDetailState,
-} from "./modules/credential-detail";
 import credentialType, {
   State as CredentialTypeState,
 } from "./modules/credential-type";
@@ -21,9 +16,6 @@ import like, { State as LikeState } from "./modules/like";
 Vue.use(Vuex);
 
 export interface State {
-  app: AppState;
-  contact: ContactState;
-  credentialDetail: CredentialDetailState;
   credentialType: CredentialTypeState;
   doc: DocState;
   entity: EntityState;
@@ -37,9 +29,6 @@ export interface State {
 
 export default new Vuex.Store({
   modules: {
-    app,
-    contact,
-    credentialDetail,
     credentialType,
     doc,
     entity,

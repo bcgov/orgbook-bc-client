@@ -14,7 +14,8 @@ import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/layout/header/Header.vue";
 import Footer from "@/components/layout/footer/Footer.vue";
 import Loading from "@/components/shared/Loading.vue";
-import { mapGetters } from "vuex";
+import { useAppState } from "@/stores/app"
+import { mapState } from "pinia";
 
 @Component({
   components: {
@@ -23,7 +24,7 @@ import { mapGetters } from "vuex";
     Loading,
   },
   computed: {
-    ...mapGetters(["loading"]),
+    ...mapState(useAppState, {loading: "getLoading"}),
   },
 })
 export default class App extends Vue {}

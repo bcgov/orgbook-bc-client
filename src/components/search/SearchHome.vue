@@ -94,7 +94,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions, mapState } from "pinia";
+import { useStatisticsState } from "@/stores";
 import ShowcaseLinks from "@/components/about/ShowcaseLinks.vue";
+import { IStatistics } from "@/interfaces/api/v2/statistics.interface";
 
 interface Data {
   descriptions: string[];
@@ -106,19 +109,19 @@ interface Data {
   },
   computed: {
     ...mapGetters([
-      "statistics",
       "showcaseLinks",
       "mdiCheckBold",
       "mdiShieldCheckOutline",
     ]),
+    ...mapState(useStatisticsState, { statistics: "getStatistics"})
   },
   methods: {
-    ...mapActions(["fetchStatistics"]),
+    ...pmapActions(useStatisticsState, ["fetchStatistics"]),
   },
 })
 export default class SearchHome extends Vue {
   fetchStatistics!: () => Promise<void>;
-
+  statistics!: IStatistics | null
   data(): Data {
     return {
       descriptions: [

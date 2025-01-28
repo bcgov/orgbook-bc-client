@@ -439,6 +439,8 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions, mapState } from "pinia";
+import { useAppState, useTopicState } from "@/stores";
 import moment from "moment";
 
 import {
@@ -483,103 +485,7 @@ interface Data {
   credentialsExpanded: boolean;
 }
 
-@Component({
-  components: {
-    BackTo,
-    CredentialItem,
-    Dialog,
-    EntityCard,
-    EntityHeader,
-    EntityFilterChips,
-    EntityFilterFacetPanels,
-    EntityFilterDialog,
-  },
-  computed: {
-    ...mapGetters([
-      "credentialTypes",
-      "entityDesc",
-      "selectedTopic",
-      "selectedTopicFullCredentialSet",
-      "getEntityFilters",
-      "getRelationships",
-      "getScrollY",
-      "mdiArrowUp",
-      "mdiArrowDown",
-      "mdiArrowLeft",
-      "mdiMapMarker",
-      "mdiChevronLeft",
-      "mdiChevronRight",
-      "mdiCircleMedium",
-      "mdiInformationOutline",
-      "loading",
-    ]),
-  },
-  methods: {
-    ...mapActions([
-      "setLoading",
-      "fetchCredentialTypes",
-      "fetchFormattedIdentifiedTopic",
-      "fetchTopicFullCredentialSet",
-      "setCredentialType",
-      "setEntityDesc",
-      "setRegistrationType",
-      "setIssuers",
-      "fetchRelationships",
-    ]),
-  },
-  directives: {
-    translate,
-  },
-})
-export default class EntityResult extends Vue {
-  setLoading!: (loading: boolean) => void;
-  currentTab!: string;
-  entityDesc!: IEntityDesc;
-  setEntityDesc!: (params: {
-    code: string;
-    fileName: string;
-    displayName: string | undefined;
-  }) => void;
-  setIssuers!: (creds: ICredentialDisplayType[]) => void;
-  setCredentialType!: (creds: ICredentialDisplayType[]) => void;
-  setRegistrationType!: (creds: ICredentialDisplayType[]) => void;
-  fetchRelationships!: (id: number) => Promise<void>;
-  fetchCredentialTypes!: (paging: boolean) => Promise<void>;
-
-  fetchFormattedIdentifiedTopic!: ({
-    sourceId,
-    type,
-  }: {
-    sourceId: string;
-    type: string;
-  }) => Promise<void>;
-  fetchTopicFullCredentialSet!: (id: number) => Promise<void>;
-  credOrRelationshipToDisplay = credOrRelationshipToDisplay;
-  selectedTopicFullCredentialSet!: Array<ICredentialSet>;
-  selectedTopic!: IFormattedTopic;
-  credentialTimeOrder!: number;
-  getEntityFilters!: IEntityFilter;
-  getRelationships!: IRelationship[];
-  getScrollY!: number;
-  relationshipStartIndex!: number;
-  itemsDisplayed!: number;
-  loading!: boolean;
-  credentialsExpanded!: boolean;
-
-  credentialFilters: {
-    (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
-  }[] = [
-    this.applyDateFilter,
-    this.applyExpiredFilter,
-    this.applyCredentialTypeFilter,
-    this.applyIssuerFilter,
-    this.applyRegistrationTypeFilter,
-  ];
-  getRelationshipName = getRelationshipName;
-  getCredentialLabel = getCredentialLabel;
-  toTranslationFormat = toTranslationFormat;
-  isExpired = isExpired;
-
+export default {
   data(): Data {
     return {
       currentTab: "",
@@ -588,417 +494,451 @@ export default class EntityResult extends Vue {
       relationshipStartIndex: 0,
       credentialsExpanded: false,
     };
-  }
+  },
+  computed: {
+    ...mapGetters({
+      credentialTypes: "credentialTypes",
+      entityDesc: "entityDesc",
+      getEntityFilters: "getEntityFilters",
+      getRelationships: "getRelationships",
+      getScrollY: "getScrollY",
+      mdiArrowUp: "mdiArrowUp",
+      mdiArrowDown: "mdiArrowDown",
+      mdiArrowLeft: "mdiArrowLeft",
+      mdiMapMarker: "mdiMapMarker",
+      mdiChevronLeft: "mdiChevronLeft",
+      mdiChevronRight: "mdiChevronRight",
+      mdiCircleMedium: "mdiCircleMedium",
+      mdiInformationOutline: "mdiInformationOutline",
+    }),
+    ...mapState(useAppState, { loading: "getLoading" }),
+    ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    hasAnyRelationships: function (): boolean {
+      return (
+        this.businessAsRelationship?.length > 0 ||
+          this.ownedByRelationship?.length > 0
+      );
+    },
 
-  loadingCallBack(): void {
-    if (
-      this.selectedTopicFullCredentialSet &&
-      this.entityCredentials !== undefined
-    ) {
-      this.setCredentialType(this.entityCredentials);
-      this.setRegistrationType(this.entityCredentials);
-      this.setIssuers(this.entityCredentials);
-    }
-    if (this.entityJurisdiction) {
-      //convert entity type to file name
-      let fileName = this.$t(this.entityJurisdiction) as string;
-      let displayName = undefined;
-      if (fileName !== this.entityJurisdiction) {
-        // translation success
-        displayName = fileName;
+    tabItems: function (): { text: string; refname: string }[] {
+      let baseTabItems = [
+        { text: "Registration", refname: "registration" },
+        { text: "Credentials", refname: "credentials" },
+      ];
+      if (this.hasAnyRelationships) {
+        baseTabItems.splice(1, 0, {
+          text: "Relationships",
+          refname: "relationships",
+        });
+      }
+      return baseTabItems;
+    },
+
+    businessAsRelationship: function (): IRelationship[] {
+      return this.getRelationships.filter(
+        (relationship) =>
+          selectFirstAttrItem(
+            { key: "value", value: "Does Business As" },
+            relationship.attributes
+          ) !== undefined
+      );
+    },
+    ownedByRelationship: function (): IRelationship[] {
+      return this.getRelationships.filter(
+        (relationship) =>
+          selectFirstAttrItem(
+            { key: "value", value: "IsOwned" },
+            relationship.attributes
+          ) !== undefined
+      );
+    },
+    entityName: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "entity_name" },
+        this.selectedTopic?.names as ITopicName[]
+      )?.text;
+    },
+    entityNameCredId: function (): number | undefined {
+      const ret = selectFirstAttrItem(
+        { key: "type", value: "entity_name" },
+        this.selectedTopic?.names as ITopicName[]
+      )?.credential_id;
+      return ret;
+    },
+    entityBusinessNumber: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "business_number" },
+        // find the latest business number
+        this.entityCredentials
+          ?.filter((cred) => cred.latest)
+          ?.map((cred) => {
+            return {
+              type: cred.type,
+              text: cred.value,
+            };
+          })
+      )?.text as string;
+    },
+    entityIncorporationNumber: function (): string | undefined {
+      return this.selectedTopic?.source_id;
+    },
+    filteredEntityCredentials: function (): Array<ICredentialDisplayType> | undefined {
+      var filteredCreds = this.entityCredentialsSorted;
+      if (filteredCreds === undefined) {
+        return undefined;
       }
 
-      // get the entity code, ex: BC, A, SP, etc
-      const codeSplit = this.entityJurisdiction.split(".");
-      const code = codeSplit[codeSplit.length - 1];
+      this.credentialFilters.forEach((filterFunc) => {
+        filteredCreds = filterFunc(filteredCreds as ICredentialDisplayType[]);
+      });
 
-      // convert to markdown file name
-      fileName = fileName.toLowerCase().replace(" ", "-");
-
-      this.setEntityDesc({ code, fileName, displayName });
-    }
-    if (this.getScrollY) {
-      this.$vuetify.goTo(this.getScrollY, { duration: 0 });
-    }
-  }
-
-  toggleCredentialsExpanded(): void {
-    this.credentialsExpanded = !this.credentialsExpanded;
-  }
-
-  private applyIssuerFilter(creds: Array<ICredentialDisplayType>) {
-    var filteredCreds = [...creds];
-    if ((this.getEntityFilters.authorities as string[]).length <= 0) {
       return filteredCreds;
-    }
-    return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.authorities as string[]).includes(cred.authority)
-    );
-  }
+    },
+    credSet: function (): ICredential[] | undefined {
+      if (!this.selectedTopicFullCredentialSet) {
+        return undefined;
+      }
+      var credentialSet: ICredential[] = [];
+      this.selectedTopicFullCredentialSet.forEach((credSet) =>
+        credentialSet.push(...credSet.credentials)
+      );
+      return credentialSet;
+    },
 
-  private applyCredentialTypeFilter(
-    creds: Array<ICredentialDisplayType>
-  ): Array<ICredentialDisplayType> {
-    var filteredCreds = [...creds];
-    if ((this.getEntityFilters.credential_type as string[]).length <= 0) {
-      return filteredCreds;
-    }
-    return filteredCreds.filter((cred) =>
-      (this.getEntityFilters.credential_type as string[]).includes(
-        getCredentialLabel(cred)
-      )
-    );
-  }
+    entityCredentials: function (): Array<ICredentialDisplayType> | undefined {
+      if (!this.selectedTopicFullCredentialSet) {
+        return undefined;
+      }
 
-  private applyRegistrationTypeFilter(
-    creds: Array<ICredentialDisplayType>
-  ): Array<ICredentialDisplayType> {
-    var filteredCreds = [...creds];
-    if ((this.getEntityFilters.registration_type as string[]).length <= 0) {
-      return filteredCreds;
-    }
-    return filteredCreds.filter(
-      (cred) =>
-        cred.registration_reason !== undefined &&
-        (this.getEntityFilters.registration_type as string[]).includes(
-          cred.registration_reason
+      var fullCredentials: ICredentialDisplayType[] = [];
+      this.selectedTopicFullCredentialSet.forEach((credSet) => {
+        //filter out all the relationship credentials
+        fullCredentials.push(
+          ...credSet.credentials
+            .filter((cred) => !this.isRelationshipCred(cred))
+            .map((cred) => credOrRelationshipToDisplay(cred))
+        );
+      });
+      this.getRelationships.forEach((rel) => {
+        fullCredentials.push(credOrRelationshipToDisplay(rel, this.credSet));
+      });
+      return fullCredentials;
+    },
+
+    entityCredentialsSorted: function (): Array<ICredentialDisplayType> | undefined {
+      const cpa = (
+        item1: ICredentialDisplayType,
+        item2: ICredentialDisplayType
+      ) => {
+        return (
+          (moment(item1.date_effective).isBefore(item2.date_effective) ? -1 : 1) *
+            this.credentialTimeOrder
+        );
+      };
+      return this.entityCredentials?.sort((cred1, cred2) => {
+        return cpa(cred1, cred2);
+      });
+    },
+
+    entityState: function (): string | undefined {
+      if (this.selectedTopic === undefined) {
+        return undefined;
+      }
+
+      const state = selectFirstAttrItem(
+        { key: "type", value: "entity_status" },
+        this.selectedTopic?.attributes
+      );
+
+      const maybeEntityStatus = state?.type + "." + state?.value;
+      console.log("maybeEntityStatus is ", maybeEntityStatus)
+      // if either state, state.type, or state.value are undefined return undefined
+      return maybeEntityStatus.includes("undefined") ? undefined : maybeEntityStatus 
+    },
+
+    entityRegistrationDate: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "registration_date" },
+        this.selectedTopic?.attributes
+      )?.value;
+    },
+
+    entityNameEffectiveDate: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "entity_name_effective" },
+        this.selectedTopic?.attributes
+      )?.value;
+    },
+
+    entityStatusEffectiveDate: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "entity_status_effective" },
+        this.selectedTopic?.attributes
+      )?.value;
+    },
+
+    entityJurisdiction: function (): string | undefined {
+      const state = selectFirstAttrItem(
+        { key: "type", value: "entity_type" },
+        this.selectedTopic?.attributes
+      );
+      const ret = "entity_type." + state?.value;
+      if (ret.includes("undefined")) {
+        return undefined;
+      }
+      return ret;
+    },
+
+    entityRegistrationIssuer: function (): string | undefined {
+      return selectFirstAttrItem(
+        { key: "type", value: "entity_name" },
+        this.selectedTopic?.names
+      )?.issuer?.name;
+    },
+
+    entityRegistrationIssuerUrl: function (): string | URL | undefined {
+      const ret = selectFirstAttrItem(
+        { key: "type", value: "entity_name" },
+        this.selectedTopic?.names
+      )?.issuer?.url;
+      return ret;
+    },
+    credentialFilters: function (): {
+      (creds: Array<ICredentialDisplayType>): Array<ICredentialDisplayType>;
+    }[] {
+      return [
+        this.applyDateFilter,
+        this.applyExpiredFilter,
+        this.applyCredentialTypeFilter,
+        this.applyIssuerFilter,
+        this.applyRegistrationTypeFilter,
+      ]
+    },
+
+  },
+  methods: {
+    ...mapActions({
+      fetchCredentialTypes: "fetchCredentialTypes",
+      setCredentialType: "setCredentialType",
+      setEntityDesc: "setEntityDesc",
+      setRegistrationType: "setRegistrationType",
+      setIssuers: "setIssuers",
+      fetchRelationships: "fetchRelationships",
+    }),
+    ...pmapActions(useAppState, ["setLoading"]),
+    ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
+    credOrRelationshipToDisplay,
+    getRelationshipName,
+    getCredentialLabel,
+    toTranslationFormat,
+    isExpired,
+    loadingCallBack(): void {
+      if (
+        this.selectedTopicFullCredentialSet &&
+          this.entityCredentials !== undefined
+      ) {
+        this.setCredentialType(this.entityCredentials);
+        this.setRegistrationType(this.entityCredentials);
+        this.setIssuers(this.entityCredentials);
+      }
+      if (this.entityJurisdiction) {
+        //convert entity type to file name
+        let fileName = this.$t(this.entityJurisdiction) as string;
+        let displayName = undefined;
+        if (fileName !== this.entityJurisdiction) {
+          // translation success
+          displayName = fileName;
+        }
+
+        // get the entity code, ex: BC, A, SP, etc
+        const codeSplit = this.entityJurisdiction.split(".");
+        const code = codeSplit[codeSplit.length - 1];
+
+        // convert to markdown file name
+        fileName = fileName.toLowerCase().replace(" ", "-");
+
+        this.setEntityDesc({ code, fileName, displayName });
+      }
+      if (this.getScrollY) {
+        this.$vuetify.goTo(this.getScrollY, { duration: 0 });
+      }
+    },
+    toggleCredentialsExpanded(): void {
+      this.credentialsExpanded = !this.credentialsExpanded;
+    },
+    applyIssuerFilter(creds: Array<ICredentialDisplayType>) {
+      let filteredCreds = [...creds];
+      if ((this.getEntityFilters.authorities as string[]).length <= 0) {
+        return filteredCreds;
+      }
+      return filteredCreds.filter((cred) =>
+        (this.getEntityFilters.authorities as string[]).includes(cred.authority)
+      );
+    },
+    applyCredentialTypeFilter(
+      creds: Array<ICredentialDisplayType>
+    ): Array<ICredentialDisplayType> {
+      let filteredCreds = [...creds];
+      if ((this.getEntityFilters.credential_type as string[]).length <= 0) {
+        return filteredCreds;
+      }
+      return filteredCreds.filter((cred) =>
+        (this.getEntityFilters.credential_type as string[]).includes(
+          getCredentialLabel(cred)
         )
-    );
-  }
+      );
+    },
+    applyRegistrationTypeFilter(
+      creds: Array<ICredentialDisplayType>
+    ): Array<ICredentialDisplayType> {
+      let filteredCreds = [...creds];
+      if ((this.getEntityFilters.registration_type as string[]).length <= 0) {
+        return filteredCreds;
+      }
+      return filteredCreds.filter(
+        (cred) =>
+          cred.registration_reason !== undefined &&
+            (this.getEntityFilters.registration_type as string[]).includes(
+              cred.registration_reason
+            )
+      );
+    },
+    applyDateFilter(
+      creds: Array<ICredentialDisplayType>
+    ): Array<ICredentialDisplayType> {
+      let filteredCreds = [...creds];
 
-  private applyDateFilter(
-    creds: Array<ICredentialDisplayType>
-  ): Array<ICredentialDisplayType> {
-    var filteredCreds = [...creds];
+      if (this.getEntityFilters.date_min !== "") {
+        filteredCreds = filteredCreds.filter((cred) => {
+          //take the negative condition so we don't have to do another check with isSame
+          return !moment(this.getEntityFilters.date_min as string).isAfter(
+            cred.date_effective
+          );
+        });
+      }
 
-    if (this.getEntityFilters.date_min !== "") {
-      filteredCreds = filteredCreds.filter((cred) => {
-        //take the negative condition so we don't have to do another check with isSame
-        return !moment(this.getEntityFilters.date_min as string).isAfter(
-          cred.date_effective
+      if (this.getEntityFilters.date_max !== "") {
+        filteredCreds = filteredCreds.filter((cred) => {
+          return !moment(this.getEntityFilters.date_max as string).isBefore(
+            cred.date_effective
+          );
+        });
+      }
+      return filteredCreds;
+    },
+    applyExpiredFilter(
+      creds: Array<ICredentialDisplayType>
+    ): Array<ICredentialDisplayType> {
+      let filteredCreds = [...creds];
+      if (!this.getEntityFilters.show_expired) {
+        filteredCreds = creds.filter(
+          (cred) => !cred.revoked && !this.isExpired(cred.attributes)
         );
+      }
+      return filteredCreds;
+    },
+
+    tabClick(refname: string): void {
+      this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {
+        duration: 500,
+        easing: "easeInOutCubic",
       });
-    }
+    },
 
-    if (this.getEntityFilters.date_max !== "") {
-      filteredCreds = filteredCreds.filter((cred) => {
-        return !moment(this.getEntityFilters.date_max as string).isBefore(
-          cred.date_effective
-        );
+    incRelationshipStartIndex(num: number): void {
+      const interval = Math.min(
+        this.businessAsRelationship.length,
+        this.itemsDisplayed
+      );
+      if (
+        this.relationshipStartIndex + num * interval >= 0 &&
+          this.relationshipStartIndex + num * interval <
+            this.businessAsRelationship.length
+      )
+        this.relationshipStartIndex += num * interval;
+    },
+
+    correctRelDisplay(): void {
+      // deal with issue of switching display intervals in the middle of a set
+      if (this.relationshipStartIndex % this.itemsDisplayed) {
+        this.relationshipStartIndex =
+                                Math.floor(this.relationshipStartIndex / this.itemsDisplayed) *
+                                  this.itemsDisplayed;
+      }
+      //refocus relationships on selection change
+      this.$vuetify.goTo(this.$refs["relationships"] as VuetifyGoToTarget, {
+        duration: 500,
+        easing: "easeInOutCubic",
       });
-    }
-    return filteredCreds;
-  }
+    },
 
-  private applyExpiredFilter(
-    creds: Array<ICredentialDisplayType>
-  ): Array<ICredentialDisplayType> {
-    var filteredCreds = [...creds];
-    if (!this.getEntityFilters.show_expired) {
-      filteredCreds = creds.filter(
-        (cred) => !cred.revoked && !this.isExpired(cred.attributes)
-      );
-    }
-    return filteredCreds;
-  }
+    switchCredentialTimeOrder(): void {
+      this.credentialTimeOrder *= -1;
+    },
 
-  tabClick(refname: string): void {
-    this.$vuetify.goTo(this.$refs[refname] as VuetifyGoToTarget, {
-      duration: 500,
-      easing: "easeInOutCubic",
-    });
-  }
+    isRelationshipCred(cred: ICredential): boolean {
+      return cred.credential_type.description === "relationship.registries.ca";
+    },
 
-  incRelationshipStartIndex(num: number): void {
-    const interval = Math.min(
-      this.businessAsRelationship.length,
-      this.itemsDisplayed
-    );
-    if (
-      this.relationshipStartIndex + num * interval >= 0 &&
-      this.relationshipStartIndex + num * interval <
-        this.businessAsRelationship.length
-    )
-      this.relationshipStartIndex += num * interval;
-  }
+    entityTypeToRegValue(entityType: string): string {
+      const entityTypeTable: Record<string, string> = {
+        "BC Company": "Incorporation number",
+        "BC Corporation": "Incorporation number",
+        Society: "Incorporation number",
+        Cooperative: "Incorporation number",
+        "Sole Proprietorship": "Registration number",
+        "General Partnership": "Registration number",
+        "Limited Partnership": "Registration number",
+        "Extraprovincial Limited Partnership": "Registration number",
+        "Limited Liability Partnership": "Registration number",
+        "Extrapro Limited Liability Partnership": "Registration number",
+        "Miscellaneous Firm": "Registration number",
+      };
+      return entityTypeTable[entityType] !== undefined
+        ? entityTypeTable[entityType]
+        : entityType;
+    },
+    async reload(): Promise<void> {
+      this.setLoading(true);
+      const { sourceId, type } = this.$route.params;
 
-  correctRelDisplay(): void {
-    // deal with issue of switching display intervals in the middle of a set
-    if (this.relationshipStartIndex % this.itemsDisplayed) {
-      this.relationshipStartIndex =
-        Math.floor(this.relationshipStartIndex / this.itemsDisplayed) *
-        this.itemsDisplayed;
-    }
-    //refocus relationships on selection change
-    this.$vuetify.goTo(this.$refs["relationships"] as VuetifyGoToTarget, {
-      duration: 500,
-      easing: "easeInOutCubic",
-    });
-  }
-
-  switchCredentialTimeOrder(): void {
-    this.credentialTimeOrder *= -1;
-  }
-
-  isRelationshipCred(cred: ICredential): boolean {
-    return cred.credential_type.description === "relationship.registries.ca";
-  }
-
-  entityTypeToRegValue(entityType: string): string {
-    const entityTypeTable: Record<string, string> = {
-      "BC Company": "Incorporation number",
-      "BC Corporation": "Incorporation number",
-      Society: "Incorporation number",
-      Cooperative: "Incorporation number",
-      "Sole Proprietorship": "Registration number",
-      "General Partnership": "Registration number",
-      "Limited Partnership": "Registration number",
-      "Extraprovincial Limited Partnership": "Registration number",
-      "Limited Liability Partnership": "Registration number",
-      "Extrapro Limited Liability Partnership": "Registration number",
-      "Miscellaneous Firm": "Registration number",
-    };
-    return entityTypeTable[entityType] !== undefined
-      ? entityTypeTable[entityType]
-      : entityType;
-  }
-
-  get hasAnyRelationships(): boolean {
-    return (
-      this.businessAsRelationship?.length > 0 ||
-      this.ownedByRelationship?.length > 0
-    );
-  }
-
-  get tabItems(): { text: string; refname: string }[] {
-    let baseTabItems = [
-      { text: "Registration", refname: "registration" },
-      { text: "Credentials", refname: "credentials" },
-    ];
-    if (this.hasAnyRelationships) {
-      baseTabItems.splice(1, 0, {
-        text: "Relationships",
-        refname: "relationships",
-      });
-    }
-    return baseTabItems;
-  }
-
-  get businessAsRelationship(): IRelationship[] {
-    return this.getRelationships.filter(
-      (relationship) =>
-        selectFirstAttrItem(
-          { key: "value", value: "Does Business As" },
-          relationship.attributes
-        ) !== undefined
-    );
-  }
-
-  get ownedByRelationship(): IRelationship[] {
-    return this.getRelationships.filter(
-      (relationship) =>
-        selectFirstAttrItem(
-          { key: "value", value: "IsOwned" },
-          relationship.attributes
-        ) !== undefined
-    );
-  }
-
-  get entityName(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      this.selectedTopic?.names as ITopicName[]
-    )?.text;
-  }
-
-  get entityNameCredId(): number | undefined {
-    const ret = selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      this.selectedTopic?.names as ITopicName[]
-    )?.credential_id;
-    return ret;
-  }
-
-  get entityBusinessNumber(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "business_number" },
-      // find the latest business number
-      this.entityCredentials
-        ?.filter((cred) => cred.latest)
-        ?.map((cred) => {
-          return {
-            type: cred.type,
-            text: cred.value,
-          };
-        })
-    )?.text as string;
-  }
-
-  get entityIncorporationNumber(): string | undefined {
-    return this.selectedTopic?.source_id;
-  }
-
-  get filteredEntityCredentials(): Array<ICredentialDisplayType> | undefined {
-    var filteredCreds = this.entityCredentialsSorted;
-    if (filteredCreds === undefined) {
-      return undefined;
-    }
-
-    this.credentialFilters.forEach((filterFunc) => {
-      filteredCreds = filterFunc(filteredCreds as ICredentialDisplayType[]);
-    });
-
-    return filteredCreds;
-  }
-
-  get credSet(): ICredential[] | undefined {
-    if (!this.selectedTopicFullCredentialSet) {
-      return undefined;
-    }
-    var credentialSet: ICredential[] = [];
-    this.selectedTopicFullCredentialSet.forEach((credSet) =>
-      credentialSet.push(...credSet.credentials)
-    );
-    return credentialSet;
-  }
-
-  get entityCredentials(): Array<ICredentialDisplayType> | undefined {
-    if (!this.selectedTopicFullCredentialSet) {
-      return undefined;
-    }
-
-    var fullCredentials: ICredentialDisplayType[] = [];
-    this.selectedTopicFullCredentialSet.forEach((credSet) => {
-      //filter out all the relationship credentials
-      fullCredentials.push(
-        ...credSet.credentials
-          .filter((cred) => !this.isRelationshipCred(cred))
-          .map((cred) => credOrRelationshipToDisplay(cred))
-      );
-    });
-    this.getRelationships.forEach((rel) => {
-      fullCredentials.push(credOrRelationshipToDisplay(rel, this.credSet));
-    });
-    return fullCredentials;
-  }
-
-  get entityCredentialsSorted(): Array<ICredentialDisplayType> | undefined {
-    const cpa = (
-      item1: ICredentialDisplayType,
-      item2: ICredentialDisplayType
-    ) => {
-      return (
-        (moment(item1.date_effective).isBefore(item2.date_effective) ? -1 : 1) *
-        this.credentialTimeOrder
-      );
-    };
-    return this.entityCredentials?.sort((cred1, cred2) => {
-      return cpa(cred1, cred2);
-    });
-  }
-
-  get entityState(): string | undefined {
-    if (this.selectedTopic === undefined) {
-      return undefined;
-    }
-
-    const state = selectFirstAttrItem(
-      { key: "type", value: "entity_status" },
-      this.selectedTopic?.attributes
-    );
-
-    const ret = state?.type + "." + state?.value;
-    if (ret.includes("undefined")) {
-      return undefined;
-    }
-    return ret;
-  }
-
-  get entityRegistrationDate(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "registration_date" },
-      this.selectedTopic?.attributes
-    )?.value;
-  }
-
-  get entityNameEffectiveDate(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_name_effective" },
-      this.selectedTopic?.attributes
-    )?.value;
-  }
-
-  get entityStatusEffectiveDate(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_status_effective" },
-      this.selectedTopic?.attributes
-    )?.value;
-  }
-
-  get entityJurisdiction(): string | undefined {
-    const state = selectFirstAttrItem(
-      { key: "type", value: "entity_type" },
-      this.selectedTopic?.attributes
-    );
-    const ret = "entity_type." + state?.value;
-    if (ret.includes("undefined")) {
-      return undefined;
-    }
-    return ret;
-  }
-
-  get entityRegistrationIssuer(): string | undefined {
-    return selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      this.selectedTopic?.names
-    )?.issuer?.name;
-  }
-
-  get entityRegistrationIssuerUrl(): string | URL | undefined {
-    const ret = selectFirstAttrItem(
-      { key: "type", value: "entity_name" },
-      this.selectedTopic?.names
-    )?.issuer?.url;
-    return ret;
-  }
-
+      if (sourceId && type) {
+        await this.fetchFormattedIdentifiedTopic({
+          sourceId,
+          type,
+        });
+        if (!this.selectedTopic) {
+          //sourceid is invalid, go back to search
+          console.error("Failed to fetch topic. Invalid source id");
+          this.$router.push("/");
+        }
+        const topic: ITopic | null = this.selectedTopic;
+        if (topic?.id) {
+          console.log("relationships")
+          await Promise.all([
+            this.fetchRelationships(topic.id),
+            this.fetchTopicFullCredentialSet(topic.id),
+            this.fetchCredentialTypes(false),
+          ]);
+        }
+      }
+      this.setLoading(false);
+      this.loadingCallBack();
+    },
+  },
   async created(): Promise<void> {
     await this.reload();
-  }
-
-  async reload(): Promise<void> {
-    this.setLoading(true);
-    const { sourceId, type } = this.$route.params;
-
-    if (sourceId && type) {
-      await this.fetchFormattedIdentifiedTopic({
-        sourceId,
-        type,
-      });
-      if (!this.selectedTopic) {
-        //sourceid is invalid, go back to search
-        console.error("Failed to fetch topic. Invalid source id");
-        this.$router.push("/");
-      }
-      const topic: ITopic = this.$store.getters.selectedTopic;
-      if (topic?.id) {
-        await Promise.all([
-          this.fetchRelationships(topic.id),
-          this.fetchTopicFullCredentialSet(topic.id),
-          this.fetchCredentialTypes(false),
-        ]);
+  },
+  directives: {
+    translate,
+  },
+  watch: {
+    async onRouteParamsChanged(params: any): Promise<void> {
+      if (params.sourceId) {
+        this.reload();
       }
     }
-    this.setLoading(false);
-    this.loadingCallBack();
-  }
-
-  @Watch("$route.params")
-  async onRouteParamsChanged(params: any): Promise<void> {
-    if (params.sourceId) {
-      this.reload();
-    }
-  }
+  },
 }
 </script>
 

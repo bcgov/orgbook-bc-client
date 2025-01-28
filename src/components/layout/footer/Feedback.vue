@@ -42,9 +42,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions } from "pinia"
+import { useAppState } from "@/stores/app"
 import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
 import { trackStructEvent } from "@snowplow/browser-tracker";
-
 interface Data {
   reason: string;
   comments: string;
@@ -57,7 +58,8 @@ interface Data {
     ...mapGetters(["mdiThumbDown", "mdiThumbUp", "getLikeStatus"]),
   },
   methods: {
-    ...mapActions(["sendFeedback", "setLoading", "setLike"]),
+    ...mapActions(["sendFeedback", "setLike"]),
+    ...pmapActions(useAppState, ["setLoading"])
   },
 })
 export default class Feedback extends Vue {
