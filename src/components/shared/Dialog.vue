@@ -34,11 +34,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { useIconState } from "@/stores";
+import { mapState } from "pinia";
 
 @Component({
   computed: {
-    ...mapGetters(["mdiClose"]),
+    ...mapState(useIconState, ["mdiClose"]),
   },
 })
 export default class Dialog extends Vue {

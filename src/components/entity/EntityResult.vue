@@ -438,9 +438,8 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { VuetifyGoToTarget } from "vuetify/types/services/goto";
-import { mapActions, mapGetters } from "vuex";
 import { mapActions as pmapActions, mapState } from "pinia";
-import { useAppState, useTopicState } from "@/stores";
+import { useAppState, useTopicState, useEntityState, useEntityDescState, useIconState, useCredentialTypeState } from "@/stores";
 import moment from "moment";
 
 import {
@@ -496,23 +495,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
+    ...mapState(useCredentialTypeState, {
       credentialTypes: "credentialTypes",
-      entityDesc: "entityDesc",
-      getEntityFilters: "getEntityFilters",
-      getRelationships: "getRelationships",
-      getScrollY: "getScrollY",
-      mdiArrowUp: "mdiArrowUp",
-      mdiArrowDown: "mdiArrowDown",
-      mdiArrowLeft: "mdiArrowLeft",
-      mdiMapMarker: "mdiMapMarker",
-      mdiChevronLeft: "mdiChevronLeft",
-      mdiChevronRight: "mdiChevronRight",
-      mdiCircleMedium: "mdiCircleMedium",
-      mdiInformationOutline: "mdiInformationOutline",
     }),
+    ...mapState(useIconState, ["mdiArrowUp", "mdiArrowDown", "mdiArrowLeft", "mdiMapMarker", "mdiChevronLeft", "mdiChevronRight", "mdiCircleMedium", "mdiInformationOutline"]),
     ...mapState(useAppState, { loading: "getLoading" }),
     ...mapState(useTopicState, ["selectedTopic", "selectedTopicFullCredentialSet"]),
+    ...mapState(useEntityState, ["getScrollY","getRelationships", "getEntityFilters"]),
+    ...mapState(useEntityDescState, ["entityDesc"]),
     hasAnyRelationships: function (): boolean {
       return (
         this.businessAsRelationship?.length > 0 ||
@@ -717,16 +707,13 @@ export default {
 
   },
   methods: {
-    ...mapActions({
+    ...pmapActions(useCredentialTypeState, {
       fetchCredentialTypes: "fetchCredentialTypes",
-      setCredentialType: "setCredentialType",
-      setEntityDesc: "setEntityDesc",
-      setRegistrationType: "setRegistrationType",
-      setIssuers: "setIssuers",
-      fetchRelationships: "fetchRelationships",
     }),
     ...pmapActions(useAppState, ["setLoading"]),
     ...pmapActions(useTopicState, ["fetchFormattedIdentifiedTopic", "fetchTopicFullCredentialSet"]),
+    ...pmapActions(useEntityState, ["fetchRelationships", "setIssuers", "setCredentialType", "setRegistrationType",]),
+    ...pmapActions(useEntityDescState, ["setEntityDesc"]),
     credOrRelationshipToDisplay,
     getRelationshipName,
     getCredentialLabel,

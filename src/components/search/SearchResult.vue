@@ -42,7 +42,8 @@ import SearchTopicPageNavigation from "./page/SearchTopicPageNavigation.vue";
 import SearchFilterResultCount from "./filter/SearchFilterResultCount.vue";
 import SearchFilterChips from "./filter/SearchFilterChips.vue";
 import SearchFilterFacetPanels from "./filter/SearchFilterFacetPanels.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useSearchState } from "@/stores";
 import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { isFilterActive } from "@/utils/search";
 
@@ -55,7 +56,7 @@ import { isFilterActive } from "@/utils/search";
     SearchFilterFacetPanels,
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useSearchState, [
       "searchQuery",
       "extendedSearchFilterFields",
       "searchFilters",

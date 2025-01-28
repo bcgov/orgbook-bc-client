@@ -9,7 +9,7 @@ interface State {
 	statistics: IStatistics | null;
 }
 
-export const useStatisticsState = defineStore("StatisticsState", {
+export const useStatisticsState = defineStore("statisticsState", {
 	state: (): State => ({
 		statistics: null,
 	}),

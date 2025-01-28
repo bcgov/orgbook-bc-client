@@ -89,15 +89,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 import _ from "lodash-es";
 import { IApiPagedResult } from "@/interfaces/api/result.interface";
 import { ISearchAutocomplete } from "@/interfaces/api/v3/search-autocomplete.interface";
 import { ISearchQuery } from "@/interfaces/api/v4/search-topic.interface";
 import { defaultQuery } from "@/utils/search";
 import SearchHelpPopup from "./SearchHelpPopup.vue";
-import { useAppState } from "@/stores/app"
-import { mapState } from "pinia";
+import { useAppState, useIconState, useSearchState } from "@/stores"
+import { mapActions as pmapActions, mapState } from "pinia";
 
 interface Data {
   index: number;
@@ -111,11 +110,11 @@ interface Data {
     SearchHelpPopup,
   },
   computed: {
-    ...mapGetters(["mdiMagnify", "mdiClose", "mdiHelpCircle"]),
+    ...mapState(useIconState, ["mdiMagnify", "mdiClose", "mdiHelpCircle"]),
     ...mapState(useAppState, {loading: "getLoading"})
   },
   methods: {
-    ...mapActions(["fetchAutocomplete", "fetchSearch"]),
+    ...pmapActions(useSearchState, ["fetchAutocomplete", "fetchSearch"]),
   },
 })
 export default class SearchBar extends Vue {

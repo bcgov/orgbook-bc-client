@@ -16,7 +16,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useIconState } from "@/stores";
 
 interface Data {
   descriptions: string[];
@@ -24,7 +25,7 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["mdiCheckBold"]),
+    ...mapState(useIconState, ["mdiCheckBold"]),
   },
 })
 export default class SearchDescription extends Vue {

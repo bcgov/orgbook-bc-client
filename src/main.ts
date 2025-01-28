@@ -1,8 +1,8 @@
 import Vue from "vue";
+import store from "./store";
 import App from "./App.vue";
 import i18n from "./i18n";
 import router from "./router";
-import store from "./store";
 import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import { dateFilter } from "@/filters/date.filter";
@@ -12,7 +12,6 @@ import { defaultDoc, processDocRoute } from "./utils/doc";
 import { newTracker, trackPageView } from "@snowplow/browser-tracker";
 import { createPinia, PiniaVuePlugin } from "pinia";
 
-Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
 Vue.config.productionTip = false;

@@ -41,9 +41,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
-import { mapActions as pmapActions } from "pinia"
-import { useAppState } from "@/stores/app"
+import { mapActions as pmapActions, mapState } from "pinia";
+import { useAppState, useFeedbackState, useIconState, useLikeState } from "@/stores"
 import { IFeedback } from "@/interfaces/api/v4/feedback.interface";
 import { trackStructEvent } from "@snowplow/browser-tracker";
 interface Data {
@@ -55,11 +54,13 @@ interface Data {
 
 @Component({
   computed: {
-    ...mapGetters(["mdiThumbDown", "mdiThumbUp", "getLikeStatus"]),
+    ...mapState(useLikeState, ["getLikeStatus"]),
+    ...mapState(useIconState, [ "mdiThumbDown", "mdiThumbUp",] ),
   },
   methods: {
-    ...mapActions(["sendFeedback", "setLike"]),
-    ...pmapActions(useAppState, ["setLoading"])
+    ...pmapActions(useLikeState, ["setLike"]),
+    ...pmapActions(useAppState, ["setLoading"]),
+    ...pmapActions(useFeedbackState, ["sendFeedback"])
   },
 })
 export default class Feedback extends Vue {

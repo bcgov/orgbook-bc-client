@@ -34,14 +34,15 @@
 import { ISearchFilter } from "@/interfaces/api/v4/search-topic.interface";
 import { isFilterActive } from "@/utils/search";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions as pmapActions, mapState } from "pinia";
+import { useSearchState } from "@/stores";
 
 @Component({
   computed: {
-    ...mapGetters(["searchFilters"]),
+    ...mapState(useSearchState, ["searchFilters"]),
   },
   methods: {
-    ...mapActions(["toggleSearchFilter"]),
+    ...pmapActions(useSearchState, ["toggleSearchFilter"]),
   },
 })
 export default class SearchFilterFacets extends Vue {

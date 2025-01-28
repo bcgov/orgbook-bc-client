@@ -26,7 +26,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useSearchState } from "@/stores";
 import SearchFilterFacetPanel from "@/components/search/filter/SearchFilterFacetPanel.vue";
 
 interface Data {
@@ -38,7 +39,7 @@ interface Data {
     SearchFilterFacetPanel,
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useSearchState, [
       "topEntityTypeFilters",
       "moreEntityTypeFilters",
       "entityStatusFilters",

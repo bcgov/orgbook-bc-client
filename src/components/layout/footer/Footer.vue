@@ -76,7 +76,8 @@ import { footerLinks } from "@/data/nav";
 import { INavLink } from "@/interfaces/nav-link.interface";
 import About from "@/components/layout/footer/About.vue";
 import Feedback from "@/components/layout/footer/Feedback.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useIconState } from "@/stores";
 
 interface Data {
   links: INavLink[];
@@ -89,7 +90,7 @@ interface Data {
     Feedback,
   },
   computed: {
-    ...mapGetters(["mdiArrowUp"]),
+    ...mapState(useIconState, ["mdiArrowUp"]),
   },
 })
 export default class Footer extends Vue {
