@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      md="6"
+      md="4"
       v-for="showcaseLink in showcaseLinks"
       :key="showcaseLink.name"
     >

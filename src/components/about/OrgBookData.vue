@@ -36,15 +36,6 @@
       </template>
     </v-simple-table>
 
-    <p>More data types will be added in the future.</p>
-
-    <p>
-      Find out how you can add your organization’s data to OrgBook BC by
-      <router-link to="/about/becoming-an-issuer"
-        >becoming an “issuer”</router-link
-      >.
-    </p>
-  </div>
 </template>
 
 <script lang="ts">

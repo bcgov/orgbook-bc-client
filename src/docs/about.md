@@ -11,6 +11,6 @@ Launched in January 2019, it contains British Columbia-registered organizations,
 
 The [Digital Trust technologies](/about/digital-trust) at the heart of OrgBook BC make it more secure and trustworthy than traditional websites. Information in OrgBook BC is highly tamper resistant, and its data sources are verified with cryptography. All its technologies are open source, meaning they’re improved and reusable by a worldwide community.
 
-Organizations can work through a simple process to [“issue” (add) their data to OrgBook BC](/about/becoming-an-issuer). There are also developer tools available for anyone to [use OrgBook BC data](/about/orgbook-api) in their own services.
+There are also developer tools available for anyone to [use OrgBook BC data](/about/orgbook-api) in their own services.
 
 In the future OrgBook BC will enable the secure, digital sharing of trustworthy information with other organizations.
