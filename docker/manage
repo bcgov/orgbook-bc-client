@@ -7,6 +7,18 @@ set -e
 
 SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd)"
 
+# ========================================================================================================
+# Check Docker Compose
+# --------------------------------------------------------------------------------------------------------
+
+# Default to deprecated V1 'docker-compose'.
+dockerCompose="docker-compose --log-level ERROR"
+
+# Prefer 'docker compose' V2 if available
+if [[ $(docker compose version 2> /dev/null) == 'Docker Compose'* ]]; then
+  dockerCompose="docker --log-level error compose"
+fi
+
 toLower() {
   echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
 }
@@ -78,7 +90,7 @@ cleanUpEnvironment() {
   _projectName=${COMPOSE_PROJECT_NAME:-docker}
 
   echo "Stopping and removing any running containers ..."
-  docker-compose down -v
+  ${dockerCompose} down -v
 
   _pattern="^${_projectName}_\|^docker_"
   _volumes=$(docker volume ls -q | grep ${_pattern})
@@ -170,22 +182,22 @@ case "${COMMAND}" in
   start | up)
     _startupParams=$(getStartupParams --force-recreate $@)
     configureEnvironment "$@"
-    docker-compose up -d ${_startupParams}
-    docker-compose logs -f
+    ${dockerCompose}  up -d ${_startupParams}
+    ${dockerCompose} logs -f
     ;;
   restart)
     _startupParams=$(getStartupParams $@)
     configureEnvironment "$@"
-    docker-compose stop ${_startupParams}
-    docker-compose up -d ${_startupParams}
+    ${dockerCompose} stop ${_startupParams}
+    ${dockerCompose} up -d ${_startupParams}
     ;;
   logs)
     configureEnvironment "$@"
-    docker-compose logs -f
+    ${dockerCompose} logs -f
     ;;
   stop)
     configureEnvironment
-    docker-compose stop
+    ${dockerCompose} stop
     ;;
   rm | down)
     configureEnvironment

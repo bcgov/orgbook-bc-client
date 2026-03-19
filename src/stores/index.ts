@@ -1,7 +1,6 @@
 import Vue from "vue";
 import { createPinia, PiniaVuePlugin } from "pinia";
 export { useAppState } from "./app";
-export { useContactState } from "./contact";
 export { useCredentialState } from "./credential-detail";
 export { useCredentialTypeState } from "./credential-type";
 // TODO: Migrate to doc when switching to Vue 3

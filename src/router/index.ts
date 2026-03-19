@@ -27,10 +27,10 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "credential" */ "@/views/Credential.vue"),
   },
   {
-    path: "/contact",
-    name: "Contact",
+    path: "/help",
+    name: "Help",
     component: () =>
-      import(/* webpackChunkName: "contact" */ "@/views/Contact.vue"),
+      import(/* webpackChunkName: "help" */ "@/views/Help.vue"),
   },
   {
     path: "*",
