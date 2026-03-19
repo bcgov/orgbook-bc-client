@@ -14,15 +14,6 @@
     >
       <v-icon>{{ mdiArrowUp }}</v-icon>
     </v-btn>
-    <div class="footer-feedback">
-      <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
-        <v-row class="ma-0">
-          <v-col>
-            <Feedback class="pl-2 pr-2" />
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
     <div class="footer-about">
       <v-container :fluid="$vuetify.breakpoint.smAndDown" class="pa-0">
         <v-row class="ma-0">
@@ -75,7 +66,6 @@ import { Component, Vue } from "vue-property-decorator";
 import { footerLinks } from "@/data/nav";
 import { INavLink } from "@/interfaces/nav-link.interface";
 import About from "@/components/layout/footer/About.vue";
-import Feedback from "@/components/layout/footer/Feedback.vue";
 import { mapState } from "pinia";
 import { useIconState } from "@/stores";
 
@@ -87,7 +77,6 @@ interface Data {
 @Component({
   components: {
     About,
-    Feedback,
   },
   computed: {
     ...mapState(useIconState, ["mdiArrowUp"]),
@@ -101,13 +90,6 @@ export default class Footer extends Vue {
       links: footerLinks || [],
       fab: false,
     };
-  }
-
-  get feedbackSubmitted(): boolean {
-    return (
-      window.sessionStorage.getItem("Feedback") !== null &&
-      window.sessionStorage.getItem("Feedback") === "true"
-    );
   }
 
   onScroll(): void {
@@ -126,11 +108,6 @@ export default class Footer extends Vue {
 .footer {
   background: $primary-color !important;
   color: $white;
-}
-.footer-feedback {
-  background: $background-color;
-  color: $text-color;
-  border-top: 1px solid $border-color;
 }
 .footer-about {
   background: $secondary-color;
