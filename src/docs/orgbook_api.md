@@ -13,5 +13,3 @@ Anyone is able to use OrgBook BC data in their own services. Rather than needing
 Developers can review the [API specification](http://orgbook.gov.bc.ca/api/) and the [API documentation](https://bcgov.github.io/orgbook-bc-api-docs/).
 
 The data published in OrgBook BC is provided under the [Access Only Data Terms and Conditions](https://bcgov.github.io/data-publication/pages/faq.html#data-publication-licensing-options---open-dataaccess-only).
-
-If you have any questions about the API or its potential, [get in touch](/contact) with our team.

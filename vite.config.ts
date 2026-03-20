@@ -49,8 +49,10 @@ export default defineConfig({
     port: 8081,
     proxy: {
       "/api": {
+        target: "https://orgbook.gov.bc.ca",
         // target: "https://dev.orgbook.gov.bc.ca",
-        target: "http://host.docker.internal:8080",
+        // target: "http://host.docker.internal:8080", // local VCR in Docker
+        // target: "http://localhost:8080",             // local VCR native
         changeOrigin: true,
       },
     },

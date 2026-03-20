@@ -319,6 +319,15 @@
       </template>
     </EntityCard>
 
+    <div class="registries-note text-body-2 mt-4 mb-2">
+      Need more information? Visit the
+      <a
+        href="https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates"
+        target="_blank"
+        rel="noopener"
+      >BC Registries certificate search service</a>.
+    </div>
+
     <!-- credential timeline -->
     <EntityCard :expanded="credentialsExpanded" ref="credentials">
       <template #title>
@@ -950,5 +959,12 @@ export default {
 
 .flex {
   display: flex;
+}
+
+.registries-note {
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: $input-color;
 }
 </style>

@@ -4,7 +4,7 @@
     {$RATE_LIMIT_ORDERING}
 }
 
-{$WEB_HOST_NAME}:{$WEB_HOST_PORT} {
+:{$WEB_HOST_PORT} {
     # Most common security headers
     header {
         # enable CSP
