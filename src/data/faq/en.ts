@@ -38,7 +38,7 @@ changes and dissolutions.
 
 OrgBook BC does **not** display addresses, director names, contact information,
 or ownership details. This is a legislative restriction. For that additional
-information, please contact [BC Registries](https://www.bcregistry.gov.bc.ca/).
+information, please use the [BC Registries search service](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
           `.trim(),
         },
         {
@@ -48,7 +48,7 @@ information, please contact [BC Registries](https://www.bcregistry.gov.bc.ca/).
 Yes. OrgBook BC is a free, publicly accessible service. No account or login is
 required to search the directory or view organization information.
 
-The [OrgBook BC API](/about) is also freely available for use in your own
+The [OrgBook BC API](/about/orgbook-api/) is also freely available for use in your own
 applications, subject to the
 [BC Government Terms of Use](https://www2.gov.bc.ca/gov/content/home/disclaimer).
           `.trim(),
@@ -74,6 +74,9 @@ publicly, including:
 
 OrgBook BC data is updated within approximately 30 minutes of changes at
 BC Registries.
+
+To obtain more information about an entity, please visit the
+[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
           `.trim(),
         },
         {
@@ -85,11 +88,7 @@ registered entities. This is a legislative restriction — it is not a technical
 limitation.
 
 To obtain address or contact details, please visit the
-[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates),
-or contact BC Registries directly:
-
-- **Email:** bcregistries@gov.bc.ca
-- **Phone:** 1-800-663-6102 (Mon–Fri, 8:00 am – 5:00 pm)
+[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
           `.trim(),
         },
         {
@@ -99,8 +98,20 @@ or contact BC Registries directly:
 No. OrgBook BC does not provide owner, director, or shareholder information.
 This information may be available from BC Registries, potentially for a fee.
 
-Please contact BC Registries at bcregistries@gov.bc.ca or 1-800-663-6102
-to enquire about obtaining a business summary.
+To obtain contact names, please visit the
+[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
+          `.trim(),
+        },
+        {
+          id: "beneficial-owners",
+          question: "I want to know who the beneficial owners of an organization are?",
+          answer: `
+The BC Business Corporation Act requires that businesses themselves provide that information
+via a Transparency Registry (as defined here in the [BC Business Corporations Act](https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02057_00_multi#section49)).
+See [this page](https://www2.gov.bc.ca/gov/content/employment-business/business/bc-companies/transparency-register)
+for more details about a Transparency Register. As noted there, you must contact the business
+itself to get the beneficial owner information. To get information about contacting the business, please visit the
+[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
           `.trim(),
         },
         {
@@ -108,11 +119,7 @@ to enquire about obtaining a business summary.
           question: "I found a company on OrgBook BC but need more details — where do I go?",
           answer: `
 For information beyond what OrgBook BC is permitted to show, please use the
-[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates),
-or contact the BC Registries Help Desk:
-
-- **Email:** bcregistries@gov.bc.ca
-- **Phone:** 1-800-663-6102 (Mon–Fri, 8:00 am – 5:00 pm)
+[BC Registries searches and certificates page](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/searches-certificates).
           `.trim(),
         },
         {
@@ -120,14 +127,16 @@ or contact the BC Registries Help Desk:
           question: "The information for an organization appears incorrect. How do I report it?",
           answer: `
 OrgBook BC displays exactly what is held in BC Registries — it does not
-independently create or modify records.
+independently create or modify records. If the data is about your own organization,
+see the FAQ section on [Updating or Managing Your Own Registration](#registration)
+for how to update it through BC Registries.
 
-If information appears incorrect, contact BC Registries directly:
+To report information about other entities that appears incorrect, contact BC Registries directly:
 
 - **Email:** bcregistries@gov.bc.ca
 - **Phone:** 1-800-663-6102 (Mon–Fri, 8:00 am – 5:00 pm)
 
-Once BC Registries corrects the data, OrgBook BC will reflect the change
+If the organization or BC Registries updates the data, OrgBook BC will reflect the change
 automatically within approximately 30 minutes.
           `.trim(),
         },
@@ -141,6 +150,91 @@ records, removal requests should be directed to BC Registries.
 
 For privacy concerns, please refer to the
 [BC Government Privacy Policy](https://www2.gov.bc.ca/gov/content/home/privacy).
+          `.trim(),
+        },
+      ],
+    },
+    {
+      id: "searching",
+      title: "Searching for Organizations",
+      items: [
+        {
+          id: "how-to-search",
+          question: "How do I search for an organization?",
+          answer: `
+Use the search bar on the [home page](/search) to search by:
+
+- **Legal name** — enter the full or partial name
+- **BC Registries ID** — formatted like \`FM1234567\` or \`BC1234567\`
+- **CRA Business Number** — a 9-digit number
+
+OrgBook BC floats the closest matches to the top of the results. If you are searching by the name of the business,
+you might get back a long list, but note that the most likely matches always float to the top. If you don't
+see the entity you're looking for in the first few pages, try adjusting your search term.
+
+To see tips on searching, click the **? icon** above the search box on the OrgBook BC home page.
+          `.trim(),
+        },
+        {
+          id: "too-many-results",
+          question: "I'm getting too many results and can't find the entity I'm looking for — what should I do?",
+          answer: `
+Try searching for just the **least common word** in the name rather than the
+full name. For example, searching \`BKV\` instead of \`BKV SOCIAL ENTERPRISE CO.\`
+will return far fewer results and float the right match to the top.
+
+Names with punctuation (e.g. a trailing period in \`"Inc."\` or \`"Co."\`) can
+cause unexpectedly large result sets — narrowing your search term usually helps.
+
+You can also search by **BC Registries ID** or **CRA Business Number** for an
+exact match, if you have those values.
+
+There is a **help icon (?)** above the search box on the OrgBook BC home page with
+further guidance.
+          `.trim(),
+        },
+        {
+          id: "page-limit",
+          question: "Why can I only view 10 pages of results?",
+          answer: `
+The 10-page limit is in place because automated scripts have attempted to scrape
+the entire OrgBook BC database, which is against the terms of service. The limit
+is based on the principle that someone looking for a specific entity should refine
+their search rather than paginating through hundreds of results.
+
+If you are not finding what you need within the first few pages, try adjusting
+your search terms. There is a **help icon (?)** above the search box on the
+OrgBook BC home page with further guidance.
+          `.trim(),
+        },
+        {
+          id: "cant-find-org",
+          question: "Why can't I find the organization I'm looking for?",
+          answer: `
+There are a few common reasons:
+
+1. **Not registered with BC Registries** — Sole proprietorships are not required
+   to register, and those that don't register are not in the system.
+2. **Dissolved or inactive** — Dissolved entities are marked "Historical" and
+   may be hidden by default. Enable the **Show Archived** option in the search
+   results to include them.
+3. **Spelling variation** — If you aren't sure of the actual name, try only
+   the parts you are certain of, or try different spellings. For tips on
+   searching, click the **? icon** above the search box on the OrgBook BC home page.
+4. **Registered in another jurisdiction** — OrgBook BC only lists entities
+   registered with BC Registries.
+
+If you believe an organization should be listed, contact BC Registries at
+bcregistries@gov.bc.ca or 1-800-663-6102.
+          `.trim(),
+        },
+        {
+          id: "filter-results",
+          question: "Can I filter search results?",
+          answer: `
+Yes. After performing a search, you can filter results by **entity type** and
+**status** (active or historical/archived) using the options displayed alongside
+the results.
           `.trim(),
         },
       ],
@@ -162,7 +256,7 @@ approximately 30 minutes.
   [BC Business Registry](https://www.account.bcregistry.gov.bc.ca/decide-business)
 - **Corporation:** Use [BC OnLine](https://www.bconline.gov.bc.ca/)
 
-If you need help, contact BC Registries at bcregistries@gov.bc.ca or
+If you need help, contact BC Registries Help Desk at bcregistries@gov.bc.ca or
 1-800-663-6102.
           `.trim(),
         },
@@ -172,7 +266,7 @@ If you need help, contact BC Registries at bcregistries@gov.bc.ca or
           answer: `
 Register your business with BC Registries. Once registered, it will
 automatically appear on OrgBook BC within approximately 30 minutes. There
-is no separate submission process for OrgBook BC.
+is no separate submission process for OrgBook BC. These guides might help in registering an organization in BC:
 
 - [Register your business in BC](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies)
 - [Step-by-step guide to starting a BC business](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/starting-a-business)
@@ -190,14 +284,18 @@ BC. However, many do register for practical reasons — such as opening a busine
 bank account, applying for grants, or establishing a formal business name.
 
 If your sole proprietorship is not registered with BC Registries, it will not
-appear on OrgBook BC. If you would like to register, see:
+appear on OrgBook BC. If you would like to register your sole proprietorship,
+this page has the information you need:
 
-- [Register your business in BC](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies)
+- [Sole proprietorships and partnerships](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/proprietorships-partnerships)
+
+If you need additional information, contact the BC Registries Help Desk
+at bcregistries@gov.bc.ca or 1-800-663-6102.
           `.trim(),
         },
         {
           id: "dissolve",
-          question: "How do I dissolve my company?",
+          question: "How do I dissolve my organization?",
           answer: `
 Dissolution must be done through BC Registries, not through OrgBook BC.
 
@@ -208,71 +306,6 @@ Dissolution must be done through BC Registries, not through OrgBook BC.
 
 If you need help, contact BC Registries at bcregistries@gov.bc.ca or
 1-800-663-6102.
-          `.trim(),
-        },
-      ],
-    },
-    {
-      id: "searching",
-      title: "Searching for Organizations",
-      items: [
-        {
-          id: "how-to-search",
-          question: "How do I search for an organization?",
-          answer: `
-Use the search bar on the [home page](/search) to search by:
-
-- **Legal name** — enter the full or partial name
-- **BC Registries ID** — formatted like \`FM1234567\` or \`BC1234567\`
-- **CRA Business Number** — a 9-digit number
-
-OrgBook BC floats the closest matches to the top of the results.
-          `.trim(),
-        },
-        {
-          id: "too-many-results",
-          question: "I'm getting too many results and can't find the entity I'm looking for — what should I do?",
-          answer: `
-Try searching for just the **least common word** in the name rather than the
-full name. For example, searching \`BKV\` instead of \`BKV SOCIAL ENTERPRISE CO.\`
-will return far fewer results and float the right match to the top.
-
-Names with punctuation (e.g. a trailing period in \`"Inc."\` or \`"Co."\`) can
-cause unexpectedly large result sets — narrowing your search term usually helps.
-
-You can also search by **BC Registries ID** or **CRA Business Number** for an
-exact match, if you have those values.
-
-There is a **help icon (?)** above the search box on the OrgBook BC site with
-further guidance.
-          `.trim(),
-        },
-        {
-          id: "cant-find-org",
-          question: "Why can't I find the organization I'm looking for?",
-          answer: `
-There are a few common reasons:
-
-1. **Not registered with BC Registries** — Sole proprietorships are not required
-   to register, so many are not in the system.
-2. **Dissolved or inactive** — Dissolved entities are marked "Historical" and
-   may be hidden by default. Enable the **Show Archived** option in the search
-   results to include them.
-3. **Spelling variation** — Try a shorter or differently worded search term.
-4. **Registered in another jurisdiction** — OrgBook BC only lists entities
-   registered with BC Registries.
-
-If you believe an organization should be listed, contact BC Registries at
-bcregistries@gov.bc.ca or 1-800-663-6102.
-          `.trim(),
-        },
-        {
-          id: "filter-results",
-          question: "Can I filter search results?",
-          answer: `
-Yes. After performing a search, you can filter results by **entity type** and
-**status** (active or historical/archived) using the options displayed alongside
-the results.
           `.trim(),
         },
       ],
@@ -308,8 +341,16 @@ There are two likely reasons:
    on OrgBook BC.
 2. **BC Registries does not have the BN on file** — Your business may be
    registered but BC Registries may not yet have linked the CRA Business Number.
-   Try searching by your legal name or BC Registries ID instead, and contact
-   BC Registries to establish the linkage.
+   Try searching by your legal name or BC Registries ID instead.
+
+To update your registration to include your CRA Business Number, contact BC Registries directly:
+
+- **Sole proprietorship or general partnership:** Log in to the
+  [BC Business Registry](https://www.account.bcregistry.gov.bc.ca/decide-business)
+- **Corporation:** Use [BC OnLine](https://www.bconline.gov.bc.ca/)
+
+If you need help, contact BC Registries Help Desk at bcregistries@gov.bc.ca or
+1-800-663-6102.
           `.trim(),
         },
         {
@@ -317,10 +358,18 @@ There are two likely reasons:
           question: "My business is registered but its CRA Business Number doesn't appear on OrgBook BC — why?",
           answer: `
 BC Registries receives CRA Business Numbers for many entities but not all.
-If the Business Number is missing from your OrgBook BC listing, contact BC
-Registries at bcregistries@gov.bc.ca or 1-800-663-6102 to request that the
+If the Business Number is missing from your OrgBook BC listing, update your registration to request that the
 linkage be established. Once updated, the number will appear on OrgBook BC
 automatically within approximately 30 minutes.
+
+To update your registration to add your CRA Business Number, contact BC Registries directly:
+
+- **Sole proprietorship or general partnership:** Log in to the
+  [BC Business Registry](https://www.account.bcregistry.gov.bc.ca/decide-business)
+- **Corporation:** Use [BC OnLine](https://www.bconline.gov.bc.ca/)
+
+If you need help, contact BC Registries Help Desk at bcregistries@gov.bc.ca or
+1-800-663-6102.
           `.trim(),
         },
       ],
@@ -369,8 +418,18 @@ missed Annual Report filings:
 - **System to D2** — two consecutive Annual Reports have been missed, which
   triggers automatic dissolution
 
-If you see these codes on your entity, contact BC Registries as soon as possible
-at bcregistries@gov.bc.ca or 1-800-663-6102.
+If you see these codes on your entity and want to prevent dissolution, update
+your registration immediately by filing the overdue Annual Report.
+
+To update your registration, including filing your overdue Annual Report,
+contact BC Registries directly:
+
+- **Sole proprietorship or general partnership:** Log in to the
+  [BC Business Registry](https://www.account.bcregistry.gov.bc.ca/decide-business)
+- **Corporation:** Use [BC OnLine](https://www.bconline.gov.bc.ca/)
+
+If you need help, contact BC Registries Help Desk at bcregistries@gov.bc.ca or
+1-800-663-6102.
           `.trim(),
         },
         {
@@ -425,7 +484,7 @@ avoid impacting other users.
         },
         {
           id: "page-limit",
-          question: "Why is search limited to 10 pages of results?",
+          question: "Why can't I view more than 10 pages of results?",
           answer: `
 The 10-page limit is in place because automated scripts have attempted to scrape
 the entire OrgBook BC database, which is against the terms of service. The limit
@@ -433,7 +492,8 @@ is based on the principle that someone looking for a specific entity should refi
 their search rather than paginating through hundreds of results.
 
 If you are not finding what you need within the first few pages, try adjusting
-your search terms (see [Search Tips](#searching)).
+your search terms. There is a **help icon (?)** above the search box on the
+OrgBook BC home page with further guidance.
           `.trim(),
         },
         {
@@ -469,6 +529,11 @@ For example, a numbered company like \`1234567 BC Ltd.\` might own a Sole Prop
 called \`Acme Services\` — that is its DBA. Both the parent company and the DBA
 appear as separate entities on OrgBook BC, connected via the **Relationships**
 section on each entity's page.
+
+Both the company and each of its sole proprietorship are registered entities with their
+own records, linked through a relationship indicating that the sole proprietorship
+is a DBA of the parent company. OrgBook BC provides links between the parent company
+and its DBAs, showing them as connected entities.
           `.trim(),
         },
         {
@@ -477,15 +542,21 @@ section on each entity's page.
           answer: `
 Not necessarily. In BC, a Sole Proprietorship can be owned by either an individual
 or a corporation. When a corporation owns a Sole Proprietorship, it is functioning
-as a DBA — an alternate operating name for the corporation.
+as a "Doing Business As" (DBA) — an alternate operating name for the corporation.
 
 The entity page on OrgBook BC will show the **Relationship** indicating whether
 the Sole Prop is owned by an individual or a corporation.
+
+For Sole proprietorships owned by a corporation, both the company and each of its
+sole proprietorship are registered entities with their own records, linked through
+a relationship indicating that the sole proprietorship is a DBA of the parent company.
+OrgBook BC provides links between the parent company and its DBAs, showing them as
+connected entities.
           `.trim(),
         },
         {
           id: "register-dba",
-          question: "How do I register a DBA name for my company?",
+          question: "How do I register a \"Doing Business As\" (DBA) name for my company?",
           answer: `
 DBA registration is done through BC Registries, not through OrgBook BC.
 
@@ -554,6 +625,9 @@ credential or a different credential type.
 
 Always check whether there is a more recent **active** credential for the same
 organization before drawing conclusions about its operating status.
+
+If the organization has been dissolved, it will be marked as "Historical" and
+the dissolution event will be visible in the timeline..
           `.trim(),
         },
       ],
@@ -566,15 +640,15 @@ organization before drawing conclusions about its operating status.
           id: "report-fraud",
           question: "I think a business registered on OrgBook BC is committing fraud — who do I contact?",
           answer: `
-OrgBook BC and BC Registries maintain registration records but do not regulate
+BC Registries maintains registration records but does not regulate
 business conduct.
 
-- For **criminal matters** (fraud, theft, etc.), contact the **RCMP**.
+- For **criminal matters** (fraud, theft, etc.), contact the **RCMP** or other law enforcement organizations.
 - For **civil matters**, you may wish to consult a lawyer. The
   [BC Business Corporations Act — Part 8, Division 1 (Court Proceedings)](https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/02057_09#division_d2e22209)
   may be relevant to your situation.
 
-OrgBook BC itself cannot investigate or act on the conduct of registered businesses.
+BC Registries itself cannot investigate or act on the conduct of registered businesses.
           `.trim(),
         },
         {
@@ -588,7 +662,7 @@ are made.
 
 For regulatory action, contact the appropriate authority:
 
-- **RCMP** for criminal matters
+- **RCMP** or other law enforcement organizations for criminal matters
 - A lawyer or legal counsel for civil proceedings
           `.trim(),
         },
