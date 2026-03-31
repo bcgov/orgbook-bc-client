@@ -22,9 +22,8 @@ initiative, which aims to make government services simpler and more trustworthy.
           question: "Who operates OrgBook BC?",
           answer: `
 OrgBook BC is operated by the **BC Digital Trust Service** within the Province of
-British Columbia. The underlying data is issued by government bodies such as
-[BC Registries](https://www.bcregistry.gov.bc.ca/) and other provincial licensing
-authorities.
+British Columbia. The underlying data is issued by
+[BC Registries](https://www.bcregistry.gov.bc.ca/).
           `.trim(),
         },
         {
@@ -270,24 +269,6 @@ is no separate submission process for OrgBook BC. These guides might help in reg
 
 - [Register your business in BC](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies)
 - [Step-by-step guide to starting a BC business](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/starting-a-business)
-
-If you need additional information, contact the BC Registries Help Desk
-at bcregistries@gov.bc.ca or 1-800-663-6102.
-          `.trim(),
-        },
-        {
-          id: "sole-prop-not-required",
-          question: "Do I need to register my sole proprietorship with BC Registries?",
-          answer: `
-No. Sole proprietorships are **not required** to register with BC Registries in
-BC. However, many do register for practical reasons — such as opening a business
-bank account, applying for grants, or establishing a formal business name.
-
-If your sole proprietorship is not registered with BC Registries, it will not
-appear on OrgBook BC. If you would like to register your sole proprietorship,
-this page has the information you need:
-
-- [Sole proprietorships and partnerships](https://www2.gov.bc.ca/gov/content/employment-business/business/managing-a-business/permits-licences/businesses-incorporated-companies/proprietorships-partnerships)
 
 If you need additional information, contact the BC Registries Help Desk
 at bcregistries@gov.bc.ca or 1-800-663-6102.
@@ -610,7 +591,6 @@ issuers include:
 
 - **BC Registries and Online Services** — issues incorporation and registration
   credentials
-- Other provincial ministries and agencies as they join the Digital Trust ecosystem
 
 Each credential on an organization's page shows which issuer provided it.
           `.trim(),
